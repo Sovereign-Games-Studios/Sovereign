@@ -1,0 +1,4 @@
+res://world.tscn
+res://RecruitButton.gd
+res://enemy_scene.tscn
+res://NpcScripts/Enemy.gd
