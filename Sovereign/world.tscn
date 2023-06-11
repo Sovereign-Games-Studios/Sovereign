@@ -1,13 +1,30 @@
-[gd_scene load_steps=13 format=3 uid="uid://3rvqv6rah1cp"]
+[gd_scene load_steps=12 format=3 uid="uid://3rvqv6rah1cp"]
 
 [ext_resource type="Texture2D" uid="uid://do0gn5ymt7dfl" path="res://Resources/Maps/Test-Map-1.png" id="1_o0kgn"]
 [ext_resource type="Script" path="res://NpcScripts/Barbarian_Script.gd" id="2_507ug"]
 [ext_resource type="Texture2D" uid="uid://icpenuif1avl" path="res://Resources/Characters/Test-Barb-1.png" id="3_ocm1u"]
-[ext_resource type="Script" path="res://NpcScripts/Enemy.gd" id="4_o7e7j"]
 [ext_resource type="Script" path="res://PlayerScripts/Camera2D.gd" id="5_drsh2"]
-[ext_resource type="Script" path="res://Control.gd" id="6_2kogl"]
-[ext_resource type="Script" path="res://RecruitButton.gd" id="7_svtjc"]
-[ext_resource type="PackedScene" uid="uid://8vbt6sesc6kd" path="res://enemy_scene.tscn" id="8_pmvb3"]
+[ext_resource type="Script" path="res://BuildingScripts/ConstructBuilding.gd" id="6_qa1yr"]
+[ext_resource type="PackedScene" uid="uid://frik6nx0s7qh" path="res://BuildingScripts/barbarian_encampment.tscn" id="7_0rknv"]
+[ext_resource type="Texture2D" uid="uid://bdw1rdv68kygi" path="res://Resources/Buildings/barbarian_camp.png" id="7_conqd"]
+
+[sub_resource type="GDScript" id="GDScript_13kf7"]
+script/source = "extends Node2D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	print_tree()
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	pass
+	
+func spawnNode(node):
+	add_child(node)
+"
 
 [sub_resource type="TileSet" id="TileSet_58ewb"]
 
@@ -17,9 +34,8 @@ size = Vector2(16, 21)
 [sub_resource type="CircleShape2D" id="CircleShape2D_2h1ln"]
 radius = 138.004
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_wdusf"]
-
 [node name="World" type="Node2D"]
+script = SubResource("GDScript_13kf7")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(3.8147e-06, -1.52588e-05)
@@ -36,6 +52,7 @@ script = ExtResource("2_507ug")
 metadata/tags = {
 "name": "hero"
 }
+metadata/team = "player"
 
 [node name="Hitbox" type="CollisionShape2D" parent="Barbarian"]
 position = Vector2(1, -1)
@@ -51,72 +68,19 @@ texture = ExtResource("3_ocm1u")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Barbarian/Area2D"]
 shape = SubResource("CircleShape2D_2h1ln")
 
-[node name="Enemy" type="CharacterBody2D" parent="."]
-visible = false
-position = Vector2(67, -77)
-script = ExtResource("4_o7e7j")
-metadata/tags = {
-"name": "enemy"
-}
-
-[node name="Sprite2D" type="Sprite2D" parent="Enemy"]
-position = Vector2(-2.28882e-05, 0)
-scale = Vector2(0.2, 0.215)
-texture = ExtResource("3_ocm1u")
-
-[node name="Hitbox" type="CollisionShape2D" parent="Enemy"]
-position = Vector2(0, 1)
-shape = SubResource("RectangleShape2D_ou6bc")
-
-[node name="Area2D" type="Area2D" parent="Enemy"]
-position = Vector2(0, 1)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy/Area2D"]
-shape = SubResource("CircleShape2D_wdusf")
-
 [node name="Camera2D" type="Camera2D" parent="."]
 visible = false
 position = Vector2(11, 10)
 script = ExtResource("5_drsh2")
 
-[node name="Enemy2" type="CharacterBody2D" parent="."]
-visible = false
-position = Vector2(-109, -76)
-script = ExtResource("4_o7e7j")
-metadata/tags = {
-"name": "enemy"
-}
+[node name="ConstructBuilding" type="Button" parent="."]
+offset_right = 8.0
+offset_bottom = 8.0
+text = "Construct Building"
+script = ExtResource("6_qa1yr")
+building_scene = ExtResource("7_0rknv")
 
-[node name="Sprite2D" type="Sprite2D" parent="Enemy2"]
-position = Vector2(-2.28882e-05, 0)
-scale = Vector2(0.2, 0.215)
-texture = ExtResource("3_ocm1u")
-
-[node name="Hitbox" type="CollisionShape2D" parent="Enemy2"]
-position = Vector2(0, 1)
-shape = SubResource("RectangleShape2D_ou6bc")
-
-[node name="Area2D" type="Area2D" parent="Enemy2"]
-position = Vector2(0, 1)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy2/Area2D"]
-shape = SubResource("CircleShape2D_wdusf")
-
-[node name="Control" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-script = ExtResource("6_2kogl")
-
-[node name="RecruitButton" type="Button" parent="Control"]
-offset_left = 184.0
-offset_top = 2.0
-offset_right = 290.0
-offset_bottom = 33.0
-text = "Recruit Hero"
-script = ExtResource("7_svtjc")
-enemy_scene = ExtResource("8_pmvb3")
-
-[node name="SpawnLocation" type="PathFollow2D" parent="."]
-position = Vector2(493.689, 323.215)
+[node name="Sprite2D" type="Sprite2D" parent="ConstructBuilding"]
+position = Vector2(70, 18)
+scale = Vector2(0.236, 0.217)
+texture = ExtResource("7_conqd")
