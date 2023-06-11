@@ -1,7 +1,7 @@
 [gd_scene load_steps=12 format=3 uid="uid://3rvqv6rah1cp"]
 
 [ext_resource type="Texture2D" uid="uid://do0gn5ymt7dfl" path="res://Resources/Maps/Test-Map-1.png" id="1_o0kgn"]
-[ext_resource type="Script" path="res://NpcScripts/Barbarian_Script.gd" id="2_507ug"]
+[ext_resource type="Script" path="res://NpcScripts/NPCLibrary/Barbarian.gd" id="2_mrx1c"]
 [ext_resource type="Texture2D" uid="uid://icpenuif1avl" path="res://Resources/Characters/Test-Barb-1.png" id="3_ocm1u"]
 [ext_resource type="Script" path="res://PlayerScripts/Camera2D.gd" id="5_drsh2"]
 [ext_resource type="Script" path="res://BuildingScripts/ConstructBuilding.gd" id="6_qa1yr"]
@@ -48,7 +48,7 @@ format = 2
 
 [node name="Barbarian" type="CharacterBody2D" parent="."]
 position = Vector2(-21, 12)
-script = ExtResource("2_507ug")
+script = ExtResource("2_mrx1c")
 metadata/tags = {
 "name": "hero"
 }
