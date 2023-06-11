@@ -8,7 +8,8 @@ extends NPC
 func _physics_process(_delta):
 	if current_health <= 0:
 		print("The ", self.char_class, " has been slain!")
-		queue_free() 
+		queue_free()
+		
 	var overlapping = self.get_node("Area2D").get_overlapping_bodies()
 	for node in overlapping:
 		if node.team == "player":
@@ -35,3 +36,5 @@ func initialize(start_position, player_position):
 	
 func _on_visible_on_screen_notifier_2d_screen_exited():
 	queue_free()
+
+	

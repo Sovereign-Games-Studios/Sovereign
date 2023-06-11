@@ -32,7 +32,8 @@ func _physics_process(_delta):
 			velocity = unitv * 20
 			var distance = target_pos - self.global_position
 			if distance[0] <= self.attack["Range"] and distance[1] <= self.attack["Range"]:
-				Attacks.attackTarget(self, node) 
+				$AudioStreamPlayer2D.play()
+				Attacks.attackTarget(self, node)
 			target = node
 	if target == null and ticks_since_last_behaviour_change > 10:
 		Behaviours.hunt(self)
@@ -40,7 +41,6 @@ func _physics_process(_delta):
 	else:
 		ticks_since_last_behaviour_change += 1		
 	move_and_slide()
-
 
 func initialize(start_position, team, char_class, level, behaviour, stats, spells, equipped_items):
 	set_global_position(start_position)

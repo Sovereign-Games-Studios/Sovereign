@@ -24,6 +24,7 @@ func _input(event):
 			var building = building_scene.instantiate()
 			building.initialize($Sprite2D.position, "enemy", "grue den")
 			add_child(building)
+			$AudioStreamPlayer2D.play()
 			$Sprite2D.hide()
 			
 			

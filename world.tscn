@@ -1,12 +1,14 @@
-[gd_scene load_steps=12 format=3 uid="uid://3rvqv6rah1cp"]
+[gd_scene load_steps=14 format=3 uid="uid://3rvqv6rah1cp"]
 
 [ext_resource type="Texture2D" uid="uid://do0gn5ymt7dfl" path="res://Resources/Maps/Test-Map-1.png" id="1_o0kgn"]
 [ext_resource type="Script" path="res://NpcScripts/NPCLibrary/Barbarian.gd" id="2_mrx1c"]
-[ext_resource type="Texture2D" uid="uid://icpenuif1avl" path="res://Resources/Characters/Test-Barb-1.png" id="3_ocm1u"]
+[ext_resource type="Texture2D" uid="uid://icpenuif1avl" path="res://Resources/Characters/Images/Test-Barb-1.png" id="3_hwpar"]
+[ext_resource type="AudioStream" uid="uid://d01uelietkft5" path="res://Resources/Characters/Sounds/bloody-blade-103593.mp3" id="4_rjaon"]
 [ext_resource type="Script" path="res://PlayerScripts/Camera2D.gd" id="5_drsh2"]
 [ext_resource type="Script" path="res://BuildingScripts/ConstructBuilding.gd" id="6_qa1yr"]
 [ext_resource type="PackedScene" uid="uid://frik6nx0s7qh" path="res://BuildingScripts/barbarian_encampment.tscn" id="7_0rknv"]
-[ext_resource type="Texture2D" uid="uid://bdw1rdv68kygi" path="res://Resources/Buildings/barbarian_camp.png" id="7_conqd"]
+[ext_resource type="Texture2D" uid="uid://bdw1rdv68kygi" path="res://Resources/Buildings/Images/barbarian_camp.png" id="8_4t6l2"]
+[ext_resource type="AudioStream" uid="uid://bq3owbkmyyuwu" path="res://Resources/Buildings/Sounds/middle-ages-war-crywav-14780.mp3" id="9_fms0d"]
 
 [sub_resource type="GDScript" id="GDScript_13kf7"]
 script/source = "extends Node2D
@@ -61,15 +63,18 @@ shape = SubResource("RectangleShape2D_ou6bc")
 [node name="Sprite2D" type="Sprite2D" parent="Barbarian"]
 position = Vector2(-7.62939e-06, -1)
 scale = Vector2(0.2, 0.215)
-texture = ExtResource("3_ocm1u")
+texture = ExtResource("3_hwpar")
 
 [node name="Area2D" type="Area2D" parent="Barbarian"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Barbarian/Area2D"]
 shape = SubResource("CircleShape2D_2h1ln")
 
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="Barbarian"]
+stream = ExtResource("4_rjaon")
+volume_db = -7.287
+
 [node name="Camera2D" type="Camera2D" parent="."]
-visible = false
 position = Vector2(11, 10)
 script = ExtResource("5_drsh2")
 
@@ -83,4 +88,7 @@ building_scene = ExtResource("7_0rknv")
 [node name="Sprite2D" type="Sprite2D" parent="ConstructBuilding"]
 position = Vector2(70, 18)
 scale = Vector2(0.236, 0.217)
-texture = ExtResource("7_conqd")
+texture = ExtResource("8_4t6l2")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="ConstructBuilding"]
+stream = ExtResource("9_fms0d")

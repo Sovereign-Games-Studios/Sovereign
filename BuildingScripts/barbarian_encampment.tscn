@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://frik6nx0s7qh"]
 
 [ext_resource type="Script" path="res://BuildingScripts/BuildingLibrary/barbarian_encampment.gd" id="1_0cfb4"]
-[ext_resource type="Texture2D" uid="uid://bdw1rdv68kygi" path="res://Resources/Buildings/barbarian_camp.png" id="2_rvgs0"]
+[ext_resource type="Texture2D" uid="uid://bdw1rdv68kygi" path="res://Resources/Buildings/Images/barbarian_camp.png" id="2_ccliy"]
 [ext_resource type="Script" path="res://PlayerScripts/RecruitButton.gd" id="3_d0vj7"]
 [ext_resource type="PackedScene" uid="uid://8vbt6sesc6kd" path="res://NpcScripts/enemy_scene.tscn" id="4_fxyop"]
 
@@ -24,7 +24,7 @@ shape = SubResource("RectangleShape2D_ieyx1")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.228, 0.217)
-texture = ExtResource("2_rvgs0")
+texture = ExtResource("2_ccliy")
 
 [node name="Area2D" type="Area2D" parent="."]
 
