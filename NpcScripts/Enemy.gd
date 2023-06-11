@@ -11,7 +11,7 @@ func _physics_process(_delta):
 		queue_free() 
 	var overlapping = self.get_node("Area2D").get_overlapping_bodies()
 	for node in overlapping:
-		if node.get_meta("Team") == "player":
+		if node.team == "player":
 			print(self.char_class, " is pursuing Player!")
 			var target_pos = node.global_position
 			var fullv = target_pos - self.global_position
@@ -25,7 +25,7 @@ func initialize(start_position, player_position):
 	char_class = "grue"
 	look_at(player_position)
 	set_global_position(start_position)
-	self.set_meta("Team", "enemy")
+	team = "enemy"
 	stats = Statistics.getStats("generic_npc")
 	max_health = 10
 	current_health = 10

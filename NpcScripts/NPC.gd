@@ -8,6 +8,7 @@ var exp
 var max_health
 var current_health
 var stats
+var speed
 
 var inventory
 var gold
@@ -15,4 +16,3 @@ var equipped_items
 var behaviour
 var spells
 var attack
-

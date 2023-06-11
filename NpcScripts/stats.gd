@@ -42,7 +42,27 @@ static func getStats(char_class):
 		"Light Resistance": 0
 	}
 
+	var building_block = {
+		"Strength": 0,
+		"Spirit": 0,
+		"Stamina": 0,
+		"Agility": 0,
+		"Charisma": 0,
+		"Wisdom": 0,
+		"Intelligence": 0,
+		"Physical Resistance": 10,
+		"Magic Resistance": 5,
+		"Fire Resistance": 5,
+		"Air Resistance": 10,
+		"Earth Resistance": 10,
+		"Water Resistance": 10,
+		"Electric Resistance": 50,
+		"Nature Resistance": 10,
+		"Shadow Resistance": 50,
+		"Light Resistance": 50
+	}
 
-	var stat_lib = {"generic_npc": generic_npc_block, "barbarian": barbarian_block}
+
+	var stat_lib = {"generic_npc": generic_npc_block, "barbarian": barbarian_block, "building": building_block}
 
 	return stat_lib[char_class]

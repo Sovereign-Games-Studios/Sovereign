@@ -22,7 +22,7 @@ func _input(event):
 			# Place Building
 			buttonPressed = false
 			var building = building_scene.instantiate()
-			building.initialize($Sprite2D.position)
+			building.initialize($Sprite2D.position, "enemy", "grue den")
 			add_child(building)
 			$Sprite2D.hide()
 			
