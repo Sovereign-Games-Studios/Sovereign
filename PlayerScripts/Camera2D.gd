@@ -10,16 +10,18 @@ extends Camera2D
 @onready var Target = get_node_or_null(target)
 
 func _physics_process(_delta: float) -> void:
-	if not is_instance_valid(Target):
-		var targets: Array = get_tree().get_nodes_in_group("Barbarian")
-		if targets: Target = targets[0]
-	if not is_instance_valid(Target):
-		return
+	var desired_pos = self.global_position
+	if Input.is_action_pressed("A"):
+		desired_pos.x += -500 * _delta
+	if Input.is_action_pressed("D"):
+		desired_pos.x += 500 * _delta
+	if Input.is_action_pressed("W"):
+		desired_pos.y += -500 * _delta
+	if Input.is_action_pressed("S"):
+		desired_pos.y += 500 * _delta
 	
 	# Actual movement
 	var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUINT)
-	tween.tween_property(self, "global_position", desired_position(), align_time)
+	tween.tween_property(self, "position", desired_pos, align_time).from_current()
 
 # Calculating the gridnapped position
-func desired_position() -> Vector2:
-	return (Target.global_position / screen_size).floor() * screen_size + screen_size/2
