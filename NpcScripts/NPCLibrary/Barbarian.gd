@@ -3,6 +3,7 @@ class_name Barbarian
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var ticks_since_last_behaviour_change = 0
+var last_attack = 0
 # Temporary until I implement Barbarian Guilds
 func _ready():
 	char_class = "barbarian"
@@ -31,15 +32,18 @@ func _physics_process(_delta):
 			var unitv = fullv.normalized()
 			velocity = unitv * 20
 			var distance = target_pos - self.global_position
-			if distance[0] <= self.attack["Range"] and distance[1] <= self.attack["Range"]:
-				$AudioStreamPlayer2D.play()
-				Attacks.attackTarget(self, node)
+			if last_attack >= attack["Speed"]:
+				if distance[0] <= self.attack["Range"] and distance[1] <= self.attack["Range"]:
+					$AudioStreamPlayer2D.play()
+					Attacks.attackTarget(self, node)
+					last_attack = 0
 			target = node
 	if target == null and ticks_since_last_behaviour_change > 10:
 		Behaviours.hunt(self)
 		ticks_since_last_behaviour_change = 0
 	else:
 		ticks_since_last_behaviour_change += 1		
+	last_attack += _delta
 	move_and_slide()
 
 func initialize(start_position, team, char_class, level, behaviour, stats, spells, equipped_items):
