@@ -43,10 +43,11 @@ static func getBehaviour(char_class):
 static func hunt(node):
 	var directions = randi() % 5
 	if directions == 0:
-		node.velocity = Vector2.UP	* node.speed
+		node.velocity = Vector3.UP	* node.speed
 	if directions == 1:
-		node.velocity = Vector2.LEFT * node.speed
+		node.velocity = Vector3.LEFT * node.speed
 	if directions == 2:
-		node.velocity = Vector2.RIGHT * node.speed
+		node.velocity = Vector3.RIGHT * node.speed
 	if directions == 3:
-		node.velocity = Vector2.DOWN * node.speed
+		node.velocity = Vector3.DOWN * node.speed
+		
