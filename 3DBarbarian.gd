@@ -8,6 +8,7 @@ var bought: bool
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	
 	char_class = "barbarian"
 	stats = Statistics.getStats(char_class)
 	await get_tree().create_timer(0.1).timeout

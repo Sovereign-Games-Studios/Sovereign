@@ -1,10 +1,14 @@
-[gd_scene load_steps=9 format=3 uid="uid://85p28673878h"]
+[gd_scene load_steps=15 format=3 uid="uid://85p28673878h"]
 
+[ext_resource type="Script" path="res://WorldFiles/KingdomState.gd" id="1_mmwq8"]
 [ext_resource type="Texture2D" uid="uid://icpenuif1avl" path="res://Resources/Characters/Images/Test-Barb-1.png" id="1_tbs65"]
 [ext_resource type="Script" path="res://Camera3D.gd" id="3_h6mc6"]
 [ext_resource type="Script" path="res://3DBarbarian.gd" id="3_lpcm8"]
 [ext_resource type="Script" path="res://BuildingScripts/BuildingLibrary/barbarian_encampment.gd" id="4_am8v3"]
 [ext_resource type="Texture2D" uid="uid://chnx641kh2xlm" path="res://Resources/Environment/Rock-1.png" id="4_dlt6j"]
+[ext_resource type="Script" path="res://WorldFiles/FogOfWarPermanent.gd" id="6_73nda"]
+[ext_resource type="Shader" path="res://WorldFiles/fog_permanent.gdshader" id="7_8xfk4"]
+[ext_resource type="Script" path="res://WorldFiles/Fog.gd" id="9_ky7s0"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_ba5v4"]
 vertices = PackedVector3Array(-32.9943, 0.5, -13.6562, -31.2443, 0.5, -13.9062, -31.4943, 0.5, -18.1562, -36.9943, 0.5, -18.1562, -36.9943, 0.5, -6.40618, -32.9943, 0.5, -6.15618, -32.9943, 0.5, -13.6562, -36.9943, 0.5, -18.1562, -24.4943, 0.5, -17.9062, -31.4943, 0.5, -18.1562, -31.2443, 0.5, -13.9062, -24.2443, 0.5, -13.6562, -10.2443, 0.5, -17.4062, -17.2443, 0.5, -17.6562, -17.2443, 0.5, -13.4062, -10.2443, 0.5, -13.1562, -17.2443, 0.5, -17.6562, -24.4943, 0.5, -17.9062, -24.2443, 0.5, -13.6562, -17.2443, 0.5, -13.4062, -10.2443, 0.5, -13.1562, -2.99434, 0.5, -13.1562, -2.99434, 0.5, -17.1562, -10.2443, 0.5, -17.4062, -1.99434, 0.5, -12.6562, -1.99434, 0.5, -10.6562, 2.00566, 0.5, -10.6562, -2.99434, 0.5, -17.1562, -2.99434, 0.5, -13.1562, -1.99434, 0.5, -12.6562, -1.99434, 0.5, -12.6562, 2.00566, 0.5, -10.6562, 2.00566, 0.5, -17.1562, -2.99434, 0.5, -17.1562, 2.00566, 0.5, -10.6562, -1.99434, 0.5, -10.6562, -1.99434, 0.5, -3.90618, 2.00566, 0.5, -3.90618, -1.99434, 0.5, 3.09382, -1.99434, 0.5, 10.0938, 2.00566, 0.5, 10.0938, 2.00566, 0.5, 3.09382, -1.99434, 0.5, 10.0938, -1.99434, 0.5, 17.0938, 2.00566, 0.5, 17.0938, 2.00566, 0.5, 10.0938, 2.00566, 0.5, 3.09382, 2.00566, 0.5, -3.90618, -1.99434, 0.5, -3.90618, -1.99434, 0.5, 3.09382, -39.2443, 0.5, -2.90618, -39.2443, 0.5, 1.34382, -37.4943, 0.5, 1.34382, -37.2443, 0.5, -3.15618, -37.4943, 0.5, 1.34382, -37.2443, 0.5, 3.09382, -32.9943, 0.5, 2.84382, -32.9943, 0.5, -6.15618, -36.9943, 0.5, -6.40618, -37.2443, 0.5, -3.15618, -63.9943, 0.5, -3.15618, -71.9943, 0.5, -3.40618, -71.9943, 0.5, 0.843822, -63.9943, 0.5, 1.09382, -47.7443, 0.5, -2.90618, -55.7443, 0.5, -3.15618, -55.7443, 0.5, 1.09382, -47.4943, 0.5, 1.09382, -47.4943, 0.5, 1.09382, -39.2443, 0.5, 1.34382, -39.2443, 0.5, -2.90618, -47.7443, 0.5, -2.90618, -55.7443, 0.5, -3.15618, -63.9943, 0.5, -3.15618, -63.9943, 0.5, 1.09382, -55.7443, 0.5, 1.09382, -32.9943, 0.5, 9.34382, -32.9943, 0.5, 2.84382, -37.2443, 0.5, 3.09382, -37.2443, 0.5, 9.59382, -37.2443, 0.5, 9.59382, -37.2443, 0.5, 16.0938, -32.9943, 0.5, 16.0938, -32.9943, 0.5, 9.34382)
@@ -15,8 +19,22 @@ polygons = [PackedInt32Array(1, 0, 2), PackedInt32Array(2, 0, 3), PackedInt32Arr
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_g3sij"]
 height = 1.53318
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gquxp"]
+render_priority = 0
+shader = ExtResource("7_8xfk4")
+shader_parameter/fogMaxDepth = 5.0
+shader_parameter/maxRange = 20.0
+shader_parameter/defaultAlpha = 0.9
+shader_parameter/fogColor = Vector3(0, 0, 0)
+shader_parameter/mapWidth = 150.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_prbg0"]
+material = SubResource("ShaderMaterial_gquxp")
+size = Vector3(150, 10, 40)
+
 [node name="World" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.32224, 0)
+script = ExtResource("1_mmwq8")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.422618, 0.906308, 0, -0.906308, 0.422618, -19.6203, 24.1692, 23.3922)
@@ -72,5 +90,26 @@ texture = ExtResource("4_dlt6j")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Rock"]
 transform = Transform3D(1, 0, 0, 0, 0.48669, 0, 0, 0, 1, 0, 0.410894, 0)
 shape = SubResource("CylinderShape3D_g3sij")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+render_target_update_mode = 4
+
+[node name="Camera2D" type="Camera2D" parent="SubViewportContainer/SubViewport"]
+
+[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/Camera2D"]
+script = ExtResource("6_73nda")
+
+[node name="Timer" type="Timer" parent="SubViewportContainer/SubViewport/Camera2D/Sprite2D"]
+wait_time = 0.201
+autostart = true
+
+[node name="Fog" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_prbg0")
+script = ExtResource("9_ky7s0")
 
 [connection signal="velocity_computed" from="Barbarian/NavigationAgent3D" to="Barbarian" method="_on_navigation_agent_3d_velocity_computed"]
