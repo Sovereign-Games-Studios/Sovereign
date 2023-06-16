@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://85p28673878h"]
+[gd_scene load_steps=17 format=3 uid="uid://85p28673878h"]
 
 [ext_resource type="Script" path="res://WorldFiles/KingdomState.gd" id="1_mmwq8"]
 [ext_resource type="Texture2D" uid="uid://icpenuif1avl" path="res://Resources/Characters/Images/Test-Barb-1.png" id="1_tbs65"]
@@ -20,7 +20,7 @@ polygons = [PackedInt32Array(1, 0, 2), PackedInt32Array(2, 0, 3), PackedInt32Arr
 height = 1.53318
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_gmovu"]
-render_priority = 0
+render_priority = 2
 shader = ExtResource("7_8xfk4")
 shader_parameter/fogMaxDepth = null
 shader_parameter/maxRange = 20.0
@@ -28,14 +28,22 @@ shader_parameter/defaultAlpha = 0.9
 shader_parameter/fogColor = Vector3(0, 0, 0)
 shader_parameter/mapWidth = 150.0
 
-[sub_resource type="BoxMesh" id="BoxMesh_g68mb"]
-size = Vector3(145, 5, 145)
+[sub_resource type="PlaneMesh" id="PlaneMesh_1hle4"]
+size = Vector2(145, 145)
+subdivide_width = 100
+subdivide_depth = 100
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_auuxi"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_1o0r8"]
+material = SubResource("StandardMaterial3D_auuxi")
+size = Vector2(145, 145)
 
 [node name="World" type="Node3D"]
 script = ExtResource("1_mmwq8")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.422618, 0.906308, 0, -0.906308, 0.422618, -19.6203, 105.208, 33.4383)
+transform = Transform3D(1, 0, 0, 0, 0.422618, 0.906308, 0, -0.906308, 0.422618, -5.49149, 10.1885, 17.9521)
 fov = 88.6608
 script = ExtResource("3_h6mc6")
 
@@ -90,11 +98,12 @@ transform = Transform3D(1, 0, 0, 0, 0.48669, 0, 0, 0, 1, 0, 0.410894, 0)
 shape = SubResource("CylinderShape3D_g3sij")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="."]
-offset_right = 40.0
-offset_bottom = 40.0
+offset_right = 512.0
+offset_bottom = 512.0
 
 [node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
-render_target_clear_mode = 1
+handle_input_locally = false
+render_target_clear_mode = 2
 render_target_update_mode = 4
 
 [node name="Camera2D" type="Camera2D" parent="SubViewportContainer/SubViewport"]
@@ -107,11 +116,16 @@ wait_time = 0.201
 autostart = true
 
 [node name="Fog" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.58232, 0)
 material_override = SubResource("ShaderMaterial_gmovu")
-mesh = SubResource("BoxMesh_g68mb")
+mesh = SubResource("PlaneMesh_1hle4")
 script = ExtResource("9_ky7s0")
 
 [node name="GarbageSprite" type="Sprite3D" parent="."]
 visible = false
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.17902, 0)
+mesh = SubResource("PlaneMesh_1o0r8")
 
 [connection signal="velocity_computed" from="Barbarian/NavigationAgent3D" to="Barbarian" method="_on_navigation_agent_3d_velocity_computed"]

@@ -24,7 +24,6 @@ func _draw():
 		draw_rect(Rect2(Vector2(0, 0), FOG.fog_map_size), Color(0.0, 0.0, 0.0))
 		self.backgroundDrawn = true	
 	else:
-		self.oldImg.flip_y() # flip it back. due to the way OpenGL works, the resulting ViewportTexture is flipped vertically.
 		var tex = ImageTexture.new()
 		tex.create_from_image(self.oldImg)
 		draw_texture(tex, Vector2(0, 0))
@@ -38,7 +37,6 @@ func _draw():
 	# var x = (unit.translation.x + (MAIN.mapWidth / 2)) / MAIN.mapWidth * FOG.fogMapSize.x
 	# var z = (unit.translation.z + (MAIN.mapWidth / 2)) / MAIN.mapWidth * FOG.fogMapSize.y
 	var pixel = FOG.getFogMapPixelForUnit(unit)
-	print("Unit Pixels: ", pixel)
 	var r = 10  # tier of the unit to multiply its viewing distance
 #		print("fog unit at: ",x,"/",z," radius ",y)
 	
@@ -60,7 +58,6 @@ func _on_Timer_timeout():
 	self.queue_redraw() # force redraw of Sprite, which draws fog reveal circles on itself
 	
 	fogMapImg = get_viewport().get_texture().get_image()
-	fogMapImg.flip_y() # flip it back. due to the way OpenGL works, the resulting ViewportTexture is flipped vertically.
 	var tex = ImageTexture.create_from_image(fogMapImg)
 	FOG.material_override.set_shader_parameter("fogMap", tex)
 

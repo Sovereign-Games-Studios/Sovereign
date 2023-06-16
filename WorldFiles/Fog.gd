@@ -20,6 +20,6 @@ func getFogMapPixelForUnit(unit):
 	if unit == null:
 		print("Null Unit")
 		return Vector2(0,0)
-	var x = (unit.global_position.x + (72.5) / 145 * self.fog_map_size.x)
-	var z = (unit.global_position.z + (72.5) / 145 * self.fog_map_size.y)
+	var x = (unit.global_position.x / 145 * self.fog_map_size.x)
+	var z = (unit.global_position.z  / 145 * self.fog_map_size.y)
 	return Vector2(x, z)

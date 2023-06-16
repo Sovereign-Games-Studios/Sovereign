@@ -42,8 +42,8 @@ vec2 worldPosToPixel(vec3 worldPos) {
 	worldPos += (mapWidth/2.0); // shift to positive values for reading from bitmap
 	worldPos *= (float(fogMapSize.x) / mapWidth); // map worldPos from world units to pixels of the fogMap
 	
-	float indexOnBitmapX = worldPos.x; // the pixel that holds current units position info
-	float indexOnBitmapY = worldPos.z;
+	float indexOnBitmapX = worldPos.x * bitmapPixelWidth; // the pixel that holds current units position info
+	float indexOnBitmapY = worldPos.z * bitmapPixelWidth;
 	
 	return vec2(indexOnBitmapX, indexOnBitmapY);
 }
@@ -54,7 +54,7 @@ vec4 getPixelColor(vec2 pixelPos) {
 	float bitmapPixelWidth = 1.0 / float(fogMapSize.x); // offset used to read color from center of pixel, important to get the pixel, not an uncertain value from pixel border
 	
 	// vec2 pixelPos = worldPosToPixel(worldPos);
-	vec4 bitmapPixel = texture(fogMap, vec2(1, 1)); // texture() reads positions on a bitmap between 0.0 and 1.0, not int pixels
+	vec4 bitmapPixel = texture(fogMap, vec2(pixelPos.x, pixelPos.y)); // texture() reads positions on a bitmap between 0.0 and 1.0, not int pixels
 	
 //	indexOnBitmapX = 0.25;
 //	indexOnBitmapY = 0.25;
@@ -76,7 +76,7 @@ void vertex() {
 	// we expect grayscale, so we need check only r component. ignore black pixels, they are full fog
 	// apparently, when overdrawing the fogMap image with a 0.1 alpha black rect, we will never ever reach full black again. 
 	// so let's have some tolerance here as for what counts as black.
-	if (bitmapPixel.r > 0.3) {
+	if (bitmapPixel.r > 0.8) {
 		VERTEX.y = - (fogMaxDepth * bitmapPixel.r + 10.0);
 	}
 		
