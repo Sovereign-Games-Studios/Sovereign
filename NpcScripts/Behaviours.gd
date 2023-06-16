@@ -40,14 +40,8 @@ static func getBehaviour(char_class):
 
 	return behaviour_lib[char_class]
 
-static func hunt(node):
-	var directions = randi() % 5
-	if directions == 0:
-		node.velocity = Vector3.UP	* node.speed
-	if directions == 1:
-		node.velocity = Vector3.LEFT * node.speed
-	if directions == 2:
-		node.velocity = Vector3.RIGHT * node.speed
-	if directions == 3:
-		node.velocity = Vector3.DOWN * node.speed
+static func hunt():
+	var radius = 3
+	var random_position = Vector3(randi_range(-radius, radius), 0, randi_range(-radius, radius))
+	return random_position
 		

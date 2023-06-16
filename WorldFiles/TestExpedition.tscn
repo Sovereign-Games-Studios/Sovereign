@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://WorldFiles/KingdomState.gd" id="1_bpvjn"]
 [ext_resource type="Script" path="res://Camera3D.gd" id="2_17iei"]
-[ext_resource type="Script" path="res://3DBarbarian.gd" id="3_pciuh"]
+[ext_resource type="Script" path="res://NpcScripts/NPCLibrary/3DBarbarian.gd" id="3_a2e12"]
 [ext_resource type="Texture2D" uid="uid://icpenuif1avl" path="res://Resources/Characters/Images/Test-Barb-1.png" id="4_pe70u"]
 [ext_resource type="Script" path="res://BuildingScripts/BuildingLibrary/barbarian_encampment.gd" id="5_nyixr"]
 [ext_resource type="Texture2D" uid="uid://chnx641kh2xlm" path="res://Resources/Environment/Rock-1.png" id="6_dxjp2"]
@@ -60,7 +60,7 @@ fov = 88.6608
 script = ExtResource("2_17iei")
 
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0250092, 0.108852, -0.00137711)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.025, 0, -0.001)
 navigation_mesh = SubResource("NavigationMesh_ba5v4")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="NavigationRegion3D"]
@@ -92,7 +92,7 @@ skeleton = NodePath("../..")
 
 [node name="Barbarian" type="CharacterBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.35, 0.0285034, 50.6213)
-script = ExtResource("3_pciuh")
+script = ExtResource("3_a2e12")
 
 [node name="BarbSprite" type="Sprite3D" parent="Barbarian"]
 transform = Transform3D(1, 0, 0, 0, 0.819151, 0.573576, 0, -0.573576, 0.819151, -0.0286217, 0.403795, 0.00770569)
@@ -151,21 +151,22 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0136948, 0)
 mesh = SubResource("PlaneMesh_1o0r8")
 
 [node name="Palace" type="CharacterBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.15374, 0.500062, 37.0008)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.143, 0, 37.001)
 script = ExtResource("13_7m8f8")
 
 [node name="PalaceSprite" type="Sprite3D" parent="Palace"]
-transform = Transform3D(3, 0, 0, 0, 2.45746, 1.72073, 0, -1.72073, 2.45746, 0.00174809, 1.94793, 0.00424194)
+transform = Transform3D(3, 0, 0, 0, 2.45746, 1.72073, 0, -1.72073, 2.45746, 0, 2.5, 0)
 texture = ExtResource("14_t4h63")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Palace"]
-transform = Transform3D(1, 0, 0, 0, 0.48669, 0, 0, 0, 1, 0, 0.410894, 0)
+transform = Transform3D(1, 0, 0, 0, 0.48669, 0, 0, 0, 1, 0, 0, 0)
 shape = SubResource("CylinderShape3D_jwlqq")
 
 [node name="SpawnPath" type="Path3D" parent="Palace"]
 curve = SubResource("Curve3D_npuvq")
 
 [node name="SpawnLocation" type="PathFollow3D" parent="Palace/SpawnPath"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.92686)
 
 [node name="Timer" type="Timer" parent="Palace"]
 autostart = true

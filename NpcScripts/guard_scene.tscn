@@ -13,11 +13,11 @@ radius = 5.0
 script = ExtResource("1_a48b5")
 
 [node name="GuardSprite" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.819151, 0.573576, 0, -0.573576, 0.819151, 0.00194454, 0.403796, 0.0068283)
+transform = Transform3D(1, 0, 0, 0, 0.819151, 0.573576, 0, -0.573576, 0.819151, 0, 0.5, 0)
 texture = ExtResource("2_4pejx")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.48669, 0, 0, 0, 1, 0, 0.410894, 0)
+transform = Transform3D(1, 0, 0, 0, 0.48669, 0, 0, 0, 1, 0, 0, 0)
 shape = SubResource("CylinderShape3D_s5j36")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
@@ -26,5 +26,8 @@ shape = SubResource("CylinderShape3D_s5j36")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Vision"]
 shape = SubResource("SphereShape3D_cfbix")
+
+[node name="Timer" type="Timer" parent="."]
+autostart = true
 
 [connection signal="velocity_computed" from="NavigationAgent3D" to="." method="_on_navigation_agent_3d_velocity_computed"]

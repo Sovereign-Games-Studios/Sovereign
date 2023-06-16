@@ -12,12 +12,12 @@ func _ready():
 	current_health = 10 + stats["Stamina"]
 	# array of existing npcs tied to this building, the length of which is compared against maximum to determine if more can be recruited/spawned
 	npcs = {"Peasant": [], "Guard": [], "Tax Collector": []}
-	maximum_npcs = {"Peasant": 4, "Guard": 2, "Tax Collector": 2}
+	maximum_npcs = {"Peasant": 0, "Guard": 2, "Tax Collector": 0}
 	# array of npcs currently occupying this building
 	current_occupants = []
 	var NpcScenes = preload("res://NpcScripts/NpcScenes.gd").new()
 	print(NpcScenes.get_npc_scene("Guard"))
-	$Timer.wait_time = 5
+	$Timer.wait_time = 10
 	$Timer.timeout.connect(_recruit_on_timer_timeout.bind(NpcScenes))
 	# Must check to see if these are on the map before construction is allowed
 	# This is for checks and tells us to look for a palace level 1 on the map. unused currently

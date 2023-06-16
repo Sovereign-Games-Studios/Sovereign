@@ -37,3 +37,5 @@ func _recruit_on_timer_timeout(NpcScenes):
 			npcs[npc_type].append(npc)
 			add_child(npc)
 			print("Spawned NPC of type: ", npc_type, " using entity: ", npc.char_class, " at ", spawn_location)
+			# We only want to spawn once a tick. 
+			return

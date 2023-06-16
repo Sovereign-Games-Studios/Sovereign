@@ -10,7 +10,7 @@ func _ready():
 	stats = Statistics.getStats(building_type)
 	max_health = 10 + stats["Stamina"]
 	current_health = 10 + stats["Stamina"]
-	recruitable_npc_type = Barbarian
+	recruitable_npc_type = "Barbarian"
 	# array of existing npcs tied to this building, the length of which is compared against maximum to determine if more can be recruited/spawned
 	npcs = []
 	maximum_npcs = []
@@ -39,7 +39,7 @@ func initialize(start_position, team, building_type):
 	stats = Statistics.getStats(building_type)
 	max_health = 10 + stats["Stamina"]
 	current_health = 10 + stats["Stamina"]
-	recruitable_npc_type = Barbarian
+	recruitable_npc_type = "Barbarian"
 	# array of existing npcs tied to this building, the length of which is compared against maximum to determine if more can be recruited/spawned
 	npcs = []
 	maximum_npcs = []
