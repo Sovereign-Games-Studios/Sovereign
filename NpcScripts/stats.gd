@@ -61,6 +61,27 @@ static func getStats(char_class):
 		"Shadow Resistance": 50,
 		"Light Resistance": 50
 	}
+	
+	var palace_block = {
+		"Strength": 0,
+		"Spirit": 0,
+		"Stamina": 0,
+		"Agility": 0,
+		"Charisma": 0,
+		"Wisdom": 0,
+		"Intelligence": 0,
+		"Physical Resistance": 10,
+		"Magic Resistance": 5,
+		"Fire Resistance": 5,
+		"Air Resistance": 10,
+		"Earth Resistance": 10,
+		"Water Resistance": 10,
+		"Electric Resistance": 50,
+		"Nature Resistance": 10,
+		"Shadow Resistance": 50,
+		"Light Resistance": 50
+	}
+	
 	var sword_block = {
 		"Strength": 10,
 		"Spirit": 0,
@@ -82,6 +103,7 @@ static func getStats(char_class):
 	}
 
 
-	var stat_lib = {"generic_npc": generic_npc_block, "barbarian": barbarian_block, "building": building_block, "Sword of Bashing": sword_block}
+	var stat_lib = {"generic_npc": generic_npc_block, "barbarian": barbarian_block, "building": building_block,
+	 "Sword of Bashing": sword_block, "Palace": palace_block}
 
 	return stat_lib[char_class]

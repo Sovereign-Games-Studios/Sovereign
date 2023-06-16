@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://di5uvenjjsoia"]
+
+[ext_resource type="Script" path="res://NpcScripts/NPCLibrary/Guard.gd" id="1_a48b5"]
+[ext_resource type="Texture2D" uid="uid://0ytu43e3q872" path="res://Resources/Characters/Images/Test-Guard.png" id="2_4pejx"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_s5j36"]
+height = 1.53318
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_cfbix"]
+radius = 5.0
+
+[node name="Guard" type="CharacterBody3D"]
+script = ExtResource("1_a48b5")
+
+[node name="GuardSprite" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.819151, 0.573576, 0, -0.573576, 0.819151, 0.00194454, 0.403796, 0.0068283)
+texture = ExtResource("2_4pejx")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.48669, 0, 0, 0, 1, 0, 0.410894, 0)
+shape = SubResource("CylinderShape3D_s5j36")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+
+[node name="Vision" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Vision"]
+shape = SubResource("SphereShape3D_cfbix")
+
+[connection signal="velocity_computed" from="NavigationAgent3D" to="." method="_on_navigation_agent_3d_velocity_computed"]

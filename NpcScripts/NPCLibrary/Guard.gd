@@ -1,5 +1,4 @@
 extends NPC
-class_name Guard
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var last_attack = 0
@@ -10,7 +9,7 @@ func _ready():
 	pass # Replace with function body.
 
 func _physics_process(_delta):
-	var overlapping = self.get_node("Area2D").get_overlapping_bodies()
+	var overlapping = self.get_node("Vision").get_overlapping_bodies()
 	for node in overlapping:
 		if node.team == "enemy":
 			var target_pos = node.global_position
@@ -27,7 +26,7 @@ func _physics_process(_delta):
 	last_attack += _delta
 	move_and_slide()
 
-func initialize(start_position, team, char_class, level, behaviour, stats, spells, equipped_items):
+func initialize(start_position):
 	set_global_position(start_position)
 	char_class = "Guard"
 	team = "player"
@@ -39,8 +38,8 @@ func initialize(start_position, team, char_class, level, behaviour, stats, spell
 	equipped_items = []
 	behaviour = "Hunt"
 	spells = "TODO implement spells"
-	stats = Statistics.getStats(char_class)
-	attack = Attacks.getAttack(char_class)
+	stats = Statistics.getStats("generic_npc")
+	attack = Attacks.getAttack("generic_npc")
 	max_health = 10 + stats["Stamina"]
 	current_health = 10 + stats["Stamina"]
 	
