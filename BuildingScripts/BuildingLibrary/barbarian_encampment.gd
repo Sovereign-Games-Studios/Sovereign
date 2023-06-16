@@ -6,7 +6,7 @@ func _ready():
 	building_type = "building"
 	team = "player"
 	level = 1
-
+	self.add_to_group("Player Entities")
 	stats = Statistics.getStats(building_type)
 	max_health = 10 + stats["Stamina"]
 	current_health = 10 + stats["Stamina"]

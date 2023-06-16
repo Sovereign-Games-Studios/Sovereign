@@ -27,32 +27,18 @@ func _draw():
 		var tex = ImageTexture.new()
 		tex.create_from_image(self.oldImg)
 		draw_texture(tex, Vector2(0, 0))
-	
-	# WTF? this next line is necessary to make sure the draw_texture() calls works as intended. 
-	# even though it's only another sprite for debugging purposes... is this about causing some small delay?
-	# without it, we get crazy pink blinking background... 0_o
-		get_node("../../../../GarbageSprite").texture = tex
-	var unit = self.get_my_units()
-	# transform world pos into pixels on the fogMap
-	# var x = (unit.translation.x + (MAIN.mapWidth / 2)) / MAIN.mapWidth * FOG.fogMapSize.x
-	# var z = (unit.translation.z + (MAIN.mapWidth / 2)) / MAIN.mapWidth * FOG.fogMapSize.y
-	var pixel = FOG.getFogMapPixelForUnit(unit)
-	var r = 10  # tier of the unit to multiply its viewing distance
-#		print("fog unit at: ",x,"/",z," radius ",y)
-	
-	var blurSteps = 10.0
-	var blurMultRadius = 0.05
 		
-		# units visible range, full white
-	draw_circle(Vector2(pixel.x, pixel.y), r, Color(1.0, 1.0, 1.0))
-	# draw_rect(Rect2(Vector2(1, 0), FOG.fog_map_size), Color(1.0, 1.0, 1.0), false)
+	var scene_tree = self.get_tree()
 	
-func get_my_units():
-	# TODO make this grab all player entities, probably need to get something
-	# good working in the guilds recruit button to make sure it adds the new nodes
-	# (aka new heroes) to a parent node that houses ALL player entities. 
-	return get_node("../../../../Barbarian")
-# update texture on shader only when necessary, it's expensive
+	for node in scene_tree.get_nodes_in_group("Player Entities"):	 
+		var pixel = FOG.getFogMapPixelForUnit(node)
+		var r = 10  # tier of the unit to multiply its viewing distance
+		
+		var blurSteps = 10.0
+		var blurMultRadius = 0.05
+			
+		draw_circle(Vector2(pixel.x, pixel.y), r, Color(1.0, 1.0, 1.0))
+
 
 func _on_Timer_timeout():
 	self.queue_redraw() # force redraw of Sprite, which draws fog reveal circles on itself
