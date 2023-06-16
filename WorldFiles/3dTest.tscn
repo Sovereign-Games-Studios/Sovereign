@@ -98,8 +98,11 @@ transform = Transform3D(1, 0, 0, 0, 0.48669, 0, 0, 0, 1, 0, 0.410894, 0)
 shape = SubResource("CylinderShape3D_g3sij")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="."]
-offset_right = 512.0
-offset_bottom = 512.0
+show_behind_parent = true
+offset_left = -547.0
+offset_top = -534.0
+offset_right = -35.0
+offset_bottom = -22.0
 
 [node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
 handle_input_locally = false
@@ -116,7 +119,7 @@ wait_time = 0.201
 autostart = true
 
 [node name="Fog" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.58232, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.443039, 0)
 material_override = SubResource("ShaderMaterial_gmovu")
 mesh = SubResource("PlaneMesh_1hle4")
 script = ExtResource("9_ky7s0")
@@ -124,8 +127,8 @@ script = ExtResource("9_ky7s0")
 [node name="GarbageSprite" type="Sprite3D" parent="."]
 visible = false
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.17902, 0)
+[node name="Ground" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0136948, 0)
 mesh = SubResource("PlaneMesh_1o0r8")
 
 [connection signal="velocity_computed" from="Barbarian/NavigationAgent3D" to="Barbarian" method="_on_navigation_agent_3d_velocity_computed"]
