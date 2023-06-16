@@ -5,6 +5,7 @@ var available_enchants
 var heroes
 var objectives
 var is_palace_alive
+var size
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -13,6 +14,8 @@ func _ready():
 	heroes = []
 	objectives = []
 	is_palace_alive = true
+	var fog = get_node("Fog")
+	fog.startFog()
 	pass # Replace with function body.
 
 

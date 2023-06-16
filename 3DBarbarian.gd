@@ -8,7 +8,9 @@ var bought: bool
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	
 	char_class = "barbarian"
+	self.add_to_group("Player Entities")
 	stats = Statistics.getStats(char_class)
 	await get_tree().create_timer(0.1).timeout
 	nav_map = get_world_3d().get_navigation_map()
