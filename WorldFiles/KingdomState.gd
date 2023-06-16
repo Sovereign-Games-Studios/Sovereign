@@ -14,6 +14,8 @@ func _ready():
 	heroes = []
 	objectives = []
 	is_palace_alive = true
+	var fog = get_node("Fog")
+	fog.startFog()
 	pass # Replace with function body.
 
 

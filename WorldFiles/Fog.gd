@@ -1,24 +1,25 @@
 extends MeshInstance3D
 
 
-var max_depth = 40.0 # this in combination with black rect overdraw alpha value on fogMap determines how fast fog rises back up
 
 var fog_map_size = Vector2(200, 200) # resolution of the fogMap image
-var fog_mesh_width = 0
+var fog_mesh_width = 145
 var fog_reveal_distance = 5
 
 func startFog():
+	print("Fog Initializing")
 	var MAIN = get_node("../World")
-	self.fog_mesh_width = self.size.x * 1
+	self.fog_mesh_width = 145 * 1
 	# set shader params
-	self.mesh.material.set_shader_parameter("fogMaxDepth", self.max_depth)
-	self.mesh.material.set_shader_parameter("maxRange", self.fog_reveal_distance)
-	self.mesh.material.set_shader_parameter("mapWidth", self.fog_mesh_width)
+	self.material_override.set_shader_parameter("maxRange", self.fog_reveal_distance)
+	self.material_override.set_shader_parameter("mapWidth", self.fog_mesh_width)
+	self.material_override.set_shader_parameter("fogMaxDepth", 5)
 	self.show()
 	
 func getFogMapPixelForUnit(unit):
 	if unit == null:
+		print("Null Unit")
 		return Vector2(0,0)
-	var x = (unit.x + (self.fogMeshWidth / 2)) / self.fogMeshWidth * self.fogMapSize.x
-	var z = (unit.z + (self.fogMeshWidth / 2)) / self.fogMeshWidth * self.fogMapSize.y
+	var x = (unit.global_position.x + (72.5) / 145 * self.fog_map_size.x)
+	var z = (unit.global_position.z + (72.5) / 145 * self.fog_map_size.y)
 	return Vector2(x, z)

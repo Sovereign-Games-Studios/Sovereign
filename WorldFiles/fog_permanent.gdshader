@@ -31,7 +31,7 @@ uniform float fogMaxDepth;
 uniform float maxRange = 20;
 uniform float defaultAlpha = 0.9;
 uniform vec3 fogColor = vec3(0.0, 0.0, 0.0);
-uniform float mapWidth;
+uniform float mapWidth = 145;
 uniform sampler2D fogMap;
 
 vec2 worldPosToPixel(vec3 worldPos) {
@@ -42,69 +42,57 @@ vec2 worldPosToPixel(vec3 worldPos) {
 	worldPos += (mapWidth/2.0); // shift to positive values for reading from bitmap
 	worldPos *= (float(fogMapSize.x) / mapWidth); // map worldPos from world units to pixels of the fogMap
 	
-	float indexOnBitmapX = bitmapPixelWidth * worldPos.x; // the pixel that holds current units position info
-	float indexOnBitmapY = bitmapPixelWidth * worldPos.z;
+	float indexOnBitmapX = worldPos.x; // the pixel that holds current units position info
+	float indexOnBitmapY = worldPos.z;
 	
 	return vec2(indexOnBitmapX, indexOnBitmapY);
 }
 
-vec4 getPixelColor(vec3 worldPos) {
+vec4 getPixelColor(vec2 pixelPos) {
+	
 	ivec2 fogMapSize = textureSize(fogMap, 0);
 	float bitmapPixelWidth = 1.0 / float(fogMapSize.x); // offset used to read color from center of pixel, important to get the pixel, not an uncertain value from pixel border
 	
-	vec2 pixelPos = worldPosToPixel(worldPos);
+	// vec2 pixelPos = worldPosToPixel(worldPos);
+	vec4 bitmapPixel = texture(fogMap, vec2(1, 1)); // texture() reads positions on a bitmap between 0.0 and 1.0, not int pixels
 	
 //	indexOnBitmapX = 0.25;
 //	indexOnBitmapY = 0.25;
-	vec4 bitmapPixel = texture(fogMap, vec2((bitmapPixelWidth / 2.0) + pixelPos.x, (bitmapPixelWidth / 2.0) + pixelPos.y) ); // texture() reads positions on a bitmap between 0.0 and 1.0, not int pixels
-//	bitmapPixel.r = 0.0;
+//	bitmapPixel.r = 0.2;
 //	bitmapPixel.g = 0.0;
 //	bitmapPixel.b = 0.0;
 	
 	return bitmapPixel;
 }
 
-vec4 getPixelNoise(vec2 pixelPos) {
-	ivec2 fogMapSize = textureSize(fogMap, 0);
-	float bitmapPixelWidth = 1.0 / float(fogMapSize.x); // offset used to read color from center of pixel, important to get the pixel, not an uncertain value from pixel border
-	
-//	indexOnBitmapX = 0.25;
-//	indexOnBitmapY = 0.25;
-	vec4 bitmapPixel = texture(fogMap, vec2((bitmapPixelWidth / 2.0) + pixelPos.x, (bitmapPixelWidth / 2.0) + pixelPos.y) ); // texture() reads positions on a bitmap between 0.0 and 1.0, not int pixels
-//	bitmapPixel.r = 0.0;
-//	bitmapPixel.g = 0.0;
-//	bitmapPixel.b = 0.0;
-	
-	return bitmapPixel;
-}
 
 void vertex() {
 	// world pos of currect fog vertex
 	vec3 worldPos = ((MODEL_MATRIX) * vec4(VERTEX, 1.0)).xyz;  // transform from view to world space
 	vec2 pixelPos = worldPosToPixel(worldPos);
 
-	vec4 bitmapPixel = getPixelColor(worldPos);
-	vec4 noiseColor = getPixelNoise(pixelPos + TIME * 0.01);
+	vec4 bitmapPixel = getPixelColor(pixelPos);
 
 	// we expect grayscale, so we need check only r component. ignore black pixels, they are full fog
 	// apparently, when overdrawing the fogMap image with a 0.1 alpha black rect, we will never ever reach full black again. 
 	// so let's have some tolerance here as for what counts as black.
-	if (bitmapPixel.r > 0.1) {
-		VERTEX.y = - (fogMaxDepth * bitmapPixel.r);
+	if (bitmapPixel.r > 0.3) {
+		VERTEX.y = - (fogMaxDepth * bitmapPixel.r + 10.0);
 	}
+		
 	
-	VERTEX.y = VERTEX.y + (noiseColor.r * 150.0);
-	VERTEX.x = VERTEX.x + (noiseColor.r) ;
-	VERTEX.z = VERTEX.z + (noiseColor.r) ;
+	VERTEX.x = VERTEX.x + (bitmapPixel.r) ;
+	VERTEX.z = VERTEX.z + (bitmapPixel.r) ;
 	
 }
 
 void fragment() {
 	vec3 worldPos = (inverse(VIEW_MATRIX) * vec4(VERTEX, 1.0)).xyz;  // transform from view to world space
 	vec2 pixelPos = worldPosToPixel(worldPos);
-	vec4 noiseColor = getPixelNoise(pixelPos + TIME * 0.01);
-	ALBEDO = noiseColor.rgb * 0.05;
+	vec4 pixelColor = getPixelColor(pixelPos);
+
+	ALBEDO = pixelColor.rgb * 0.0000001;
 	ALPHA = defaultAlpha;
-	
+
 }
 
