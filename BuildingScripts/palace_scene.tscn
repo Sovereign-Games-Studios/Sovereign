@@ -1,9 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://clo86oo0agfm4"]
+[gd_scene load_steps=5 format=3 uid="uid://clo86oo0agfm4"]
 
 [ext_resource type="Script" path="res://BuildingScripts/BuildingLibrary/palace.gd" id="1_rktdv"]
 [ext_resource type="Texture2D" uid="uid://ove5gll083rc" path="res://Resources/Buildings/Images/palace.png" id="2_gfi58"]
 [ext_resource type="Script" path="res://PlayerScripts/RecruitButton.gd" id="3_k1cbt"]
-[ext_resource type="PackedScene" uid="uid://di5uvenjjsoia" path="res://NpcScripts/guard_scene.tscn" id="4_4nked"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_ybue0"]
 height = 1.53318
@@ -27,6 +26,6 @@ offset_right = 147.0
 offset_bottom = 18.0
 text = "Recruit Hero"
 script = ExtResource("3_k1cbt")
-enemy_scene = ExtResource("4_4nked")
+metadata/_edit_use_anchors_ = true
 
 [node name="Timer" type="Timer" parent="."]

@@ -1,6 +1,6 @@
 extends Button
 
-@export var enemy_scene: PackedScene
+@export var npc_scene: PackedScene
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -12,7 +12,7 @@ func _process(delta):
 	pass
 
 func _pressed():
-	var enemy = enemy_scene.instantiate()
-	var enemy_spawn_location = get_node("../SpawnPath/SpawnLocation").position
+	var enemy = npc_scene.instantiate()
+	var enemy_spawn_location = get_node("../../SpawnPath/SpawnLocation").position
 	enemy.initialize(enemy_spawn_location)
 	add_child(enemy)

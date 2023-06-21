@@ -1,8 +1,10 @@
 extends Camera3D
 
 var align_time = .2
+var original_position
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	original_position = get_global_position()
 	pass # Replace with function body.
 
 
@@ -17,7 +19,6 @@ func _process(delta):
 		desired_pos.z += -25 * delta
 	if Input.is_action_pressed("S"):
 		desired_pos.z += 25 * delta
-
 	self.transform.origin.x += desired_pos.x
 	self.transform.origin.z += desired_pos.z
 
