@@ -1,40 +1,52 @@
 extends NPC
-
-
-
+class_name Guard
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
+var last_attack = 0
+var target = null
+
+# Temporary until I implement Barbarian Guilds
+func _ready():
+	pass # Replace with function body.
 
 func _physics_process(_delta):
-	if current_health <= 0:
-		print("The ", self.char_class, " has been slain!")
-		queue_free()
-		
 	var overlapping = self.get_node("Area2D").get_overlapping_bodies()
 	for node in overlapping:
-		if node.team == "player":
-			print(self.char_class, " is pursuing Player!")
+		if node.team == "enemy":
 			var target_pos = node.global_position
 			var fullv = target_pos - self.global_position
 			var unitv = fullv.normalized()
-			velocity = unitv * 10
+			velocity = unitv * 20
+			var distance = target_pos - self.global_position
+			if last_attack >= attack["Speed"]:
+				if distance[0] <= self.attack["Range"] and distance[1] <= self.attack["Range"]:
+					$AudioStreamPlayer2D.play()
+					Attacks.attackTarget(self, node)
+					last_attack = 0
+			target = node
+	last_attack += _delta
 	move_and_slide()
 
-func initialize(start_position, player_position):
-	# We position the mob by placing it at start_position
-	# and rotate it towards player_position, so it looks at the player.
-	char_class = "grue"
-	look_at(player_position)
+func initialize(start_position, team, char_class, level, behaviour, stats, spells, equipped_items):
 	set_global_position(start_position)
-	team = "enemy"
-	stats = Statistics.getStats("generic_npc")
-	max_health = 10
-	current_health = 10
-	var vel = player_position - self.global_position
-	var unitv = vel.normalized()
-	velocity = unitv * 10
+	char_class = "Guard"
+	team = "player"
+	level = 1
+	exp = 0
+
+	inventory = []
+	gold = 20
+	equipped_items = []
+	behaviour = "Hunt"
+	spells = "TODO implement spells"
+	stats = Statistics.getStats(char_class)
+	attack = Attacks.getAttack(char_class)
+	max_health = 10 + stats["Stamina"]
+	current_health = 10 + stats["Stamina"]
+	
+func _on_timer_timeout():
+	if(target == null):
+		Behaviours.hunt(self)
 	
 func _on_visible_on_screen_notifier_2d_screen_exited():
 	queue_free()
-
-	

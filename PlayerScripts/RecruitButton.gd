@@ -13,7 +13,6 @@ func _process(delta):
 
 func _pressed():
 	var enemy = enemy_scene.instantiate()
-	var player_position = get_node("../../../Barbarian").global_position
 	var enemy_spawn_location = get_node("../SpawnPath/SpawnLocation").position
-	enemy.initialize(enemy_spawn_location, player_position)
+	enemy.initialize(enemy_spawn_location)
 	add_child(enemy)

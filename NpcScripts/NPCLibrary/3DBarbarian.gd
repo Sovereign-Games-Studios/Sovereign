@@ -18,7 +18,6 @@ func _ready():
 	speed = 5
 	inventory = []
 	equipped_items = EquippedItems.new()
-	print("Finished init")
 	bought = false
 	isReady = true
 	pass # Replace with function body.
