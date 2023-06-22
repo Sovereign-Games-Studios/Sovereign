@@ -2,6 +2,7 @@ extends Camera3D
 
 var align_time = .2
 var original_position
+var current_global_mouse_position
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	original_position = get_global_position()
@@ -22,12 +23,20 @@ func _process(delta):
 	self.transform.origin.x += desired_pos.x
 	self.transform.origin.z += desired_pos.z
 
+
+		
 func _input(event):
+	if event is InputEventMouse:
+		var mouse = event.position
+		var worldspace = get_world_3d().direct_space_state
+		var ground_plane = get_node("../GroundPlane/CollisionShape3D").shape.get_plane()
+		var start = project_ray_origin(mouse)
+		var end = project_position(mouse, 100000)
+		current_global_mouse_position = ground_plane.intersects_ray(start, end)
+		
 	if event is InputEventMouseButton:
 		if event.button_index == 4:
 			self.transform.origin.y -= 5
 		elif event.button_index == 5:
 			self.transform.origin.y += 5			
-	#var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUINT)
-	#tween.tween_property(self, "position", desired_pos, align_time).from_current()
 	pass

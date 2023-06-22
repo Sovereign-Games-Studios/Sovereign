@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://dcoe5mgvaqmm1"]
+[gd_scene load_steps=25 format=3 uid="uid://dcoe5mgvaqmm1"]
 
 [ext_resource type="Script" path="res://WorldFiles/KingdomState.gd" id="1_bpvjn"]
 [ext_resource type="Script" path="res://Camera3D.gd" id="2_17iei"]
@@ -42,6 +42,8 @@ subdivide_depth = 100
 [sub_resource type="HeightMapShape3D" id="HeightMapShape3D_rs3ou"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_auuxi"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1o0r8"]
 material = SubResource("StandardMaterial3D_auuxi")
@@ -52,6 +54,8 @@ height = 1.53318
 
 [sub_resource type="Curve3D" id="Curve3D_npuvq"]
 
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_gtx8a"]
+
 [node name="World" type="Node3D"]
 script = ExtResource("1_bpvjn")
 user_interface = ExtResource("2_m63j4")
@@ -60,6 +64,10 @@ user_interface = ExtResource("2_m63j4")
 transform = Transform3D(1, 0, 0, 0, 0.422618, 0.906308, 0, -0.906308, 0.422618, -5.49149, 43.5312, 54.3621)
 fov = 88.6608
 script = ExtResource("2_17iei")
+
+[node name="RayCast3D" type="RayCast3D" parent="Camera3D"]
+target_position = Vector3(0, 0, 0)
+collide_with_areas = true
 
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.025, 0, -0.001)
@@ -149,7 +157,6 @@ script = ExtResource("9_i77d3")
 shape = SubResource("HeightMapShape3D_rs3ou")
 
 [node name="Ground" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0136948, 0)
 mesh = SubResource("PlaneMesh_1o0r8")
 
 [node name="Palace" type="CharacterBody3D" parent="."]
@@ -175,5 +182,13 @@ autostart = true
 
 [node name="PassiveIncome" type="Timer" parent="."]
 autostart = true
+
+[node name="GroundPlane" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+top_level = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="GroundPlane"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.647827, -0.26619, 0.354767)
+shape = SubResource("WorldBoundaryShape3D_gtx8a")
 
 [connection signal="velocity_computed" from="Barbarian/NavigationAgent3D" to="Barbarian" method="_on_navigation_agent_3d_velocity_computed"]

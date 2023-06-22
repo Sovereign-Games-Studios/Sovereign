@@ -13,6 +13,7 @@ script = ExtResource("1_rktdv")
 
 [node name="PalaceSprite" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.819151, 0.573576, 0, -0.573576, 0.819151, 0.00194454, 0.403796, 0.0068283)
+offset = Vector2(0, 64)
 texture = ExtResource("2_gfi58")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]

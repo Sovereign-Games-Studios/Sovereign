@@ -51,3 +51,6 @@ icon_scale = 0.2
 item_0/text = "Barbarian Encampment"
 item_0/icon = ExtResource("1_xka3t")
 script = ExtResource("3_u6ve1")
+
+[node name="Sprite3D" type="Sprite3D" parent="ScrollContainer/ItemList"]
+transform = Transform3D(1, 0, 0, 0, 0.819152, 0.573576, 0, -0.573576, 0.819152, 0, 0, 0)

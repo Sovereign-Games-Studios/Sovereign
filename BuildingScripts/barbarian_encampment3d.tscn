@@ -14,8 +14,9 @@ height = 1.53318
 transform = Transform3D(1, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, 0, 0, 0)
 script = ExtResource("1_846mh")
 
-[node name="Barbarian_Encampment_Sprite" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.819151, 0.573576, 0, -0.573576, 0.819151, 0, 0, 0)
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.819151, 0.573576, 0, -0.573576, 0.819151, 0.0113478, -4.76838e-07, -0.0014739)
+offset = Vector2(0, 140)
 texture = ExtResource("2_sodc5")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
@@ -39,6 +40,7 @@ offset_right = 43.0
 offset_bottom = 650.0
 
 [node name="RecruitButton" type="Button" parent="Control"]
+layout_mode = 0
 offset_right = 106.0
 offset_bottom = 31.0
 text = "Recruit Hero"
