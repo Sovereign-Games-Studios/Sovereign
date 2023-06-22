@@ -1,9 +1,9 @@
 [gd_scene load_steps=7 format=3 uid="uid://beom8u1n48io"]
 
-[ext_resource type="Script" path="res://BuildingScripts/BuildingLibrary/barbarian_encampment.gd" id="1_846mh"]
-[ext_resource type="Texture2D" uid="uid://dmlgtwr7tuqlf" path="res://Resources/Buildings/Images/barbarian_camp.png" id="2_sodc5"]
-[ext_resource type="Script" path="res://PlayerScripts/RecruitButton.gd" id="3_mxy8j"]
-[ext_resource type="PackedScene" uid="uid://di5uvenjjsoia" path="res://NpcScripts/guard_scene.tscn" id="4_n4hoq"]
+[ext_resource type="Script" path="res://Buildings/BuildingScripts/barbarian_encampment.gd" id="1_xjuth"]
+[ext_resource type="Texture2D" uid="uid://dmlgtwr7tuqlf" path="res://Resources/Buildings/Images/barbarian_camp.png" id="2_otnpk"]
+[ext_resource type="Script" path="res://PlayerScripts/RecruitButton.gd" id="3_0b4v0"]
+[ext_resource type="PackedScene" uid="uid://di5uvenjjsoia" path="res://NpcScripts/guard_scene.tscn" id="4_g4rf5"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_ybue0"]
 height = 1.53318
@@ -12,12 +12,12 @@ height = 1.53318
 
 [node name="Barbarian_Encampment" type="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, 0, 0, 0)
-script = ExtResource("1_846mh")
+script = ExtResource("1_xjuth")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.819151, 0.573576, 0, -0.573576, 0.819151, 0.0113478, -4.76838e-07, -0.0014739)
 offset = Vector2(0, 140)
-texture = ExtResource("2_sodc5")
+texture = ExtResource("2_otnpk")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(3.053, 0, 0, 0, 1.487, 0, 0, 0, 3.053, 0, 0.410894, 0)
@@ -44,6 +44,6 @@ layout_mode = 0
 offset_right = 106.0
 offset_bottom = 31.0
 text = "Recruit Hero"
-script = ExtResource("3_mxy8j")
-npc_scene = ExtResource("4_n4hoq")
+script = ExtResource("3_0b4v0")
+npc_scene = ExtResource("4_g4rf5")
 metadata/_edit_use_anchors_ = true

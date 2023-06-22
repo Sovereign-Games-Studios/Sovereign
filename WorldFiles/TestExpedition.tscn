@@ -5,12 +5,12 @@
 [ext_resource type="PackedScene" uid="uid://c1xh5mw2vmytn" path="res://UserInterface.tscn" id="2_m63j4"]
 [ext_resource type="Script" path="res://NpcScripts/NPCLibrary/3DBarbarian.gd" id="3_a2e12"]
 [ext_resource type="Texture2D" uid="uid://icpenuif1avl" path="res://Resources/Characters/Images/Test-Barb-1.png" id="4_pe70u"]
-[ext_resource type="Script" path="res://BuildingScripts/BuildingLibrary/barbarian_encampment.gd" id="5_nyixr"]
 [ext_resource type="Texture2D" uid="uid://chnx641kh2xlm" path="res://Resources/Environment/Rock-1.png" id="6_dxjp2"]
+[ext_resource type="Script" path="res://Buildings/BuildingScripts/barbarian_encampment.gd" id="6_n43lu"]
 [ext_resource type="Script" path="res://WorldFiles/FogOfWarPermanent.gd" id="7_5y3eh"]
 [ext_resource type="Shader" path="res://WorldFiles/fog_permanent.gdshader" id="8_vhmlx"]
 [ext_resource type="Script" path="res://WorldFiles/Fog.gd" id="9_i77d3"]
-[ext_resource type="Script" path="res://BuildingScripts/BuildingLibrary/palace.gd" id="13_7m8f8"]
+[ext_resource type="Script" path="res://Buildings/BuildingScripts/palace.gd" id="11_usmuo"]
 [ext_resource type="Texture2D" uid="uid://ove5gll083rc" path="res://Resources/Buildings/Images/palace.png" id="14_t4h63"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_ba5v4"]
@@ -116,7 +116,7 @@ shape = SubResource("CylinderShape3D_g3sij")
 
 [node name="Rock" type="CharacterBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, -71.3988, 0, 0)
-script = ExtResource("5_nyixr")
+script = ExtResource("6_n43lu")
 
 [node name="Rock" type="Sprite3D" parent="Rock"]
 transform = Transform3D(1, 0, 0, 0, 0.819151, 0.573576, 0, -0.573576, 0.819151, 0.00194454, 0.403796, 0.0068283)
@@ -161,7 +161,7 @@ mesh = SubResource("PlaneMesh_1o0r8")
 
 [node name="Palace" type="CharacterBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.143, 0, 37.001)
-script = ExtResource("13_7m8f8")
+script = ExtResource("11_usmuo")
 
 [node name="PalaceSprite" type="Sprite3D" parent="Palace"]
 transform = Transform3D(3, 0, 0, 0, 2.45746, 1.72073, 0, -1.72073, 2.45746, 0, 2.5, 0)
