@@ -103,7 +103,7 @@ static func getStats(char_class):
 	}
 
 
-	var stat_lib = {"generic_npc": generic_npc_block, "barbarian": barbarian_block, "building": building_block,
+	var stat_lib = {"generic_npc": generic_npc_block, "Barbarian Encampment": barbarian_block, "building": building_block, "barbarian": barbarian_block, 
 	 "Sword of Bashing": sword_block, "Palace": palace_block}
 
 	return stat_lib[char_class]

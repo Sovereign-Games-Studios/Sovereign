@@ -1,0 +1,47 @@
+extends Resource
+
+# Building types include: Guild, Merchant, Lair, Palace, Support
+var building_type: String
+var name: String
+
+var biome: String
+
+var max_health: int
+var current_health: int
+# Dictionary where the key is the NPC Type (searches for NPC in Resources/NpcDefinitions)
+# and the value is the number of NPCs of that type this building can sustain. 
+var recruitable_npcs: Dictionary
+
+# Dictionary where the key is the Building Name and the Value is the level of building required. 
+var prerequisites: Array
+
+# Gold Cost
+var cost: int
+# Array of Strings, will automatically instantiate each type as needed and attach them to the building
+# Will search Resources/ServiceDefinitions to fetch them and instantiate. 
+var services: Array
+# Array of Upgrades, will search Resources/UpgradeDefinitions to fetch and instantiate
+var upgrades: Array
+
+var Strength: int
+var Spirit: int
+var Stamina: int
+var Agility: int
+var Charisma: int
+var Wisdom: int
+var Intelligence: int
+
+var PhysicalResistance: int
+var MagicResistance: int
+var FireResistance: int
+var AirResistance: int
+var EarthResistance: int
+var WaterResistance: int
+var ElectricResistance: int
+var NatureResistance: int
+var ShadowResistance: int
+var LightResistance: int
+
+# Normally will search for associated sprite in the Resources/Images/Buildings using the same name as this file. 
+# List override name here but ensure sprite is in Resources/Images/Buildings
+var sprite_override: String

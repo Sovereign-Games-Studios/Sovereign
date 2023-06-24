@@ -1,0 +1,44 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://bcqoxctm6nrcx"]
+
+[sub_resource type="GDScript" id="GDScript_pm8wv"]
+script/source = "extends Resource
+
+# Building types include: Guild, Merchant, Lair, Palace, Support
+var building_type = \"Guild\"
+var name = \"Rangers Guild\"
+
+var biome = \"All\"
+var constructable = true
+var max_health = 1000
+var current_health = 1000
+# Dictionary where the key is the NPC Type (searches for NPC in Resources/NpcDefinitions)
+# and the value is the number of NPCs of that type this building can sustain. 
+var recruitable_npcs = {\"Ranger\": 3}
+
+# Dictionary where the key is the Building Name and the Value is the level of building required. 
+var prerequisites = {\"Palace\": 1}
+
+# Gold Cost
+var cost = 2400
+# Array of Strings, will automatically instantiate each type as needed and attach them to the building
+# Will search Resources/ServiceDefinitions to fetch them and instantiate. 
+var services = [\"Guild\"]
+# Array of Upgrades, will search Resources/UpgradeDefinitions to fetch and instantiate
+var upgrades = []
+
+var PhysicalResistance = 10
+var MagicResistance = 10
+var FireResistance = 10
+var AirResistance = 10
+var EarthResistance = 10
+var WaterResistance = 10
+var ElectricResistance = 10 
+var NatureResistance = 10
+var ShadowResistance = 10 
+var LightResistance = 10
+
+var sprite_override = \"barbarian_guild\"
+"
+
+[resource]
+script = SubResource("GDScript_pm8wv")

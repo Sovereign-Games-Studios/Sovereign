@@ -7,6 +7,7 @@ var objectives
 var is_palace_alive
 var size
 var gold
+var test
 @export var user_interface: PackedScene
 
 # Called when the node enters the scene tree for the first time.
