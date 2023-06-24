@@ -13,7 +13,7 @@ var current_health: int
 var recruitable_npcs: Dictionary
 
 # Dictionary where the key is the Building Name and the Value is the level of building required. 
-var prerequisites: Array
+var prerequisites: Dictionary
 
 # Gold Cost
 var cost: int
