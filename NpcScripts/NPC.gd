@@ -24,7 +24,7 @@ static func leaveBuilding(npc, target_building):
 		target_building.current_occupants.remove_at(found) 
 		npc.show()
 
-static func enterBuilding(npc, target_building):
+static func enterBuilding(npc, target_building:Building):
 	if npc.global_position.distance_to(target_building.global_position) < 10:
 		target_building.current_occupants.append(npc)
 		npc.hide()

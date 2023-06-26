@@ -1,10 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://cvniqy3tp5mdn"]
+[gd_scene load_steps=4 format=3 uid="uid://cvniqy3tp5mdn"]
 
 [ext_resource type="Script" path="res://Buildings/Building.gd" id="1_v8rkq"]
-[ext_resource type="Texture2D" uid="uid://dmlgtwr7tuqlf" path="res://Resources/Buildings/Images/barbarian_guild.png" id="2_hmcln"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_clg12"]
-height = 1.53318
+radius = 2.0
 
 [sub_resource type="Curve3D" id="Curve3D_4pv3y"]
 
@@ -14,10 +13,9 @@ script = ExtResource("1_v8rkq")
 [node name="Sprite3D" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.819151, 0.573576, 0, -0.573576, 0.819151, 0.0113478, -4.76838e-07, -0.0014739)
 offset = Vector2(0, 140)
-texture = ExtResource("2_hmcln")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(3.053, 0, 0, 0, 1.487, 0, 0, 0, 3.053, 0, 0.410894, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CylinderShape3D_clg12")
 
 [node name="Timer" type="Timer" parent="."]

@@ -8,7 +8,7 @@ var building_type = \"Support\"
 var name = \"Palace\"
 
 var biome = \"All\"
-var constructable = true
+var constructable = false
 var max_health = 1000
 var current_health = 1000
 # Dictionary where the key is the NPC Type (searches for NPC in Resources/NpcDefinitions)
@@ -19,12 +19,14 @@ var recruitable_npcs = {\"Guard\": 3}
 var prerequisites = {\"Palace\": 1}
 
 # Gold Cost
-var cost = 2400
+var cost = 0
 # Array of Strings, will automatically instantiate each type as needed and attach them to the building
 # Will search Resources/ServiceDefinitions to fetch them and instantiate. 
-var services = []
-# Array of Upgrades, will search Resources/UpgradeDefinitions to fetch and instantiate
-var upgrades = []
+var services = [\"Kingdom Vault\"]
+# Array of Upgrades, relating directly to building level
+var upgrades = {\"Level 2\": 3000, \"Level 3\": 5000}
+# Array of research, will search Resources/Research Definitions to fetch and instantiate
+var research = [\"Guard Training\", \"Tax Collector Running Classes\", \"Improved Tools\"]
 
 var PhysicalResistance = 10
 var MagicResistance = 10

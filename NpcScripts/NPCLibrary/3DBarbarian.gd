@@ -26,7 +26,7 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if isReady:
-		if self.global_position.distance_to(get_node("../Rock").global_position) < 5 and not bought:
+		if self.global_position.distance_to(get_node("../Rock").global_position) < 5 and not bought and false:
 			$NavigationAgent3D.set_velocity(Vector3.ZERO)
 			var building = get_node("../Rock")
 			enterBuilding(self, building)

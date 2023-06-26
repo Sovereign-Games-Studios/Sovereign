@@ -2,7 +2,7 @@ extends ItemList
 
 var selected_building = null
 var camera
-var building_node = preload("res://building_node.tscn")
+var building_node = preload("res://Buildings/building_node.tscn")
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	camera = get_node("../../../Camera3D")

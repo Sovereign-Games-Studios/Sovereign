@@ -5,6 +5,7 @@ extends Building
 func _ready():
 	var building_type = "Palace"
 	var team = "player"
+	var name = "Palace"
 	var level = 1
 	self.add_to_group("Player Entities")
 	var stats = Statistics.getStats(building_type)
