@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://icpenuif1avl"
-path.s3tc="res://.godot/imported/Test-Barb-1.png-36e985535664cae00e2706f14a6b6ceb.s3tc.ctex"
+path.s3tc="res://.godot/imported/barbarian.png-0ae9a57d4492e7a49ac3ff2d28bde94e.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://Resources/Characters/Images/Test-Barb-1.png"
-dest_files=["res://.godot/imported/Test-Barb-1.png-36e985535664cae00e2706f14a6b6ceb.s3tc.ctex"]
+source_file="res://Resources/Characters/Images/barbarian.png"
+dest_files=["res://.godot/imported/barbarian.png-0ae9a57d4492e7a49ac3ff2d28bde94e.s3tc.ctex"]
 
 [params]
 

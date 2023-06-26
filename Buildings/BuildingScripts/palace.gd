@@ -16,8 +16,6 @@ func _ready():
 	var maximum_npcs = {"Peasant": 0, "Guard": 2, "Tax Collector": 0}
 	# array of npcs currently occupying this building
 	current_occupants = []
-	var NpcScenes = preload("res://NpcScripts/NpcScenes.gd").new()
-	print(NpcScenes.get_npc_scene("Guard"))
 
 	# Must check to see if these are on the map before construction is allowed
 	# This is for checks and tells us to look for a palace level 1 on the map. unused currently

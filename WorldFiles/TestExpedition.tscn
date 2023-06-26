@@ -1,10 +1,8 @@
-[gd_scene load_steps=25 format=3 uid="uid://dcoe5mgvaqmm1"]
+[gd_scene load_steps=23 format=3 uid="uid://dcoe5mgvaqmm1"]
 
 [ext_resource type="Script" path="res://WorldFiles/KingdomState.gd" id="1_bpvjn"]
 [ext_resource type="Script" path="res://Camera3D.gd" id="2_17iei"]
 [ext_resource type="PackedScene" uid="uid://c1xh5mw2vmytn" path="res://UserInterface.tscn" id="2_m63j4"]
-[ext_resource type="Script" path="res://NpcScripts/NPCLibrary/3DBarbarian.gd" id="3_a2e12"]
-[ext_resource type="Texture2D" uid="uid://icpenuif1avl" path="res://Resources/Characters/Images/Test-Barb-1.png" id="4_pe70u"]
 [ext_resource type="Texture2D" uid="uid://chnx641kh2xlm" path="res://Resources/Environment/Rock-1.png" id="6_dxjp2"]
 [ext_resource type="Script" path="res://Buildings/BuildingScripts/barbarian_encampment.gd" id="6_n43lu"]
 [ext_resource type="Script" path="res://WorldFiles/FogOfWarPermanent.gd" id="7_5y3eh"]
@@ -100,20 +98,6 @@ transform = Transform3D(-0.077508, 0, -17.5518, 0, 1.005, 0, 2.45406, 0, -0.5543
 mesh = SubResource("PlaneMesh_fyusr")
 skeleton = NodePath("../..")
 
-[node name="Barbarian" type="CharacterBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.35, 0.0285034, 50.6213)
-script = ExtResource("3_a2e12")
-
-[node name="BarbSprite" type="Sprite3D" parent="Barbarian"]
-transform = Transform3D(1, 0, 0, 0, 0.819151, 0.573576, 0, -0.573576, 0.819151, -0.0286217, 0.403795, 0.00770569)
-texture = ExtResource("4_pe70u")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Barbarian"]
-transform = Transform3D(1, 0, 0, 0, 0.48669, 0, 0, 0, 1, 0, 0.410894, 0)
-shape = SubResource("CylinderShape3D_g3sij")
-
-[node name="NavigationAgent3D" type="NavigationAgent3D" parent="Barbarian"]
-
 [node name="Rock" type="CharacterBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, -71.3988, 0, 0)
 script = ExtResource("6_n43lu")
@@ -168,7 +152,7 @@ transform = Transform3D(3, 0, 0, 0, 2.45746, 1.72073, 0, -1.72073, 2.45746, 0, 2
 texture = ExtResource("14_t4h63")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Palace"]
-transform = Transform3D(1, 0, 0, 0, 0.48669, 0, 0, 0, 1, 0, 0, 0)
+transform = Transform3D(2, 0, 0, 0, 0.974, 0, 0, 0, 2, 0, 0, 0)
 shape = SubResource("CylinderShape3D_jwlqq")
 
 [node name="SpawnPath" type="Path3D" parent="Palace"]
@@ -190,5 +174,3 @@ top_level = true
 [node name="CollisionShape3D" type="CollisionShape3D" parent="GroundPlane"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.647827, -0.26619, 0.354767)
 shape = SubResource("WorldBoundaryShape3D_gtx8a")
-
-[connection signal="velocity_computed" from="Barbarian/NavigationAgent3D" to="Barbarian" method="_on_navigation_agent_3d_velocity_computed"]

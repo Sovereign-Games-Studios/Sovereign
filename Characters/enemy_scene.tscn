@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://8vbt6sesc6kd"]
 
-[ext_resource type="Script" path="res://NpcScripts/Enemy.gd" id="1_0toal"]
-[ext_resource type="Texture2D" uid="uid://icpenuif1avl" path="res://Resources/Characters/Images/Test-Barb-1.png" id="2_786fp"]
+[ext_resource type="Script" path="res://Characters/Enemy.gd" id="1_0toal"]
+[ext_resource type="Texture2D" uid="uid://icpenuif1avl" path="res://Resources/Characters/Images/barbarian.png" id="2_786fp"]
 [ext_resource type="AudioStream" uid="uid://c2c6x8myv1ndf" path="res://Resources/Characters/Sounds/goblin-death-6729.mp3" id="3_m6wx4"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_u6tls"]

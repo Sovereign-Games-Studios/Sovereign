@@ -3,6 +3,7 @@ extends ItemList
 var selected_building = null
 var camera
 var building_node = preload("res://Buildings/building_node.tscn")
+var npc_node = preload("res://Characters/npc_node.tscn")
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	camera = get_node("../../../Camera3D")
@@ -32,7 +33,8 @@ func _input(event):
 	if selected_building != null:
 		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 			var new_building = building_node.instantiate()
-			new_building.initialize(get_filename(selected_building.name), camera.current_global_mouse_position)
+			# if player builds it, its on their team. 
+			new_building.initialize(get_filename(selected_building.name), camera.current_global_mouse_position, "player")
 			add_child(new_building)
 			# Place Building
 			deselect_all()
