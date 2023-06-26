@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://di5uvenjjsoia"]
 
-[ext_resource type="Script" path="res://Characters/NPC.gd" id="1_bpr7y"]
+[ext_resource type="Script" path="res://Npcs/Npc.gd" id="1_sdoy5"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_s5j36"]
 height = 1.53318
@@ -9,7 +9,7 @@ height = 1.53318
 radius = 5.0
 
 [node name="NPC" type="CharacterBody3D"]
-script = ExtResource("1_bpr7y")
+script = ExtResource("1_sdoy5")
 
 [node name="Sprite" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.819151, 0.573576, 0, -0.573576, 0.819151, 0, 0.5, 0)

@@ -4,8 +4,8 @@
 script/source = "extends Resource
 
 # Character types include: Hero, Monster, Support
-var character_type = \"Hero\"
-var name = \"Barbarian\"
+var character_type = \"Support\"
+var name = \"Guard\"
 
 var speed = 10
 var max_health = 100

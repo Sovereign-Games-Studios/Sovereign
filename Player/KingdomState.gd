@@ -9,7 +9,6 @@ var size
 var gold
 var test
 var palace_ui
-@export var user_interface: PackedScene
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -21,8 +20,13 @@ func _ready():
 	var fog = get_node("Fog")
 	gold = 2000
 	fog.startFog()
+	var user_interface = load("res://UserInterface/UserInterface.tscn")
 	palace_ui = user_interface.instantiate()
 	add_child(palace_ui)
+	var palace_scene = load("res://Buildings/building_node.tscn")
+	var palace = palace_scene.instantiate()
+	palace.initialize(Vector3(6, 0, 37), "Palace", "player")
+	add_child(palace)
 	var gold_counter = get_node("PassiveIncome")
 	gold_counter.wait_time = 5
 	gold_counter.timeout.connect(_gold_on_timer_timeout)

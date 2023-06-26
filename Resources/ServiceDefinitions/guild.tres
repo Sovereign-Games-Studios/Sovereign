@@ -4,7 +4,7 @@
 script/source = "extends Resource
 
 func recruit_npc(npc_name, building):
-	var npc_scene = load(\"res://Characters/npc_node.tscn\")
+	var npc_scene = load(\"res://Npcs/npc_node.tscn\")
 	var maximum_npcs = building.definition.recruitable_npcs
 	for npc_type in maximum_npcs:
 		if building.recruited_npcs[npc_type].size() < maximum_npcs[npc_type]:

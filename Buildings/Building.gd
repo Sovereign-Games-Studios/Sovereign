@@ -9,17 +9,18 @@ var current_occupants: Array
 var recruited_npcs: Dictionary
 # Image
 var sprite
-var npc_node = preload("res://Characters/npc_node.tscn")
+var npc_node = preload("res://Npcs/npc_node.tscn")
 # Array of instantiated Services
 var services = {}
 
-func initialize(building_name, start_position, team):
+func initialize(start_position, building_name, team):
 	self.team = team
 	set_global_position(start_position)
-	self.definition = ResourceLoader.load("res://Resources/Buildings/BuildingDefinitions/"+building_name+".tres")
+	self.definition = ResourceLoader.load("res://Resources/Buildings/BuildingDefinitions/"+building_name.to_lower()+".tres")
 	self.definition.get_script()
 	self.current_occupants = []
-	self.add_to_group("Player Entities")
+	if(team == "player"):
+		self.add_to_group("Player Entities")
 	# Handle NPCs	
 	self.recruited_npcs = self.definition.recruitable_npcs.duplicate()
 	for npctype in self.recruited_npcs:
@@ -29,7 +30,7 @@ func initialize(building_name, start_position, team):
 	if(self.definition.sprite_override):
 		self.sprite = load("res://Resources/Buildings/Images/"+self.definition.sprite_override+".png")
 	else:
-		self.sprite = load("res://Resources/Buildings/Images/"+building_name+".png")		
+		self.sprite = load("res://Resources/Buildings/Images/"+building_name.to_lower()+".png")		
 	$Sprite3D.texture = self.sprite	
 	
 	if definition.building_type == "Support" or definition.building_type == "Lair":
@@ -56,6 +57,6 @@ func _recruit_on_timer_timeout():
 				npc.add_to_group("Player Entities")
 			self.recruited_npcs[npc_type].append(npc)
 			add_child(npc)
-			print("Spawned NPC of type: ", npc_type, " using entity: ", npc.char_class, " at ", spawn_location)
+			print("Spawned NPC of type: ", npc_type, " using entity: ", npc.definition.name, " at ", spawn_location)
 			# We only want to spawn once a tick. 
 			return

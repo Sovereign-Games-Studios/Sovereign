@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dbs8axougt5ro"
-path="res://.godot/imported/sovereign.png-0e547197cc5a588da47f0911b3d975e9.ctex"
+path="res://.godot/imported/sovereign.png-474446deed98ee0619a4b273cdb08f5e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sovereign.png"
-dest_files=["res://.godot/imported/sovereign.png-0e547197cc5a588da47f0911b3d975e9.ctex"]
+source_file="res://Resources/sovereign.png"
+dest_files=["res://.godot/imported/sovereign.png-474446deed98ee0619a4b273cdb08f5e.ctex"]
 
 [params]
 

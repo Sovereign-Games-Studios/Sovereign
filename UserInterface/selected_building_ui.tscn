@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dypjke5iao8gd"]
 
-[ext_resource type="Script" path="res://selected_building_ui.gd" id="1_w3ssr"]
+[ext_resource type="Script" path="res://UserInterface/selected_building_ui.gd" id="1_k3oqi"]
 
 [node name="SelectedBuildingUi" type="Control"]
 z_index = 2
@@ -13,7 +13,7 @@ offset_right = -1002.0
 offset_bottom = -198.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_w3ssr")
+script = ExtResource("1_k3oqi")
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 1

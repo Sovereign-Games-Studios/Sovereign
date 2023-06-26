@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://c1xh5mw2vmytn"]
 
-[ext_resource type="Script" path="res://GoldTracker.gd" id="1_mytmm"]
-[ext_resource type="Script" path="res://KingdomPanel.gd" id="2_d6pte"]
-[ext_resource type="Script" path="res://ItemList.gd" id="3_u6ve1"]
+[ext_resource type="Script" path="res://Player/GoldTracker.gd" id="1_uhipd"]
+[ext_resource type="Script" path="res://UserInterface/KingdomPanel.gd" id="2_gtygj"]
+[ext_resource type="Script" path="res://UserInterface/ItemList.gd" id="3_dmcj6"]
 
 [sub_resource type="GDScript" id="GDScript_dsmyu"]
 script/source = "extends Control
@@ -45,7 +45,7 @@ offset_bottom = 50.0
 
 [node name="RichTextLabel" type="RichTextLabel" parent="ResourcesPanel"]
 layout_mode = 2
-script = ExtResource("1_mytmm")
+script = ExtResource("1_uhipd")
 
 [node name="ReferenceRect" type="ReferenceRect" parent="."]
 custom_minimum_size = Vector2(150, 50)
@@ -61,7 +61,7 @@ layout_mode = 1
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
-script = ExtResource("2_d6pte")
+script = ExtResource("2_gtygj")
 
 [node name="BuildList" type="ItemList" parent="KingdomPanel"]
 layout_mode = 1
@@ -72,7 +72,7 @@ size_flags_vertical = 3
 max_text_lines = 2
 auto_height = true
 fixed_icon_size = Vector2i(25, 25)
-script = ExtResource("3_u6ve1")
+script = ExtResource("3_dmcj6")
 
 [node name="Sprite3D" type="Sprite3D" parent="KingdomPanel/BuildList"]
 transform = Transform3D(1, 0, 0, 0, 0.819152, 0.573576, 0, -0.573576, 0.819152, 0, 0, 0)

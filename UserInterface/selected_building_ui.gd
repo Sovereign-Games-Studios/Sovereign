@@ -16,7 +16,15 @@ func initialize(building: Building):
 				print("This building has a guild service!")
 				var new_node = handle_guild_service()
 				$Control/AspectRatioContainer/TabContainer.add_child(new_node)
-				
+	if building.definition.upgrades.size() > 0:	
+		var new_node = Panel.new()	
+		new_node.name = "Upgrades"		
+		for upgrade in attached_building.definition.upgrades:
+			var new_button = Button.new()
+			new_button.text = upgrade + " {} ".format(attached_building.definition.upgrades[upgrade], "{}") 
+			new_node.add_child(new_button)
+		$Control/AspectRatioContainer/TabContainer.add_child(new_node)
+		
 				
 func handle_guild_service():
 	var new_node = Panel.new()

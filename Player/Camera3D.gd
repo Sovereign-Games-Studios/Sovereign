@@ -8,7 +8,7 @@ var selected_ui = null
 var ui_node
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	ui_node = preload("res://selected_building_ui.tscn")
+	ui_node = preload("res://UserInterface/selected_building_ui.tscn")
 	original_position = get_global_position()
 	pass # Replace with function body.
 

@@ -17,8 +17,8 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-ModLoader="*res://ModLoader.gd"
-GameStateInit="*res://GameStateInit.gd"
+ModLoader="*res://Player/ModLoader.gd"
+GameStateInit="*res://Player/GameStateInit.gd"
 
 [editor]
 

@@ -1,11 +1,14 @@
-[gd_scene load_steps=17 format=3 uid="uid://dcoe5mgvaqmm1"]
+[gd_scene load_steps=22 format=3 uid="uid://dcoe5mgvaqmm1"]
 
-[ext_resource type="Script" path="res://Player/KingdomState.gd" id="1_uxe8e"]
-[ext_resource type="Script" path="res://Player/Camera3D.gd" id="2_ukdeo"]
+[ext_resource type="Script" path="res://Player/KingdomState.gd" id="1_3nrlq"]
+[ext_resource type="PackedScene" uid="uid://c1xh5mw2vmytn" path="res://UserInterface/UserInterface.tscn" id="2_ox58b"]
+[ext_resource type="Script" path="res://Player/Camera3D.gd" id="3_bqxot"]
 [ext_resource type="Texture2D" uid="uid://chnx641kh2xlm" path="res://Resources/Environment/Rock-1.png" id="6_dxjp2"]
 [ext_resource type="Script" path="res://WorldFiles/FogOfWarPermanent.gd" id="7_5y3eh"]
+[ext_resource type="Script" path="res://BuildingScripts/BuildingScripts/palace.gd" id="8_3tota"]
 [ext_resource type="Shader" path="res://WorldFiles/fog_permanent.gdshader" id="8_vhmlx"]
 [ext_resource type="Script" path="res://WorldFiles/Fog.gd" id="9_i77d3"]
+[ext_resource type="Texture2D" uid="uid://ove5gll083rc" path="res://Resources/Buildings/Images/palace.png" id="14_t4h63"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_ba5v4"]
 vertices = PackedVector3Array(-32.9943, 0.5, -13.6562, -31.2443, 0.5, -13.9062, -31.4943, 0.5, -18.1562, -36.9943, 0.5, -18.1562, -36.9943, 0.5, -6.40618, -32.9943, 0.5, -6.15618, -32.9943, 0.5, -13.6562, -36.9943, 0.5, -18.1562, -24.4943, 0.5, -17.9062, -31.4943, 0.5, -18.1562, -31.2443, 0.5, -13.9062, -24.2443, 0.5, -13.6562, -10.2443, 0.5, -17.4062, -17.2443, 0.5, -17.6562, -17.2443, 0.5, -13.4062, -10.2443, 0.5, -13.1562, -17.2443, 0.5, -17.6562, -24.4943, 0.5, -17.9062, -24.2443, 0.5, -13.6562, -17.2443, 0.5, -13.4062, -10.2443, 0.5, -13.1562, -2.99434, 0.5, -13.1562, -2.99434, 0.5, -17.1562, -10.2443, 0.5, -17.4062, -1.99434, 0.5, -12.6562, -1.99434, 0.5, -10.6562, 2.00566, 0.5, -10.6562, -2.99434, 0.5, -17.1562, -2.99434, 0.5, -13.1562, -1.99434, 0.5, -12.6562, -1.99434, 0.5, -12.6562, 2.00566, 0.5, -10.6562, 2.00566, 0.5, -17.1562, -2.99434, 0.5, -17.1562, 2.00566, 0.5, -10.6562, -1.99434, 0.5, -10.6562, -1.99434, 0.5, -3.90618, 2.00566, 0.5, -3.90618, -1.99434, 0.5, 3.09382, -1.99434, 0.5, 10.0938, 2.00566, 0.5, 10.0938, 2.00566, 0.5, 3.09382, -1.99434, 0.5, 10.0938, -1.99434, 0.5, 17.0938, 2.00566, 0.5, 17.0938, 2.00566, 0.5, 10.0938, 2.00566, 0.5, 3.09382, 2.00566, 0.5, -3.90618, -1.99434, 0.5, -3.90618, -1.99434, 0.5, 3.09382, -39.2443, 0.5, -2.90618, -39.2443, 0.5, 1.34382, -37.4943, 0.5, 1.34382, -37.2443, 0.5, -3.15618, -37.4943, 0.5, 1.34382, -37.2443, 0.5, 3.09382, -32.9943, 0.5, 2.84382, -32.9943, 0.5, -6.15618, -36.9943, 0.5, -6.40618, -37.2443, 0.5, -3.15618, -63.9943, 0.5, -3.15618, -71.9943, 0.5, -3.40618, -71.9943, 0.5, 0.843822, -63.9943, 0.5, 1.09382, -47.7443, 0.5, -2.90618, -55.7443, 0.5, -3.15618, -55.7443, 0.5, 1.09382, -47.4943, 0.5, 1.09382, -47.4943, 0.5, 1.09382, -39.2443, 0.5, 1.34382, -39.2443, 0.5, -2.90618, -47.7443, 0.5, -2.90618, -55.7443, 0.5, -3.15618, -63.9943, 0.5, -3.15618, -63.9943, 0.5, 1.09382, -55.7443, 0.5, 1.09382, -32.9943, 0.5, 9.34382, -32.9943, 0.5, 2.84382, -37.2443, 0.5, 3.09382, -37.2443, 0.5, 9.59382, -37.2443, 0.5, 9.59382, -37.2443, 0.5, 16.0938, -32.9943, 0.5, 16.0938, -32.9943, 0.5, 9.34382)
@@ -43,15 +46,21 @@ albedo_color = Color(1, 1, 1, 0)
 material = SubResource("StandardMaterial3D_auuxi")
 size = Vector2(145, 145)
 
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_jwlqq"]
+height = 1.53318
+
+[sub_resource type="Curve3D" id="Curve3D_npuvq"]
+
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_gtx8a"]
 
 [node name="World" type="Node3D"]
-script = ExtResource("1_uxe8e")
+script = ExtResource("1_3nrlq")
+user_interface = ExtResource("2_ox58b")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.422618, 0.906308, 0, -0.906308, 0.422618, -5.49149, 43.5312, 54.3621)
 fov = 88.6608
-script = ExtResource("2_ukdeo")
+script = ExtResource("3_bqxot")
 
 [node name="RayCast3D" type="RayCast3D" parent="Camera3D"]
 target_position = Vector3(0, 0, 0)
@@ -131,6 +140,27 @@ shape = SubResource("HeightMapShape3D_rs3ou")
 
 [node name="Ground" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_1o0r8")
+
+[node name="Palace" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.143, 0, 37.001)
+script = ExtResource("8_3tota")
+
+[node name="PalaceSprite" type="Sprite3D" parent="Palace"]
+transform = Transform3D(3, 0, 0, 0, 2.45746, 1.72073, 0, -1.72073, 2.45746, 0, 2.5, 0)
+texture = ExtResource("14_t4h63")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Palace"]
+transform = Transform3D(2, 0, 0, 0, 0.974, 0, 0, 0, 2, 0, 0, 0)
+shape = SubResource("CylinderShape3D_jwlqq")
+
+[node name="SpawnPath" type="Path3D" parent="Palace"]
+curve = SubResource("Curve3D_npuvq")
+
+[node name="SpawnLocation" type="PathFollow3D" parent="Palace/SpawnPath"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.92686)
+
+[node name="Timer" type="Timer" parent="Palace"]
+autostart = true
 
 [node name="PassiveIncome" type="Timer" parent="."]
 autostart = true
