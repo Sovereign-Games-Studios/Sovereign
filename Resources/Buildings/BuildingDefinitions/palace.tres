@@ -22,7 +22,8 @@ var prerequisites = {\"Palace\": 1}
 var cost = 0
 # Array of Strings, will automatically instantiate each type as needed and attach them to the building
 # Will search Resources/ServiceDefinitions to fetch them and instantiate. 
-var services = [\"Kingdom Vault\"]
+# var services = {\"Kingdom Vault\": []}
+var services = {}
 # Array of Upgrades, relating directly to building level
 var upgrades = {\"Level 2\": 3000, \"Level 3\": 5000}
 # Array of research, will search Resources/Research Definitions to fetch and instantiate

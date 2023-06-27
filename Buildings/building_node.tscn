@@ -18,7 +18,7 @@ offset = Vector2(0, 140)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CylinderShape3D_clg12")
 
-[node name="Timer" type="Timer" parent="."]
+[node name="RecruitTimer" type="Timer" parent="."]
 autostart = true
 
 [node name="SpawnPath" type="Path3D" parent="."]

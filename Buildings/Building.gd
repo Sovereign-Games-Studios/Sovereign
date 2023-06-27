@@ -33,21 +33,35 @@ func initialize(start_position, building_name, team):
 		self.sprite = load("res://Resources/Buildings/Images/"+building_name.to_lower()+".png")		
 	$Sprite3D.texture = self.sprite	
 	
-	if definition.building_type == "Support" or definition.building_type == "Lair":
-		$Timer.wait_time = 10
-		$Timer.timeout.connect(_recruit_on_timer_timeout)
+	if definition.building_type == "Support" or definition.building_type == "Lair" or definition.building_type == "Merchant":
+		$RecruitTimer.wait_time = 10
+		$RecruitTimer.timeout.connect(_recruit_on_timer_timeout)
 	attach_services(definition.services)
-	
+
 # TODO Services in general.
 func attach_services(services):
 	for service in services:
-		var new_service = load("res://Resources/ServiceDefinitions/"+service.to_lower()+".tres")
-		self.services[service] = new_service
+		var service_name = service.replace(" ", "_").to_lower()
+		var new_service = load("res://Resources/ServiceDefinitions/"+service_name+".tres")
+		new_service.get_script()
+		# Some services require instantiation.
+		if services[service].size() > 0:
+			new_service.initialize(services[service])
+		if new_service.requires_timer:
+			var new_timer = Timer.new()
+			new_timer.name = service
+			new_timer.wait_time = new_service.service_timer
+			new_timer.autostart = true
+			new_timer.timeout.connect(new_service._on_service_timeout)
+			add_child(new_timer)
+		self.services[service] = new_service		
 		return
 	
 
 func _recruit_on_timer_timeout():
 	var maximum_npcs = self.definition.recruitable_npcs
+	if self.definition.name == "Frontier Market":
+		print("Frontier Market npcs: ", maximum_npcs)
 	for npc_type in maximum_npcs:
 		if self.recruited_npcs[npc_type].size() < maximum_npcs[npc_type]:
 			var npc = npc_node.instantiate()
@@ -57,6 +71,6 @@ func _recruit_on_timer_timeout():
 				npc.add_to_group("Player Entities")
 			self.recruited_npcs[npc_type].append(npc)
 			add_child(npc)
-			print("Spawned NPC of type: ", npc_type, " using entity: ", npc.definition.name, " at ", spawn_location)
+			print("The ", self.definition.name, " Spawned NPC of type: ", npc_type, " using entity: ", npc.definition.name, " at ", spawn_location)
 			# We only want to spawn once a tick. 
 			return

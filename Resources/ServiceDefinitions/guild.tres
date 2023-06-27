@@ -2,6 +2,7 @@
 
 [sub_resource type="GDScript" id="GDScript_80l4e"]
 script/source = "extends Resource
+var requires_timer = false
 
 func recruit_npc(npc_name, building):
 	var npc_scene = load(\"res://Npcs/npc_node.tscn\")

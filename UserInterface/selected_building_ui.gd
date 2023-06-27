@@ -16,15 +16,34 @@ func initialize(building: Building):
 				print("This building has a guild service!")
 				var new_node = handle_guild_service()
 				$Control/AspectRatioContainer/TabContainer.add_child(new_node)
+			elif service == "Item Seller":
+				print("This building has a item seller service!")
+				var new_node = handle_item_seller_service()
+				$Control/AspectRatioContainer/TabContainer.add_child(new_node)
+				
 	if building.definition.upgrades.size() > 0:	
 		var new_node = Panel.new()	
 		new_node.name = "Upgrades"		
-		for upgrade in attached_building.definition.upgrades:
+		for upgrade in building.definition.upgrades:
 			var new_button = Button.new()
-			new_button.text = upgrade + " {} ".format(attached_building.definition.upgrades[upgrade], "{}") 
+			new_button.name = upgrade
+			new_button.text = upgrade + " {upgrade} ".format({"upgrade": attached_building.definition.upgrades[upgrade]}) 
 			new_node.add_child(new_button)
 		$Control/AspectRatioContainer/TabContainer.add_child(new_node)
 		
+
+func handle_item_seller_service():
+	var new_node = Panel.new()
+	new_node.name = "Available Items"
+	var text = "---Available Items--- \n"
+	for item in attached_building.services["Item Seller"].inventory:
+		item.get_script()
+		text += "\n - {item}: {cost}".format({"item": item.name,"cost": item.cost})
+	var text_node = Button.new()
+	text_node.name = "ServiceText"
+	text_node.text = text
+	new_node.add_child(text_node)
+	return new_node
 				
 func handle_guild_service():
 	var new_node = Panel.new()
@@ -44,6 +63,10 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	var text = ("Building Name: " + attached_building.definition.name + "\n Team: " + attached_building.team + "\n Currently Housed NPCs: %").format(attached_building.current_occupants)
+	var text = ("Building Name: " + attached_building.definition.name +
+	 "\n Team: " + attached_building.team +
+	 "\n Currently Housed NPCs: {npcs}" +
+	 "\n Recruited NPCs: {recruited_npcs}").format({"npcs": attached_building.current_occupants, 
+	"recruited_npcs": attached_building.recruited_npcs})
 	$"Control/AspectRatioContainer/TabContainer/Building Info".text = text
 	pass

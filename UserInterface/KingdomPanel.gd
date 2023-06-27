@@ -14,9 +14,10 @@ func _process(delta):
 	if camera.colliding_entity != null:
 		if camera.colliding_entity.definition.name == "Palace":
 			$BuildList.show()			
-			if(selected_ui):
-				selected_ui.queue_free()
-				selected_ui = null
+			#selected_ui = ui_node.instantiate()
+			#selected_ui.initialize(camera.colliding_entity)
+			#selected_ui.position = Vector2(0, 150)
+			#add_sibling(selected_ui)
 		elif camera.colliding_entity is Building and selected_ui == null:
 			$BuildList.hide()		
 			selected_ui = ui_node.instantiate()
@@ -30,3 +31,11 @@ func _process(delta):
 			selected_ui.queue_free()
 			selected_ui = null
 		$BuildList.hide()
+
+func _input(event):
+	if event is InputEventKey:
+		if event.keycode == KEY_ESCAPE:
+			if(selected_ui):
+				selected_ui.queue_free()
+				selected_ui = null
+			$BuildList.hide()
