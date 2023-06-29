@@ -1,0 +1,50 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://bbundsut5p5wy"]
+
+[sub_resource type="GDScript" id="GDScript_racgu"]
+script/source = "extends Resource
+# Dictionary of items
+var inventory: Dictionary
+var service_timer = 30
+var replenishable_items: Array
+var requires_timer = true
+
+func initialize(item_list: Array):
+	for item in item_list:
+		var item_name = item.replace(\" \", \"_\").to_lower()
+		var new_item = load(\"res://Resources/ItemDefinitions/\" + item_name + \".tres\")
+		replenishable_items.append(new_item)
+		# start with 10
+		inventory[new_item] = 10
+	
+	
+func sell_item(npc, desired_item):
+	if desired_item in inventory:
+		if npc.gold >= desired_item.cost:
+			npc.gold -= desired_item.cost
+			npc.inventory.append(desired_item)
+	
+# NPCs can sell items to the shop which can be sold again but do not replenish.
+func buy_item(npc, item_to_be_sold):
+	var cost = item_to_be_sold.cost / 5
+	npc.gold += cost
+	inventory[item_to_be_sold.name] = item_to_be_sold 
+
+# As building is upgraded new items may be offered
+func upgraded_inventory(new_items):
+	for item in new_items:
+		var item_name = item.replace(\" \", \"_\").to_lower()
+		var new_item = load(\"res://Resources/ItemDefinitions/\" + item_name + \".tres\")
+		replenishable_items.append(item)
+		# start with 10
+		inventory[new_item] = 10
+
+# Items replenish every so often
+func _on_service_timeout():
+	print(\"Replenishing items!\")
+	for item in replenishable_items:
+		if inventory[item] < 10:
+			inventory[item] += 1
+"
+
+[resource]
+script = SubResource("GDScript_racgu")
