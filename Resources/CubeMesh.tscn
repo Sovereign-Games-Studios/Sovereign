@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bu2yceylp8jiy"]
+[gd_scene load_steps=11 format=3 uid="uid://bu2yceylp8jiy"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_eflmj"]
 albedo_color = Color(0, 0.403922, 1, 1)
@@ -6,11 +6,17 @@ albedo_color = Color(0, 0.403922, 1, 1)
 [sub_resource type="BoxMesh" id="BoxMesh_g15co"]
 material = SubResource("StandardMaterial3D_eflmj")
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_i5sol"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_yt5st"]
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_al0m3"]
 albedo_color = Color(0.0745098, 1, 0.0941176, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_dvng1"]
 material = SubResource("StandardMaterial3D_al0m3")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1haw6"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l146g"]
 albedo_color = Color(0.356863, 0.168627, 0, 1)
@@ -18,14 +24,34 @@ albedo_color = Color(0.356863, 0.168627, 0, 1)
 [sub_resource type="BoxMesh" id="BoxMesh_lp2cw"]
 material = SubResource("StandardMaterial3D_l146g")
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_6ftgc"]
+
 [node name="Node3D" type="Node3D"]
 
 [node name="water" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_g15co")
 
+[node name="StaticBody3D" type="StaticBody3D" parent="water"]
+physics_material_override = SubResource("PhysicsMaterial_i5sol")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="water/StaticBody3D"]
+shape = SubResource("BoxShape3D_yt5st")
+
 [node name="grass" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_dvng1")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="grass"]
+physics_material_override = SubResource("PhysicsMaterial_i5sol")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="grass/StaticBody3D"]
+shape = SubResource("BoxShape3D_1haw6")
 
 [node name="rock" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_lp2cw")
 skeleton = NodePath("../grass")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="rock"]
+physics_material_override = SubResource("PhysicsMaterial_i5sol")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="rock/StaticBody3D"]
+shape = SubResource("BoxShape3D_6ftgc")

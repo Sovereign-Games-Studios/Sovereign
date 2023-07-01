@@ -4,6 +4,7 @@ var noise := FastNoiseLite.new()
 
 var height = 10
 
+var team = "map"
 
 
 # Called when the node enters the scene tree for the first time.

@@ -1,10 +1,11 @@
-[gd_scene load_steps=16 format=3 uid="uid://dcoe5mgvaqmm1"]
+[gd_scene load_steps=17 format=3 uid="uid://dcoe5mgvaqmm1"]
 
 [ext_resource type="Script" path="res://Player/KingdomState.gd" id="1_uxe8e"]
 [ext_resource type="Script" path="res://Player/Camera3D.gd" id="2_ukdeo"]
+[ext_resource type="Script" path="res://WorldFiles/Rock.gd" id="3_d555j"]
 [ext_resource type="Texture2D" uid="uid://chnx641kh2xlm" path="res://Resources/Environment/Rock-1.png" id="6_dxjp2"]
 [ext_resource type="Script" path="res://WorldFiles/FogOfWarPermanent.gd" id="7_5y3eh"]
-[ext_resource type="MeshLibrary" uid="uid://chd77mgnwsnlo" path="res://Resources/CubeMesh.meshlib" id="7_tqlm5"]
+[ext_resource type="MeshLibrary" uid="uid://qv4dyntn82jm" path="res://Resources/CubeMesh.meshlib" id="7_tqlm5"]
 [ext_resource type="Script" path="res://WorldFiles/GridMap.gd" id="8_4bu53"]
 [ext_resource type="Shader" path="res://WorldFiles/fog_permanent.gdshader" id="8_vhmlx"]
 [ext_resource type="Script" path="res://WorldFiles/Fog.gd" id="9_i77d3"]
@@ -22,7 +23,7 @@ shader_parameter/fogColor = Vector3(0, 0, 0)
 shader_parameter/mapWidth = 145.0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1hle4"]
-size = Vector2(145, 145)
+size = Vector2(200, 200)
 subdivide_width = 100
 subdivide_depth = 100
 
@@ -52,14 +53,15 @@ fov = 88.6608
 script = ExtResource("2_ukdeo")
 
 [node name="Rock" type="CharacterBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, -71.3988, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, 0, 20, 0)
+script = ExtResource("3_d555j")
 
 [node name="Rock" type="Sprite3D" parent="Rock"]
-transform = Transform3D(1, 0, 0, 0, 0.819151, 0.573576, 0, -0.573576, 0.819151, 0.00194454, 0.403796, 0.0068283)
+transform = Transform3D(1, 0, 0, 0, 0.819151, 0.573576, 0, -0.573576, 0.819151, 0, 0, 0)
 texture = ExtResource("6_dxjp2")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Rock"]
-transform = Transform3D(1, 0, 0, 0, 0.48669, 0, 0, 0, 1, 0, 0.410894, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 shape = SubResource("CylinderShape3D_g3sij")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="."]
@@ -84,7 +86,7 @@ wait_time = 0.201
 autostart = true
 
 [node name="Fog" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.443039, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12, 0)
 material_override = SubResource("ShaderMaterial_h2c21")
 mesh = SubResource("PlaneMesh_1hle4")
 script = ExtResource("9_i77d3")
@@ -110,3 +112,4 @@ shape = SubResource("WorldBoundaryShape3D_gtx8a")
 mesh_library = ExtResource("7_tqlm5")
 cell_size = Vector3(1, 1, 1)
 script = ExtResource("8_4bu53")
+metadata/_editor_floor_ = Vector3(0, 0, 0)
