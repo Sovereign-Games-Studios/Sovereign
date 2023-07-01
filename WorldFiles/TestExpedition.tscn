@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://dcoe5mgvaqmm1"]
+[gd_scene load_steps=19 format=3 uid="uid://dcoe5mgvaqmm1"]
 
 [ext_resource type="Script" path="res://Player/KingdomState.gd" id="1_uxe8e"]
 [ext_resource type="Script" path="res://Player/Camera3D.gd" id="2_ukdeo"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://WorldFiles/GridMap.gd" id="8_4bu53"]
 [ext_resource type="Shader" path="res://WorldFiles/fog_permanent.gdshader" id="8_vhmlx"]
 [ext_resource type="Script" path="res://WorldFiles/Fog.gd" id="9_i77d3"]
+[ext_resource type="Script" path="res://WorldFiles/Terrain.gd" id="10_vwwvs"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_g3sij"]
 height = 1.53318
@@ -39,6 +40,8 @@ size = Vector2(145, 145)
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_gtx8a"]
 
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_5tiiv"]
+
 [node name="World" type="Node3D"]
 script = ExtResource("1_uxe8e")
 
@@ -61,7 +64,6 @@ transform = Transform3D(1, 0, 0, 0, 0.819151, 0.573576, 0, -0.573576, 0.819151, 
 texture = ExtResource("6_dxjp2")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Rock"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 shape = SubResource("CylinderShape3D_g3sij")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="."]
@@ -87,6 +89,7 @@ autostart = true
 
 [node name="Fog" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12, 0)
+visible = false
 material_override = SubResource("ShaderMaterial_h2c21")
 mesh = SubResource("PlaneMesh_1hle4")
 script = ExtResource("9_i77d3")
@@ -109,7 +112,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.647827, -0.26619, 0.354767
 shape = SubResource("WorldBoundaryShape3D_gtx8a")
 
 [node name="GridMap" type="GridMap" parent="."]
+visible = false
 mesh_library = ExtResource("7_tqlm5")
 cell_size = Vector3(1, 1, 1)
+bake_navigation = true
 script = ExtResource("8_4bu53")
 metadata/_editor_floor_ = Vector3(0, 0, 0)
+
+[node name="Terrain" type="StaticBody3D" parent="."]
+script = ExtResource("10_vwwvs")
+noise = SubResource("FastNoiseLite_5tiiv")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Terrain"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Terrain"]
