@@ -11,6 +11,12 @@ var team
 var basic_attack: Resource
 var level
 var exp
+var behaviour: Behaviour
+var personality: Personality
+var brain: NpcBrain
+# Array of actions to be done in order of queue starting at index 0.
+var action_queue: Array
+var occupied_building: Building
 # Temporary until I implement Barbarian Guilds
 func _ready():
 	nav_map = get_world_3d().get_navigation_map()
@@ -51,18 +57,18 @@ func initialize(start_position, character_name, team):
 	exp = 0
 	$Timer.wait_time = self.basic_attack.attack_speed
 	$Timer.timeout.connect(_on_timer_timeout)
+	self.personality = Personality.instantiate().initialize(self.definition)
+	self.brain = NpcBrain.instantiate().initialize(self.personality)
 	
 func _on_timer_timeout():
 	# If we don't have a target start hunting enemies
 	if(target == null):
-		var offset = Behaviours.hunt()
+		var offset = Behaviour.hunt()
 		set_destination(self.position+offset)
-	elif self.global_position.distance_to(target.global_position) < 10:
-		var damage_dealt = Attacks.calculateDamage(self.basic_attack, target.definition)
-		target.current_health -= damage_dealt
 		
 func set_destination(new_destination:Vector3):
 	var destination = new_destination
+	print(destination)
 	$NavigationAgent3D.set_target_position(destination)
 
 func _on_navigation_agent_3d_velocity_computed(safe_velocity):

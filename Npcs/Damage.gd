@@ -1,4 +1,4 @@
-class_name Attacks
+class_name Damage
 
 
 static func calculateDamage(attacking_node, target_node):

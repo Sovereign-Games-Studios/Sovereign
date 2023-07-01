@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://b1rybsuikh1kw"]
+
+[sub_resource type="GDScript" id="GDScript_iptki"]
+script/source = "extends Resource
+
+
+# Type of reasoner this is. Should either be an Action or another Reasoner
+var type = \"Reasoner\"
+# List of considerations for choosing this specific reasoner
+var considerations = [\"Enemy Strength\", \"Enemy Distance\", \"Nearby Allies\", \"Ally Strength\", \"Profit\", \"Available Resources\"]
+# List of child reasoners, if any
+var options = [\"Attack Enemy\", \"Flee\"]
+# List of actions to be taken when reasoner loads, if any
+var actions = []
+"
+
+[resource]
+script = SubResource("GDScript_iptki")

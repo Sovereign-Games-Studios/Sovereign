@@ -25,6 +25,15 @@ var abilities = []
 # Setting this points to a specific Resource in Resources/AttackDefintions to use 
 var basic_attack = \"Barbarian\"
 
+# How responsive a character is to gold incentive, 1-100
+var greed = 50
+# How responsive a character is to threats to the Kingdom, 1-100
+var valor = 25
+# How brave a character is when engaging enemies or pursuing contracts, 1-100
+var bravery = 100
+# Determines threshold at which a character will flee a powerful foe or losing fight, 1-100
+var cowardice = 1
+
 
 var Strength = 20
 var Spirit = 5
