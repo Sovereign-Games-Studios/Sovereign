@@ -1,15 +1,17 @@
-[gd_scene load_steps=19 format=3 uid="uid://dcoe5mgvaqmm1"]
+[gd_scene load_steps=22 format=3 uid="uid://dcoe5mgvaqmm1"]
 
 [ext_resource type="Script" path="res://Player/KingdomState.gd" id="1_uxe8e"]
 [ext_resource type="Script" path="res://Player/Camera3D.gd" id="2_ukdeo"]
 [ext_resource type="Script" path="res://WorldFiles/Rock.gd" id="3_d555j"]
 [ext_resource type="Texture2D" uid="uid://chnx641kh2xlm" path="res://Resources/Environment/Rock-1.png" id="6_dxjp2"]
 [ext_resource type="Script" path="res://WorldFiles/FogOfWarPermanent.gd" id="7_5y3eh"]
-[ext_resource type="MeshLibrary" uid="uid://qv4dyntn82jm" path="res://Resources/CubeMesh.meshlib" id="7_tqlm5"]
-[ext_resource type="Script" path="res://WorldFiles/GridMap.gd" id="8_4bu53"]
 [ext_resource type="Shader" path="res://WorldFiles/fog_permanent.gdshader" id="8_vhmlx"]
 [ext_resource type="Script" path="res://WorldFiles/Fog.gd" id="9_i77d3"]
 [ext_resource type="Script" path="res://WorldFiles/Terrain.gd" id="10_vwwvs"]
+[ext_resource type="Shader" path="res://WorldFiles/Terrain.gdshader" id="11_5oyay"]
+[ext_resource type="Texture2D" uid="uid://bpvp63fespvgo" path="res://WorldFiles/Textures/grass.jpg" id="12_hcwfn"]
+[ext_resource type="Texture2D" uid="uid://bkftb17k2ebag" path="res://WorldFiles/Textures/rock.jpg" id="13_1teob"]
+[ext_resource type="Texture2D" uid="uid://cf6kf4xxoot5f" path="res://WorldFiles/Textures/sand.jpg" id="14_thgou"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_g3sij"]
 height = 1.53318
@@ -41,13 +43,24 @@ size = Vector2(145, 145)
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_gtx8a"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_5tiiv"]
+frequency = 0.015
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8vlo4"]
+render_priority = 0
+shader = ExtResource("11_5oyay")
+shader_parameter/min_rock_slope = 0.72
+shader_parameter/max_grass_slope = 0.9
+shader_parameter/min_rockgrass_height = -4.0
+shader_parameter/max_sand_height = -2.0
+shader_parameter/grass_texture = ExtResource("12_hcwfn")
+shader_parameter/rock_texture = ExtResource("13_1teob")
+shader_parameter/sand_texture = ExtResource("14_thgou")
 
 [node name="World" type="Node3D"]
 script = ExtResource("1_uxe8e")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 7.77368, 0)
-light_color = Color(0.976471, 0.976471, 0, 1)
 shadow_enabled = true
 
 [node name="Camera3D" type="Camera3D" parent="."]
@@ -111,18 +124,12 @@ top_level = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.647827, -0.26619, 0.354767)
 shape = SubResource("WorldBoundaryShape3D_gtx8a")
 
-[node name="GridMap" type="GridMap" parent="."]
-visible = false
-mesh_library = ExtResource("7_tqlm5")
-cell_size = Vector3(1, 1, 1)
-bake_navigation = true
-script = ExtResource("8_4bu53")
-metadata/_editor_floor_ = Vector3(0, 0, 0)
-
 [node name="Terrain" type="StaticBody3D" parent="."]
 script = ExtResource("10_vwwvs")
+amplitude = 10
 noise = SubResource("FastNoiseLite_5tiiv")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Terrain"]
+material_override = SubResource("ShaderMaterial_8vlo4")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Terrain"]
