@@ -6,6 +6,9 @@ var height = 10
 
 var team = "map"
 
+# TODO: definition fix to collision
+var definition = {"name": null}
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
