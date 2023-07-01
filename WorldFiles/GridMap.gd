@@ -12,7 +12,7 @@ var definition = {"name": null}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	# noise.seed = 3.1415
+	noise.seed = 3.1415
 
 	for x in range(-100,100):
 		for z in range(-100,100):
