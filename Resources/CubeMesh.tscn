@@ -1,0 +1,31 @@
+[gd_scene load_steps=7 format=3 uid="uid://bu2yceylp8jiy"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_eflmj"]
+albedo_color = Color(0, 0.403922, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_g15co"]
+material = SubResource("StandardMaterial3D_eflmj")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_al0m3"]
+albedo_color = Color(0.0745098, 1, 0.0941176, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_dvng1"]
+material = SubResource("StandardMaterial3D_al0m3")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l146g"]
+albedo_color = Color(0.356863, 0.168627, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_lp2cw"]
+material = SubResource("StandardMaterial3D_l146g")
+
+[node name="Node3D" type="Node3D"]
+
+[node name="water" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_g15co")
+
+[node name="grass" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_dvng1")
+
+[node name="rock" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_lp2cw")
+skeleton = NodePath("../grass")

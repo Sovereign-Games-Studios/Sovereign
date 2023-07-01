@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://Player/Camera3D.gd" id="2_ukdeo"]
 [ext_resource type="Texture2D" uid="uid://chnx641kh2xlm" path="res://Resources/Environment/Rock-1.png" id="6_dxjp2"]
 [ext_resource type="Script" path="res://WorldFiles/FogOfWarPermanent.gd" id="7_5y3eh"]
-[ext_resource type="MeshLibrary" uid="uid://dnguexb3sasrk" path="res://Resources/CubeMesh.tres" id="7_dfxud"]
+[ext_resource type="MeshLibrary" uid="uid://chd77mgnwsnlo" path="res://Resources/CubeMesh.meshlib" id="7_tqlm5"]
 [ext_resource type="Script" path="res://WorldFiles/GridMap.gd" id="8_4bu53"]
 [ext_resource type="Shader" path="res://WorldFiles/fog_permanent.gdshader" id="8_vhmlx"]
 [ext_resource type="Script" path="res://WorldFiles/Fog.gd" id="9_i77d3"]
@@ -40,6 +40,11 @@ size = Vector2(145, 145)
 
 [node name="World" type="Node3D"]
 script = ExtResource("1_uxe8e")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 7.77368, 0)
+light_color = Color(0.976471, 0.976471, 0, 1)
+shadow_enabled = true
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.422618, 0.906308, 0, -0.906308, 0.422618, -5.49149, 43.5312, 54.3621)
@@ -101,11 +106,7 @@ top_level = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.647827, -0.26619, 0.354767)
 shape = SubResource("WorldBoundaryShape3D_gtx8a")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 50, 0)
-
 [node name="GridMap" type="GridMap" parent="."]
-mesh_library = ExtResource("7_dfxud")
-cell_size = Vector3(1, 2, 1)
-bake_navigation = true
+mesh_library = ExtResource("7_tqlm5")
+cell_size = Vector3(1, 1, 1)
 script = ExtResource("8_4bu53")
