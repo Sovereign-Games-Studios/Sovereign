@@ -1,47 +1,29 @@
-class_name Behaviours
+class_name Behaviour
 
-# Class for our basic behaviours, getBehaviour returns a weighted list of actions 
-# We should randomly determine what action the character does next based on previous actions and weighted available actions
-# This might get complicated so brainstorm this as a group
-static func getBehaviour(char_class):
-	var generic_behaviour = {
-	"Explore": 10,
-	"Defend" : 5,
-	"Form Party": 0,
-	"Flee": 0,
-	"Support Ally": 0,
-	"Purchase Item": 0,
-	"Purchase Spell": 0,
-	"Train": 0,
-	"Relax": 0,
-	"Hunt": 0,
-	"Follow Party Leader": 0,
-	"Loot": 0,
-	"Special Action": 0	
-}
+'''
+This is the basic interface used by NPCs to build their behaviour trees.
 
-	var barbarian_behaviour = {
-	"Explore": 0,
-	"Defend" : 0,
-	"Form Party": 0,
-	"Flee": 0,
-	"Support Ally": 0,
-	"Purchase Item": 0,
-	"Purchase Spell": 0,
-	"Train": 0,
-	"Relax": 0,
-	"Hunt": 100,
-	"Follow Party Leader": 0,
-	"Loot": 0,
-	"Special Action": 0	
-	}
+'''
+# This should be an array of Modular Behaviours
+var root_node: BehaviourNode
 
-	var behaviour_lib = {"generic_npc": generic_behaviour, "barbarian": barbarian_behaviour}
+func think(npc: NPC, node: BehaviourNode):
+	var best_option: BehaviourNode
+	var best_value = 0
+	print("Node is ", node.name)
+	print("Options are ", node.options)
+	for option_name in node.options:
+		var option = GameStateInit.list_of_bts[option_name]
+		var option_value = option.definition.consider(npc, GameStateInit)
+		if option_value > best_value:
+			best_value = option_value
+			best_option = option
+	print("We have chosen: ", best_option.name)
+	if best_option.type == "Option":
+		think(npc, best_option)
+	elif best_option.type == "Action":
+		# Final computation before return.
+		best_option.definition.take_action(npc)
+	return
 
-	return behaviour_lib[char_class]
-
-static func hunt():
-	var radius = 3
-	var random_position = Vector3(randi_range(-radius, radius), 0, randi_range(-radius, radius))
-	return random_position
-		
+	

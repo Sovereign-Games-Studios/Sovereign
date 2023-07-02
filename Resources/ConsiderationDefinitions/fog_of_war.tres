@@ -1,0 +1,16 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://0kxe1al5c110"]
+
+[sub_resource type="GDScript" id="GDScript_exf21"]
+script/source = "extends Resource
+
+var value = 100
+
+func calculate_consideration_value(npc: NPC, kingdom_state):
+	if kingdom_state.is_fow_explored:
+		value = 0
+	
+	return value
+"
+
+[resource]
+script = SubResource("GDScript_exf21")

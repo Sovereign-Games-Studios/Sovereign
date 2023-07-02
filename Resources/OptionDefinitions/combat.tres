@@ -1,0 +1,32 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://q23oytr1rtid"]
+
+[sub_resource type="GDScript" id="GDScript_jfxgr"]
+script/source = "extends Resource
+'''
+Behaviour Nodes take into account the current state of the NPC and it's environment to determine what
+action if any should be taken at the present moment. These are the \"branch nodes\" of the behaviour tree.
+
+engage_enemies:
+	This node determines if enemies in the NPC's vision range should be engaged or not. If they should, 
+	this will progress to the leaf node of find_target. 
+'''
+
+# List of considerations for choosing this specific option
+var considerations = [\"personal_strength\"]
+
+# Child node, can either be an action or another behaviour node. 
+var options = [\"attack_enemy\", \"retreat\"]
+var name = \"Combat\"
+func consider(npc: NPC, kingdom_state):
+	if npc.brain.enemies_in_range.size() == 0:
+		return -10
+	var consideration_value = 0
+	for consideration in considerations:
+		var consider_node = kingdom_state.consider_list[consideration]
+		consideration_value += consider_node.calculate_consideration_value(npc, kingdom_state)
+	consideration_value/considerations.size()
+	return consideration_value
+"
+
+[resource]
+script = SubResource("GDScript_jfxgr")

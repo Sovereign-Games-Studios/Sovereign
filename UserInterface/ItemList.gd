@@ -7,7 +7,7 @@ var npc_node = preload("res://Npcs/npc_node.tscn")
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	camera = get_node("../../../Camera3D")
-	for building in GameStateInit.list_of_buildings.values():
+	for building in GameStateInit.buildable_list.values():
 		var building_sprite
 		if(building.sprite_override):
 			print("res://Resources/Buildings/Images/"+building.sprite_override+".png")
@@ -24,7 +24,7 @@ func _gui_input(event):
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			var item_list = get_selected_items()
 			if(item_list.size() > 0):
-				selected_building = GameStateInit.list_of_buildings[get_filename(get_item_text(item_list[0]))]
+				selected_building = GameStateInit.buildable_list[get_filename(get_item_text(item_list[0]))]
 				print("Selected Building: ", selected_building)
 				$Sprite3D.texture = get_item_icon(item_list[0])
 				$Sprite3D.show()
@@ -57,7 +57,7 @@ func _process(delta):
 			continue
 		var item = get_item_text(index)
 		var filename = get_filename(item)
-		var building = GameStateInit.list_of_buildings[filename]
+		var building = GameStateInit.buildable_list[filename]
 		var is_buildable = false
 		for prereq in building.prerequisites.keys():
 			var required_level = building.prerequisites[prereq]
