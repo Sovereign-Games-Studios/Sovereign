@@ -23,7 +23,6 @@ var occupied_building: Building
 var state: String
 
 func _ready():
-	nav_map = get_world_3d().get_navigation_map()
 	pass # Replace with function body.
 
 func _physics_process(_delta):
@@ -33,9 +32,10 @@ func _physics_process(_delta):
 			set_destination(node.global_position)
 	if $NavigationAgent3D.is_target_reachable():
 		var target = $NavigationAgent3D.get_next_path_position()
-		velocity = global_transform.origin.direction_to(target).normalized() * definition.speed
+		velocity = (target - self.global_position).normalized() * definition.speed
 		$NavigationAgent3D.set_velocity(velocity)
 	else:
+		
 		$NavigationAgent3D.set_velocity(Vector3.ZERO)
 	move_and_slide()
 
@@ -60,7 +60,7 @@ func initialize(start_position, character_name, team):
 	$Sprite.texture = self.sprite
 	level = 1
 	exp = 0
-	$Timer.wait_time = self.basic_attack.attack_speed
+	$Timer.wait_time = 5
 	$Timer.timeout.connect(_on_timer_timeout)
 	self.personality = Personality.new()
 	self.personality.initialize(self.definition)
@@ -74,7 +74,8 @@ func _on_timer_timeout():
 		
 func set_destination(new_destination:Vector3):
 	var destination = new_destination
-	print(destination)
+	print("New Destination: ", destination)
+	print("Current location: ", self.global_position )
 	$NavigationAgent3D.set_target_position(destination)
 
 func _on_navigation_agent_3d_velocity_computed(safe_velocity):

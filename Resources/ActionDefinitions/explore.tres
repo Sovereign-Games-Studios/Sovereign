@@ -23,7 +23,7 @@ func consider(npc: NPC, kingdom_state):
 	return consideration_value
 	
 func take_action(npc: NPC):
-	var random_offset = randi_range(1, 5)
+	var random_offset = randi_range(-5, 5)
 	npc.set_destination(npc.global_position + Vector3(random_offset, 0, random_offset))
 "
 
