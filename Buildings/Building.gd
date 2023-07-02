@@ -67,20 +67,39 @@ func _recruit_on_timer_timeout():
 	for npc_type in maximum_npcs:
 		if self.recruited_npcs[npc_type].size() < maximum_npcs[npc_type]:
 			var npc = npc_node.instantiate()
-			var spawn_location = self.get_node("SpawnPath/SpawnLocation").position
+			var spawn_location = self.get_node("SpawnPath/SpawnLocation").get_global_position()
 			npc.initialize(spawn_location, npc_type, team)
 			if npc.team == "player":
 				npc.add_to_group("Player Entities")
 			self.recruited_npcs[npc_type].append(npc)
-			add_child(npc)
+			#add_child(npc)
+			get_tree().get_root().add_child(npc)
 			print("The ", self.definition.name, " Spawned NPC of type: ", npc_type, " using entity: ", npc.definition.name, " at ", spawn_location)
 			# We only want to spawn once a tick. 
 			return
 
-func _physics_process(delta):
+func align_with_y(xform, new_y):
+	xform.basis.y = new_y
+	xform.basis.x = -xform.basis.z.cross(new_y)
+	xform.basis = xform.basis.orthonormalized()
+	return xform
 
+func _physics_process(delta):
+	# print(global_transform)
+	
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y -= gravity * delta
-
-	move_and_slide()
+		move_and_slide()
+	
+	for index in get_slide_collision_count():
+		var collision := get_slide_collision(index)
+		var body := collision.get_collider()
+		# Only perform alignment when hit with terrain?
+		# Could apply to other scenarios
+		if (body.name == "Terrain"):
+			# Get the normal right below us 
+			var n = $RayCast3D.get_collision_normal()
+			# Transform and interpolate with current orientation
+			var xform = align_with_y(global_transform, n)
+			global_transform = global_transform.interpolate_with(xform, 0.2)

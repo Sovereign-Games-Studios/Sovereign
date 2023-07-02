@@ -25,25 +25,41 @@ var occupied_building: Building
 var state: String
 
 func _ready():
+	$NavigationAgent3D.target_position = position
 	pass # Replace with function body.
+
+func align_with_y(xform, new_y):
+	xform.basis.y = new_y
+	xform.basis.x = -xform.basis.z.cross(new_y)
+	xform.basis = xform.basis.orthonormalized()
+	return xform
 
 func _physics_process(delta):
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y -= gravity * delta
-
 	var overlapping = $Vision.get_overlapping_bodies()
 	for node in overlapping:
 		if node.team == "enemy":
-			set_destination(node.global_position)
-	if $NavigationAgent3D.is_target_reachable():
-		var target = $NavigationAgent3D.get_next_path_position()
-		velocity = (target - self.global_position).normalized() * definition.speed
-		$NavigationAgent3D.set_velocity(velocity)
-	else:
-		
-		$NavigationAgent3D.set_velocity(Vector3.ZERO)
+			set_destination(node.position)
+	# TODO: temporary fix -- do not use pathplanning. Just walk in direction
+	if is_on_floor():
+		var vec = ($NavigationAgent3D.target_position - self.global_position).normalized() * definition.speed
+		velocity.x = vec.x
+		velocity.z = vec.z
 	move_and_slide()
+	for index in get_slide_collision_count():
+		var collision := get_slide_collision(index)
+		var body := collision.get_collider()
+		# Only perform alignment when hit with terrain?
+		# Could apply to other scenarios
+		if (body.name == "Terrain"):
+			# Get the normal right below us 
+			var n = $RayCast3D.get_collision_normal()
+			# Transform and interpolate with current orientation
+			var xform = align_with_y(global_transform, n)
+			global_transform = global_transform.interpolate_with(xform, 0.2)
+
 
 func initialize(start_position, character_name, team):
 	self.set_position(start_position)
@@ -74,6 +90,7 @@ func initialize(start_position, character_name, team):
 	self.brain.initialize(self.personality)
 	self.behaviour = Behaviour.new()
 	self.behaviour.root_node = GameStateInit.list_of_bts["idle"]
+
 	
 func _on_timer_timeout():
 	self.behaviour.think(self, GameStateInit.list_of_bts["idle"])
