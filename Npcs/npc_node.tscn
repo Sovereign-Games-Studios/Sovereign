@@ -19,6 +19,9 @@ transform = Transform3D(1, 0, 0, 0, 0.48669, 0, 0, 0, 1, 0, 0, 0)
 shape = SubResource("CylinderShape3D_s5j36")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+path_desired_distance = 2.0
+target_desired_distance = 2.0
+path_max_distance = 10.01
 
 [node name="Vision" type="Area3D" parent="."]
 

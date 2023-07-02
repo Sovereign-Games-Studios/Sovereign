@@ -1,0 +1,23 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://b3t6rwo3vu4f5"]
+
+[sub_resource type="GDScript" id="GDScript_exf21"]
+script/source = "extends Resource
+
+var value = 100
+
+func calculate_consideration_value(npc: NPC, kingdom_state):
+	var npc_knowledge = npc.brain
+	
+	if (npc.current_health / npc.definition.max_health) < .3 :
+		value -= 10
+		
+	value += 10 * (npc.personality.bravery/100)
+	
+	if npc.healing_potions > 1:
+		value += 10
+		
+	return value
+"
+
+[resource]
+script = SubResource("GDScript_exf21")
