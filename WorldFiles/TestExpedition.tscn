@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://dcoe5mgvaqmm1"]
+[gd_scene load_steps=27 format=3 uid="uid://dcoe5mgvaqmm1"]
 
 [ext_resource type="Script" path="res://Player/KingdomState.gd" id="1_uxe8e"]
 [ext_resource type="Script" path="res://Player/Camera3D.gd" id="2_ukdeo"]
@@ -11,7 +11,9 @@
 [ext_resource type="Shader" path="res://WorldFiles/Terrain.gdshader" id="11_5oyay"]
 [ext_resource type="Texture2D" uid="uid://bpvp63fespvgo" path="res://WorldFiles/Textures/grass.jpg" id="12_hcwfn"]
 [ext_resource type="Texture2D" uid="uid://bkftb17k2ebag" path="res://WorldFiles/Textures/rock.jpg" id="13_1teob"]
+[ext_resource type="PackedScene" uid="uid://7isu71kfcn21" path="res://WorldFiles/water.tscn" id="13_5r6cg"]
 [ext_resource type="Texture2D" uid="uid://cf6kf4xxoot5f" path="res://WorldFiles/Textures/sand.jpg" id="14_thgou"]
+[ext_resource type="Shader" path="res://WorldFiles/sky.gdshader" id="14_y2p2y"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_g3sij"]
 height = 1.53318
@@ -44,6 +46,7 @@ size = Vector2(145, 145)
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_5tiiv"]
 noise_type = 0
+seed = -712895706
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8vlo4"]
 render_priority = 0
@@ -56,19 +59,22 @@ shader_parameter/grass_texture = ExtResource("12_hcwfn")
 shader_parameter/rock_texture = ExtResource("13_1teob")
 shader_parameter/sand_texture = ExtResource("14_thgou")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gpwie"]
-albedo_color = Color(0, 0.2, 1, 1)
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6txb3"]
+shader = ExtResource("14_y2p2y")
+shader_parameter/sky_color = Color(0.207843, 0.72549, 1, 1)
+shader_parameter/horizon_color = Color(0.627451, 0.894118, 1, 1)
 
-[sub_resource type="QuadMesh" id="QuadMesh_2xu4t"]
-size = Vector2(200, 200)
-orientation = 1
+[sub_resource type="Sky" id="Sky_nqjdy"]
+sky_material = SubResource("ShaderMaterial_6txb3")
+
+[sub_resource type="Environment" id="Environment_ghw6b"]
+background_mode = 2
+sky = SubResource("Sky_nqjdy")
+ambient_light_source = 3
+reflected_light_source = 2
 
 [node name="World" type="Node3D"]
 script = ExtResource("1_uxe8e")
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 7.77368, 0)
-shadow_enabled = true
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.422618, 0.906308, 0, -0.906308, 0.422618, -5.49149, 43.5312, 54.3621)
@@ -142,7 +148,12 @@ material_override = SubResource("ShaderMaterial_8vlo4")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Terrain"]
 
-[node name="Water" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.00223, 0)
-material_override = SubResource("StandardMaterial3D_gpwie")
-mesh = SubResource("QuadMesh_2xu4t")
+[node name="Water" parent="." instance=ExtResource("13_5r6cg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.75823, 0)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_ghw6b")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
+transform = Transform3D(-0.866024, -0.433016, 0.250001, 0, 0.499998, 0.866026, -0.500003, 0.749999, -0.43301, 0, 7.77368, 0)
+shadow_enabled = true
