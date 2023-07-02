@@ -6,18 +6,22 @@ var target = null
 var current_path: PackedVector3Array
 var nav_map: RID
 var definition: Resource
+var current_health
 var sprite
 var team
+var healing_potions = 0
 var basic_attack: Resource
 var level
 var exp
-var behaviour: Behaviour
+var behaviour
 var personality: Personality
 var brain: NpcBrain
 # Array of actions to be done in order of queue starting at index 0.
 var action_queue: Array
 var occupied_building: Building
-# Temporary until I implement Barbarian Guilds
+# State the NPC is currently in.
+var state: String
+
 func _ready():
 	nav_map = get_world_3d().get_navigation_map()
 	pass # Replace with function body.
@@ -45,6 +49,7 @@ func initialize(start_position, character_name, team):
 		self.basic_attack = ResourceLoader.load("res://Resources/AttackDefinitions/basic_attack.tres")
 	self.basic_attack.get_script()	
 	self.team = team		
+	self.current_health = self.definition.max_health
 	if(team == "player"):
 		self.add_to_group("Player Entities")
 	# Handle Building Sprite
@@ -57,14 +62,15 @@ func initialize(start_position, character_name, team):
 	exp = 0
 	$Timer.wait_time = self.basic_attack.attack_speed
 	$Timer.timeout.connect(_on_timer_timeout)
-	self.personality = Personality.instantiate().initialize(self.definition)
-	self.brain = NpcBrain.instantiate().initialize(self.personality)
+	self.personality = Personality.new()
+	self.personality.initialize(self.definition)
+	self.brain = NpcBrain.new()
+	self.brain.initialize(self.personality)
+	self.behaviour = Behaviour.new()
+	self.behaviour.root_node = GameStateInit.list_of_bts["idle"]
 	
 func _on_timer_timeout():
-	# If we don't have a target start hunting enemies
-	if(target == null):
-		var offset = Behaviour.hunt()
-		set_destination(self.position+offset)
+	self.behaviour.think(self, GameStateInit.list_of_bts["idle"])
 		
 func set_destination(new_destination:Vector3):
 	var destination = new_destination

@@ -1,0 +1,50 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://c1e3eckorl844"]
+
+[sub_resource type="GDScript" id="GDScript_iptki"]
+script/source = "extends Action
+'''
+Actions directly modify the npc to set in motion events based on a series of considerations. 
+These are the \"leaf nodes\" of the behaviour tree. 
+
+find_target:
+	Selects the best target from the list of npc's currently colliding with the NPC's vision radius. 
+	Once best target is found, sets the target and initiates combat. 
+'''
+
+# List of considerations for choosing this specific reasoner
+var considerations = [\"personal_strength\", \"enemy_strength\"]
+var name = \"Attack Enemy\"
+var action_considerations = [\"enemy_strength\", \"distance\"]
+
+func consider(npc: NPC, kingdom_state):
+	var consideration_value = 0
+	for consideration in considerations:
+		var consider_node = kingdom_state.consider_list[consideration] 
+		consideration_value += consider_node.calculate_consideration_value(npc, kingdom_state)
+	consideration_value/considerations.size()
+	return consideration_value
+	
+func take_action(npc: NPC, kingdom_state):
+	if npc.target == null:
+		var best_value = 0
+		var best_enemy = npc.brain.enemies_in_range[0]
+		for enemy in npc.brain.enemies_in_range:
+			var enemy_consideration = 0
+			for consideration in action_considerations:
+				var consider_node = kingdom_state.consider_list[consideration]
+				enemy_consideration += consider_node.calculate_consideration_value(npc, kingdom_state)
+			enemy_consideration = enemy_consideration / action_considerations.size()
+			if enemy_consideration > best_value:
+				best_value = enemy_consideration
+				best_enemy = enemy
+		npc.target = best_enemy
+	npc.set_destination(npc.target)
+		
+	while distance(npc, npc.target) < npc.basic_attack.range:
+		npc.set_destination(npc.target)		
+	
+	attack_target(npc, npc.target)
+"
+
+[resource]
+script = SubResource("GDScript_iptki")

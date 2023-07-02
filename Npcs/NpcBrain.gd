@@ -15,7 +15,7 @@ var enemies_attacking_kingdom: Array
 # Dictionary of known monster lairs and their last seen location
 var known_lairs: Dictionary
 # Action currently being undertaken
-var current_action: Actions
+var current_action: Action
 # Personality of the NPC
 var personality: Personality
 # Dictionary of NPC Attributes
@@ -23,15 +23,11 @@ var current_attributes: Dictionary
 # Current Target
 var current_target: NPC
 # Self
-var me: NPC
 var party_leader: NPC
 var leading_party: bool
 
-func initialize(npc_personality, me):
-	self.me = me
+func initialize(npc_personality):
 	self.personality = npc_personality
 	self.known_enemies = {}
 	self.known_lairs = {}
-	self.current_action = Actions.instantiate()
-	current_action.initialize("Idle")
 	self.current_target = null

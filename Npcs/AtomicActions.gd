@@ -1,0 +1,45 @@
+class_name Action
+extends Resource
+var type: String
+
+'''
+The standard actions in game all Behaviour Nodes reference. These scripts handle the actual implementation of chosen behaviours.
+'''
+
+
+func set_destination(npc: NPC, target: Vector3):
+	return
+func set_target(npc: NPC, target: Node3D):
+	return
+func attack_target(attacker: Node3D, defender: Node3D):
+	return
+func leave_building(npc: NPC, building: Building):
+	return
+func equip_item(npc: NPC, item):
+	return
+func sell_item(building: Building, item):
+	return
+func buy_item(building: Building, item):
+	return
+func use_ability(npc: NPC, target_location: Vector3):
+	return
+func use_item(npc: NPC, item):
+	return
+func enter_building(npc: NPC, building: Building):
+	return
+func idle():
+	return	
+
+func distance(npc: NPC, enemy_npc: Node3D):
+	var enemy_pos = enemy_npc.global_position
+	var enemy_x = enemy_pos.x
+	var enemy_y = enemy_pos.y
+	var enemy_z = enemy_pos.z
+	var npc_pos = npc.global_position
+	var npc_x = npc_pos.x
+	var npc_y = npc_pos.y
+	var npc_z = npc_pos.z
+	
+	var distance = sqrt((enemy_x - npc_x)^2 + (enemy_y - npc_y)^2 + (enemy_z - npc_z)^2) 
+	
+	return distance
