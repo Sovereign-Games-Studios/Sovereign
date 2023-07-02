@@ -25,7 +25,7 @@ func _ready():
 	add_child(palace_ui)
 	var palace_scene = load("res://Buildings/building_node.tscn")
 	var palace = palace_scene.instantiate()
-	palace.initialize(Vector3(6, 0, 37), "Palace", "player")
+	palace.initialize(Vector3(6, 20, 37), "Palace", "player")
 	add_child(palace)
 	var gold_counter = get_node("PassiveIncome")
 	gold_counter.wait_time = 5

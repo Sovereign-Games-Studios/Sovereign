@@ -1,0 +1,53 @@
+# We allow this to run from within the editor!
+@tool
+extends StaticBody3D
+@export var generate: bool = false : set = generate_mesh
+@export var size: int = 200
+@export var subdivide: int = 199
+@export var amplitude: int = 16
+@export var noise: FastNoiseLite = FastNoiseLite.new()
+
+var team = "map"
+# TODO: definition fix to collision
+var definition = {"name": null}
+
+func generate_mesh(new_value: bool) -> void:
+	print("Generating Terrain mesh...")
+	
+	if noise.seed == 0:
+		noise.seed = randi()
+	
+	# create mesh
+	var plane_mesh = PlaneMesh.new()
+	plane_mesh.size = Vector2(size,size)
+	plane_mesh.subdivide_depth = subdivide
+	plane_mesh.subdivide_width = subdivide
+	
+	# get individual points from the mesh via the Surface tool
+	var surface_tool = SurfaceTool.new()
+	surface_tool.create_from(plane_mesh,0)
+	var data = surface_tool.commit_to_arrays()
+	var vertices = data[ArrayMesh.ARRAY_VERTEX]
+	
+	# set the height of the points randomly
+	for i in vertices.size():
+		var vertex = vertices[i]
+		vertices[i].y = noise.get_noise_2d(vertex.x,vertex.z) * amplitude
+	data[ArrayMesh.ARRAY_VERTEX] = vertices
+	
+	# construct back the mesh
+	var array_mesh = ArrayMesh.new()
+	array_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,data)
+	
+	# generate normals for getting good lighting
+	surface_tool.create_from(array_mesh,0)
+	surface_tool.generate_normals()
+
+	# set the mesh
+	$MeshInstance3D.mesh = surface_tool.commit()
+	# set the collision
+	$CollisionShape3D.shape = array_mesh.create_trimesh_shape()
+
+# Generate dynamically in game
+func _ready():
+	generate_mesh(true)
