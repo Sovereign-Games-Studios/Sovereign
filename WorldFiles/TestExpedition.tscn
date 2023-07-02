@@ -1,65 +1,89 @@
-[gd_scene load_steps=15 format=3 uid="uid://dcoe5mgvaqmm1"]
+[gd_scene load_steps=24 format=3 uid="uid://dcoe5mgvaqmm1"]
 
 [ext_resource type="Script" path="res://Player/KingdomState.gd" id="1_uxe8e"]
 [ext_resource type="Script" path="res://Player/Camera3D.gd" id="2_ukdeo"]
+[ext_resource type="Script" path="res://WorldFiles/Rock.gd" id="3_d555j"]
 [ext_resource type="Texture2D" uid="uid://chnx641kh2xlm" path="res://Resources/Environment/Rock-1.png" id="6_dxjp2"]
 [ext_resource type="Script" path="res://WorldFiles/FogOfWarPermanent.gd" id="7_5y3eh"]
 [ext_resource type="Shader" path="res://WorldFiles/fog_permanent.gdshader" id="8_vhmlx"]
 [ext_resource type="Script" path="res://WorldFiles/Fog.gd" id="9_i77d3"]
+[ext_resource type="Script" path="res://WorldFiles/Terrain.gd" id="10_vwwvs"]
+[ext_resource type="Shader" path="res://WorldFiles/Terrain.gdshader" id="11_5oyay"]
+[ext_resource type="Texture2D" uid="uid://bpvp63fespvgo" path="res://WorldFiles/Textures/grass.jpg" id="12_hcwfn"]
+[ext_resource type="Texture2D" uid="uid://bkftb17k2ebag" path="res://WorldFiles/Textures/rock.jpg" id="13_1teob"]
+[ext_resource type="Texture2D" uid="uid://cf6kf4xxoot5f" path="res://WorldFiles/Textures/sand.jpg" id="14_thgou"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_g3sij"]
 height = 1.53318
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_gmovu"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_h2c21"]
 render_priority = 2
 shader = ExtResource("8_vhmlx")
 shader_parameter/fogMaxDepth = null
 shader_parameter/maxRange = 20.0
 shader_parameter/defaultAlpha = 0.9
 shader_parameter/fogColor = Vector3(0, 0, 0)
-shader_parameter/mapWidth = 150.0
+shader_parameter/mapWidth = 145.0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1hle4"]
-size = Vector2(145, 145)
+size = Vector2(200, 200)
 subdivide_width = 100
 subdivide_depth = 100
 
 [sub_resource type="HeightMapShape3D" id="HeightMapShape3D_rs3ou"]
 
-[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_gtx8a"]
-
-[sub_resource type="NavigationMesh" id="NavigationMesh_xu7an"]
-vertices = PackedVector3Array(-72, 0.5, 63, -72, 0.5, 72, -63, 0.5, 72, 63, 0.5, 72, 72, 0.5, 72, 72, 0.5, 63, 72, 0.5, -63, 72, 0.5, -72, 63, 0.5, -72, -63, 0.5, -72, -72, 0.5, -72, -72, 0.5, -63, -72, 0.5, 54, -72, 0.5, 63, -63, 0.5, 72, 54, 0.5, 72, 63, 0.5, 72, 72, 0.5, 63, 72, 0.5, -54, 72, 0.5, -63, 63, 0.5, -72, 54, 0.5, -72, -54, 0.5, -72, -63, 0.5, -72, -72, 0.5, -63, -72, 0.5, -54, -72, 0.5, 54, -63, 0.5, 72, -54, 0.5, 72, -72, 0.5, 45, 54, 0.5, 72, 72, 0.5, 63, 72, 0.5, 54, 45, 0.5, 72, 72, 0.5, -9, 72, 0.5, -18, 18, 0.5, -72, 9, 0.5, -72, 27, 0.5, 72, 72, 0.5, 36, 72, 0.5, 27, 18, 0.5, 72, -72, 0.5, 9, -18, 0.5, 72, -9, 0.5, 72, -72, 0.5, 0, 0, 0.5, -72, -9, 0.5, -72, -72, 0.5, -9, -72, 0.5, 0, 72, 0.5, -45, 72, 0.5, -54, 54, 0.5, -72, 45, 0.5, -72, -45, 0.5, -72, -54, 0.5, -72, -72, 0.5, -54, -72, 0.5, -45, -72, 0.5, 45, -54, 0.5, 72, -45, 0.5, 72, -72, 0.5, 36, 45, 0.5, 72, 72, 0.5, 54, 72, 0.5, 45, 36, 0.5, 72, 72, 0.5, -18, 72, 0.5, -27, 27, 0.5, -72, 18, 0.5, -72, -9, 0.5, -72, -18, 0.5, -72, -72, 0.5, -18, -72, 0.5, -9, -72, 0.5, 18, -27, 0.5, 72, -18, 0.5, 72, -72, 0.5, 9, -18, 0.5, -72, -27, 0.5, -72, -72, 0.5, -27, -72, 0.5, -18, 72, 0.5, -36, 72, 0.5, -45, 45, 0.5, -72, 36, 0.5, -72, -36, 0.5, -72, -45, 0.5, -72, -72, 0.5, -45, -72, 0.5, -36, -72, 0.5, 36, -45, 0.5, 72, -36, 0.5, 72, -72, 0.5, 27, 36, 0.5, 72, 72, 0.5, 45, 72, 0.5, 36, 27, 0.5, 72, 72, 0.5, 0, 72, 0.5, -9, 9, 0.5, -72, 0, 0.5, -72, 18, 0.5, 72, 72, 0.5, 27, 72, 0.5, 18, 9, 0.5, 72, 72, 0.5, 0, 0, 0.5, -72, -72, 0.5, 0, -9, 0.5, 72, 0, 0.5, 72, 72, 0.5, 9, 9, 0.5, 72, 72, 0.5, 18, 72, 0.5, 9, 0, 0.5, 72, 72, 0.5, -27, 72, 0.5, -36, 36, 0.5, -72, 27, 0.5, -72, -27, 0.5, -72, -36, 0.5, -72, -72, 0.5, -36, -72, 0.5, -27, -72, 0.5, 27, -36, 0.5, 72, -27, 0.5, 72, -72, 0.5, 18)
-polygons = [PackedInt32Array(2, 1, 0), PackedInt32Array(5, 4, 3), PackedInt32Array(8, 7, 6), PackedInt32Array(11, 10, 9), PackedInt32Array(14, 13, 12), PackedInt32Array(17, 16, 15), PackedInt32Array(19, 18, 20), PackedInt32Array(20, 18, 21), PackedInt32Array(23, 22, 24), PackedInt32Array(24, 22, 25), PackedInt32Array(27, 26, 28), PackedInt32Array(28, 26, 29), PackedInt32Array(31, 30, 32), PackedInt32Array(32, 30, 33), PackedInt32Array(35, 34, 36), PackedInt32Array(36, 34, 37), PackedInt32Array(39, 38, 40), PackedInt32Array(40, 38, 41), PackedInt32Array(43, 42, 44), PackedInt32Array(44, 42, 45), PackedInt32Array(47, 46, 48), PackedInt32Array(48, 46, 49), PackedInt32Array(51, 50, 52), PackedInt32Array(52, 50, 53), PackedInt32Array(55, 54, 56), PackedInt32Array(56, 54, 57), PackedInt32Array(59, 58, 60), PackedInt32Array(60, 58, 61), PackedInt32Array(63, 62, 64), PackedInt32Array(64, 62, 65), PackedInt32Array(67, 66, 68), PackedInt32Array(68, 66, 69), PackedInt32Array(71, 70, 72), PackedInt32Array(72, 70, 73), PackedInt32Array(75, 74, 76), PackedInt32Array(76, 74, 77), PackedInt32Array(79, 78, 80), PackedInt32Array(80, 78, 81), PackedInt32Array(83, 82, 84), PackedInt32Array(84, 82, 85), PackedInt32Array(87, 86, 88), PackedInt32Array(88, 86, 89), PackedInt32Array(91, 90, 92), PackedInt32Array(92, 90, 93), PackedInt32Array(95, 94, 96), PackedInt32Array(96, 94, 97), PackedInt32Array(99, 98, 100), PackedInt32Array(100, 98, 101), PackedInt32Array(103, 102, 104), PackedInt32Array(104, 102, 105), PackedInt32Array(111, 110, 106), PackedInt32Array(106, 110, 109), PackedInt32Array(106, 109, 108), PackedInt32Array(106, 108, 107), PackedInt32Array(113, 112, 114), PackedInt32Array(114, 112, 115), PackedInt32Array(117, 116, 118), PackedInt32Array(118, 116, 119), PackedInt32Array(121, 120, 122), PackedInt32Array(122, 120, 123), PackedInt32Array(125, 124, 126), PackedInt32Array(126, 124, 127)]
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_auuxi"]
-albedo_color = Color(0.531589, 0.574303, 0.3972, 1)
+transparency = 1
+albedo_color = Color(1, 1, 1, 0)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1o0r8"]
 material = SubResource("StandardMaterial3D_auuxi")
 size = Vector2(145, 145)
 
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_gtx8a"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_5tiiv"]
+noise_type = 0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8vlo4"]
+render_priority = 0
+shader = ExtResource("11_5oyay")
+shader_parameter/min_rock_slope = 0.6
+shader_parameter/max_grass_slope = 0.8
+shader_parameter/min_rockgrass_height = -4.0
+shader_parameter/max_sand_height = -2.0
+shader_parameter/grass_texture = ExtResource("12_hcwfn")
+shader_parameter/rock_texture = ExtResource("13_1teob")
+shader_parameter/sand_texture = ExtResource("14_thgou")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gpwie"]
+albedo_color = Color(0, 0.2, 1, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_2xu4t"]
+size = Vector2(200, 200)
+orientation = 1
+
 [node name="World" type="Node3D"]
 script = ExtResource("1_uxe8e")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 7.77368, 0)
+shadow_enabled = true
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.422618, 0.906308, 0, -0.906308, 0.422618, -5.49149, 43.5312, 54.3621)
 fov = 88.6608
 script = ExtResource("2_ukdeo")
 
-[node name="RayCast3D" type="RayCast3D" parent="Camera3D"]
-target_position = Vector3(0, 0, 0)
-collide_with_areas = true
-
 [node name="Rock" type="CharacterBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, -71.3988, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, 0, 20, 0)
+script = ExtResource("3_d555j")
 
 [node name="Rock" type="Sprite3D" parent="Rock"]
-transform = Transform3D(1, 0, 0, 0, 0.819151, 0.573576, 0, -0.573576, 0.819151, 0.00194454, 0.403796, 0.0068283)
+transform = Transform3D(1, 0, 0, 0, 0.819151, 0.573576, 0, -0.573576, 0.819151, 0, 0, 0)
 texture = ExtResource("6_dxjp2")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Rock"]
-transform = Transform3D(1, 0, 0, 0, 0.48669, 0, 0, 0, 1, 0, 0.410894, 0)
 shape = SubResource("CylinderShape3D_g3sij")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="."]
@@ -84,13 +108,17 @@ wait_time = 0.201
 autostart = true
 
 [node name="Fog" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.443039, 0)
-material_override = SubResource("ShaderMaterial_gmovu")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 14, 0)
+visible = false
+material_override = SubResource("ShaderMaterial_h2c21")
 mesh = SubResource("PlaneMesh_1hle4")
 script = ExtResource("9_i77d3")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Fog"]
 shape = SubResource("HeightMapShape3D_rs3ou")
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_1o0r8")
 
 [node name="PassiveIncome" type="Timer" parent="."]
 autostart = true
@@ -103,12 +131,18 @@ top_level = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.647827, -0.26619, 0.354767)
 shape = SubResource("WorldBoundaryShape3D_gtx8a")
 
-[node name="CheckFogOfWar" type="Timer" parent="."]
-autostart = true
+[node name="Terrain" type="StaticBody3D" parent="."]
+script = ExtResource("10_vwwvs")
+subdivide = 100
+amplitude = 10
+noise = SubResource("FastNoiseLite_5tiiv")
 
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
-navigation_mesh = SubResource("NavigationMesh_xu7an")
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Terrain"]
+material_override = SubResource("ShaderMaterial_8vlo4")
 
-[node name="Ground" type="MeshInstance3D" parent="NavigationRegion3D"]
-mesh = SubResource("PlaneMesh_1o0r8")
-skeleton = NodePath("../..")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Terrain"]
+
+[node name="Water" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.00223, 0)
+material_override = SubResource("StandardMaterial3D_gpwie")
+mesh = SubResource("QuadMesh_2xu4t")

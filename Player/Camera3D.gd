@@ -2,7 +2,6 @@ extends Camera3D
 
 var align_time = .2
 var original_position
-var current_global_mouse_position
 var colliding_entity = null
 var selected_ui = null
 var ui_node
@@ -36,8 +35,7 @@ func _input(event):
 		var mouse = event.position
 		var ground_plane = get_node("../GroundPlane/CollisionShape3D").shape.get_plane()
 		var start = project_ray_origin(mouse)
-		var end = project_position(mouse, 100000)
-		current_global_mouse_position = ground_plane.intersects_ray(start, end)
+		var end = start + project_ray_normal(mouse) * 10000
 		
 		if event is InputEventMouseButton:
 			# Select Entity
@@ -54,3 +52,18 @@ func _input(event):
 			elif event.button_index == 5:
 				self.transform.origin.y += 5			
 	pass
+
+func get_ray_intersect(mouse):
+
+	var start = project_ray_origin(mouse)
+	var end = start + project_ray_normal(mouse) * 10000
+	
+	var worldspace = get_world_3d().direct_space_state		
+	var check_colliding_entity = worldspace.intersect_ray(PhysicsRayQueryParameters3D.create(start, end))
+	
+	# check that position exists
+	if(check_colliding_entity.has("collider")):
+		colliding_entity = check_colliding_entity["collider"]
+		return check_colliding_entity.position
+	return Vector3(0,0,0)
+	

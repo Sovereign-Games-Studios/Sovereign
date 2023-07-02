@@ -1,6 +1,8 @@
 extends CharacterBody3D
 class_name Building
 
+var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
+
 var team: String
 var definition: Resource
 # Array of NPCs inside the building
@@ -74,3 +76,11 @@ func _recruit_on_timer_timeout():
 			print("The ", self.definition.name, " Spawned NPC of type: ", npc_type, " using entity: ", npc.definition.name, " at ", spawn_location)
 			# We only want to spawn once a tick. 
 			return
+
+func _physics_process(delta):
+
+	# Add the gravity.
+	if not is_on_floor():
+		velocity.y -= gravity * delta
+
+	move_and_slide()

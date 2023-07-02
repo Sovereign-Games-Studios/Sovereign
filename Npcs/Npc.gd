@@ -1,6 +1,8 @@
 class_name NPC
 extends CharacterBody3D
 
+var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
+
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var target = null
 var current_path: PackedVector3Array
@@ -25,7 +27,11 @@ var state: String
 func _ready():
 	pass # Replace with function body.
 
-func _physics_process(_delta):
+func _physics_process(delta):
+	# Add the gravity.
+	if not is_on_floor():
+		velocity.y -= gravity * delta
+
 	var overlapping = $Vision.get_overlapping_bodies()
 	for node in overlapping:
 		if node.team == "enemy":
