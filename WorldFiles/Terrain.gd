@@ -13,6 +13,10 @@ var definition = {"name": null}
 
 func generate_mesh(new_value: bool) -> void:
 	print("Generating Terrain mesh...")
+	
+	if noise.seed == 0:
+		noise.seed = randi()
+	
 	# create mesh
 	var plane_mesh = PlaneMesh.new()
 	plane_mesh.size = Vector2(size,size)

@@ -5,7 +5,7 @@ extends MeshInstance3D
 var fog_map_size = Vector2(200, 200) # resolution of the fogMap image
 var fog_mesh_width = 145
 var fog_reveal_distance = 5
-var fog_max_depth = 5
+var fog_max_depth = 20
 
 func startFog():
 	print("Fog Initializing")

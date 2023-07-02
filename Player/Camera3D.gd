@@ -54,8 +54,6 @@ func _input(event):
 	pass
 
 func get_ray_intersect(mouse):
-	
-	var gridmap = get_node("../GridMap")
 
 	var start = project_ray_origin(mouse)
 	var end = start + project_ray_normal(mouse) * 10000

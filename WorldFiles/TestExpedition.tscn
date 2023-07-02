@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://dcoe5mgvaqmm1"]
+[gd_scene load_steps=24 format=3 uid="uid://dcoe5mgvaqmm1"]
 
 [ext_resource type="Script" path="res://Player/KingdomState.gd" id="1_uxe8e"]
 [ext_resource type="Script" path="res://Player/Camera3D.gd" id="2_ukdeo"]
@@ -43,18 +43,25 @@ size = Vector2(145, 145)
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_gtx8a"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_5tiiv"]
-frequency = 0.015
+noise_type = 0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8vlo4"]
 render_priority = 0
 shader = ExtResource("11_5oyay")
-shader_parameter/min_rock_slope = 0.72
-shader_parameter/max_grass_slope = 0.9
+shader_parameter/min_rock_slope = 0.6
+shader_parameter/max_grass_slope = 0.8
 shader_parameter/min_rockgrass_height = -4.0
 shader_parameter/max_sand_height = -2.0
 shader_parameter/grass_texture = ExtResource("12_hcwfn")
 shader_parameter/rock_texture = ExtResource("13_1teob")
 shader_parameter/sand_texture = ExtResource("14_thgou")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gpwie"]
+albedo_color = Color(0, 0.2, 1, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_2xu4t"]
+size = Vector2(200, 200)
+orientation = 1
 
 [node name="World" type="Node3D"]
 script = ExtResource("1_uxe8e")
@@ -101,7 +108,7 @@ wait_time = 0.201
 autostart = true
 
 [node name="Fog" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 14, 0)
 visible = false
 material_override = SubResource("ShaderMaterial_h2c21")
 mesh = SubResource("PlaneMesh_1hle4")
@@ -126,6 +133,7 @@ shape = SubResource("WorldBoundaryShape3D_gtx8a")
 
 [node name="Terrain" type="StaticBody3D" parent="."]
 script = ExtResource("10_vwwvs")
+subdivide = 100
 amplitude = 10
 noise = SubResource("FastNoiseLite_5tiiv")
 
@@ -133,3 +141,8 @@ noise = SubResource("FastNoiseLite_5tiiv")
 material_override = SubResource("ShaderMaterial_8vlo4")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Terrain"]
+
+[node name="Water" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.00223, 0)
+material_override = SubResource("StandardMaterial3D_gpwie")
+mesh = SubResource("QuadMesh_2xu4t")
