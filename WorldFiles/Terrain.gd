@@ -13,9 +13,10 @@ var definition = {"name": null}
 
 func generate_mesh(new_value: bool) -> void:
 	print("Generating Terrain mesh...")
+	var noise2 = noise.duplicate()
 	
-	if noise.seed == 0:
-		noise.seed = randi()
+	if noise2.seed == 0:
+		noise2.seed = randi()
 	
 	# create mesh
 	var plane_mesh = PlaneMesh.new()
@@ -32,7 +33,7 @@ func generate_mesh(new_value: bool) -> void:
 	# set the height of the points randomly
 	for i in vertices.size():
 		var vertex = vertices[i]
-		vertices[i].y = noise.get_noise_2d(vertex.x,vertex.z) * amplitude
+		vertices[i].y = noise2.get_noise_2d(vertex.x,vertex.z) * amplitude
 	data[ArrayMesh.ARRAY_VERTEX] = vertices
 	
 	# construct back the mesh
