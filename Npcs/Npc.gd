@@ -9,6 +9,7 @@ var current_path: PackedVector3Array
 var nav_map: RID
 var definition: Resource
 var current_health
+var collision_info
 var sprite
 var team
 var healing_potions = 0
@@ -97,8 +98,6 @@ func _on_timer_timeout():
 		
 func set_destination(new_destination:Vector3):
 	var destination = new_destination
-	print("New Destination: ", destination)
-	print("Current location: ", self.global_position )
 	$NavigationAgent3D.set_target_position(destination)
 
 func _on_navigation_agent_3d_velocity_computed(safe_velocity):

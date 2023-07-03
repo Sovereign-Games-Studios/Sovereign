@@ -12,20 +12,21 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if camera.colliding_entity != null:
-		if camera.colliding_entity.definition.name == "Palace":
-			$BuildList.show()			
-			#selected_ui = ui_node.instantiate()
-			#selected_ui.initialize(camera.colliding_entity)
-			#selected_ui.position = Vector2(0, 150)
-			#add_sibling(selected_ui)
-		elif camera.colliding_entity is Building and selected_ui == null:
-			$BuildList.hide()		
-			selected_ui = ui_node.instantiate()
-			selected_ui.initialize(camera.colliding_entity)
-			add_sibling(selected_ui)
-		elif camera.colliding_entity is NPC:
-			$BuildList.hide()
-			print("You've selected a unit.")
+		if camera.colliding_entity is NPC or camera.colliding_entity is Building: 
+			if camera.colliding_entity.definition.name == "Palace":
+				$BuildList.show()			
+				#selected_ui = ui_node.instantiate()
+				#selected_ui.initialize(camera.colliding_entity)
+				#selected_ui.position = Vector2(0, 150)
+				#add_sibling(selected_ui)
+			elif camera.colliding_entity is Building and selected_ui == null:
+				$BuildList.hide()		
+				selected_ui = ui_node.instantiate()
+				selected_ui.initialize(camera.colliding_entity)
+				add_sibling(selected_ui)
+			elif camera.colliding_entity is NPC:
+				$BuildList.hide()
+				print("You've selected a unit.")
 	else:
 		if(selected_ui):
 			selected_ui.queue_free()

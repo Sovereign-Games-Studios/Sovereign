@@ -6,7 +6,7 @@ var fogMapImg = null
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	MAIN = get_node("../../../../../World")
-	FOG = get_node("../../../../Fog")
+	FOG = get_node("../../../../Terrain/Fog/Fog")
 	get_viewport().size = FOG.fog_map_size
 	print("viewport size: ", get_viewport().size)
 	draw_rect(Rect2(Vector2(0, 0), FOG.fog_map_size), Color(0.0, 0.0, 0.0))
@@ -32,7 +32,7 @@ func _draw():
 	
 	for node in scene_tree.get_nodes_in_group("Player Entities"):	 
 		var pixel = FOG.getFogMapPixelForUnit(node)
-		var r = 10  # tier of the unit to multiply its viewing distance
+		var r = 200  # tier of the unit to multiply its viewing distance
 		
 		var blurSteps = 10.0
 		var blurMultRadius = 0.05
