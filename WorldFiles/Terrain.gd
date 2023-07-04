@@ -1,6 +1,13 @@
 # We allow this to run from within the editor!
 @tool
 extends StaticBody3D
+## Should we allow generation of meshes in the editor?
+@export var enabled_offline: bool = false:
+	get: return enabled_offline
+	set(x): enabled_offline = x
+## Cleans up the files that are generated
+@export var clean_up: bool = false : set = clean
+## Button to generate the meshes
 @export var generate: bool = false : set = generate_mesh
 @export var size: int = 200
 @export var subdivide: int = 199
@@ -9,12 +16,22 @@ extends StaticBody3D
 
 var team = "map"
 
+func clean(___) -> void:
+	$MeshInstance3D.mesh = null
+	$Fog.mesh = null
+	$CollisionShape3D.shape = null
+
 func generate_mesh(new_value: bool) -> void:
+	if not enabled_offline and Engine.is_editor_hint():
+		print("Disabled from running within editor")
+		return
 	print("Generating Terrain mesh...")
 	var noise2 = noise.duplicate()
 	
 	if noise2.seed == 0:
 		noise2.seed = randi()
+
+	prints("Seed", noise2.seed)
 	
 	# create mesh
 	var plane_mesh = PlaneMesh.new()
