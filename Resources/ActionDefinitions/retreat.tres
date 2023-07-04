@@ -12,7 +12,7 @@ find_target:
 '''
 
 # List of considerations for choosing this specific reasoner
-var considerations = [\"Enemy Strength\", \"Distance\", \"Nearby Allies\", \"Nearby Enemies\"]
+var considerations = [\"enemy_strength\", \"distance\"]
 var name = \"Retreat\"
 
 func consider(npc: NPC, kingdom_state):

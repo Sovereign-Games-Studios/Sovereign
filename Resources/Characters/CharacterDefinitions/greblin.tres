@@ -1,0 +1,62 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://x56110gga4aw"]
+
+[sub_resource type="GDScript" id="GDScript_exxon"]
+script/source = "extends Resource
+
+# Character types include: Hero, Monster, Support
+var character_type = \"Monster\"
+var name = \"Greblin\"
+
+var speed = 10
+var max_health = 100
+var current_health = 100
+# Dictionary where the key is the item and value is number of that item. 
+var inventory: Dictionary
+# Gold in character's inventory. 
+var gold = 0
+# Dictionary where the key is the item and value is location equipped. 
+var equipped_items: Dictionary
+
+# Gold Cost
+var cost = 1000
+# Array of Abilities, will fetch them from Resources/AbilityDefinitions
+var abilities = []
+# The basic attack definition for the character, by default it will use a basic attack definition
+# Setting this points to a specific Resource in Resources/AttackDefintions to use 
+var basic_attack = null
+# How responsive a character is to gold incentive, 1-100
+var greed = 50
+# How responsive a character is to threats to the Kingdom, 1-100
+var valor = 25
+# How brave a character is when engaging enemies or pursuing contracts, 1-100
+var bravery = 100
+# Determines threshold at which a character will flee a powerful foe or losing fight, 1-100
+var cowardice = 1
+
+
+var Strength = 20
+var Spirit = 5
+var Stamina = 20
+var Agility = 10
+var Charisma = 5
+var Wisdom = 5
+var Intelligence = 5
+
+var PhysicalResistance = 0
+var MagicResistance = 0
+var FireResistance = 0
+var AirResistance = 0
+var EarthResistance = 0
+var WaterResistance = 0
+var ElectricResistance = 0
+var NatureResistance = 0
+var ShadowResistance = 0
+var LightResistance = 0
+
+# Normally will search for associated sprite in the Resources/Images/Characters using the same name as this file. 
+# List override name here but ensure sprite is in Resources/Images/Characters
+var sprite_override: String
+"
+
+[resource]
+script = SubResource("GDScript_exxon")

@@ -11,9 +11,11 @@ var current_occupants: Array
 var recruited_npcs: Dictionary
 # Image
 var sprite
+var current_health
 var npc_node = preload("res://Npcs/npc_node.tscn")
 # Array of instantiated Services
 var services = {}
+signal death_signal
 
 var fall_speed = 50;
 
@@ -22,6 +24,7 @@ func initialize(start_position, building_name, team):
 	set_global_position(start_position)
 	self.definition = ResourceLoader.load("res://Resources/Buildings/BuildingDefinitions/"+building_name.to_lower()+".tres")
 	self.definition.get_script()
+	current_health = self.definition.max_health
 	self.current_occupants = []
 	if(team == "player"):
 		self.add_to_group("Player Entities")
@@ -42,6 +45,11 @@ func initialize(start_position, building_name, team):
 		$RecruitTimer.timeout.connect(_recruit_on_timer_timeout)
 	attach_services(definition.services)
 
+func _process(delta):
+	if current_health < 0:
+		print(self.name, " has been destroyed!")		
+		self.death_signal.emit()
+		self.queue_free()
 # TODO Services in general.
 func attach_services(services):
 	for service in services:

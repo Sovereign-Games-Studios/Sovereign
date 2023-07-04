@@ -3,13 +3,12 @@ extends MeshInstance3D
 
 
 var fog_map_size = Vector2(200, 200) # resolution of the fogMap image
-var fog_mesh_width = 145
-var fog_reveal_distance = 5
+var fog_mesh_width = 200
+var fog_reveal_distance = 10
 var fog_max_depth = 20
 
 func startFog():
 	print("Fog Initializing")
-	var MAIN = get_node("../World")
 	# set shader params
 	self.material_override.set_shader_parameter("maxRange", self.fog_reveal_distance)
 	self.material_override.set_shader_parameter("mapWidth", self.fog_mesh_width)

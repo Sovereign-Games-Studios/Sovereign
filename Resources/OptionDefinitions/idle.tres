@@ -15,7 +15,7 @@ engage_enemies:
 var considerations = [\"idle\"]
 var name = \"Idle\"
 # Child node, can either be an action or another behaviour node. 
-var options = [\"explore\", \"hunt_monsters\"]
+var options = [\"hunt_monsters\"]
 
 func consider(npc: NPC, kingdom_state: KingdomState):
 	var consideration_value = 0
