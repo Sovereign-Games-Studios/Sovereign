@@ -19,7 +19,7 @@ func _ready():
 	heroes = []
 	objectives = []
 	is_palace_alive = true
-	var fog = get_node("Terrain/Fog/Fog")
+	var fog = get_node("Terrain/Fog")
 	bitmap_node = get_node("SubViewportContainer/SubViewport/Camera2D/Sprite2D")
 	gold = 2000
 	fog.startFog()

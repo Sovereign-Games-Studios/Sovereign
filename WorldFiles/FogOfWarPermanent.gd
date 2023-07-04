@@ -6,7 +6,7 @@ var fogMapImg = null
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	MAIN = get_node("../../../../../World")
-	FOG = get_node("../../../../Terrain/Fog/Fog")
+	FOG = get_node("../../../../Terrain/Fog")
 	get_viewport().size = FOG.fog_map_size
 	print("viewport size: ", get_viewport().size)
 	draw_rect(Rect2(Vector2(0, 0), FOG.fog_map_size), Color(0.0, 0.0, 0.0))
@@ -46,6 +46,8 @@ func _on_Timer_timeout():
 	fogMapImg = get_viewport().get_texture().get_image()
 	var tex = ImageTexture.create_from_image(fogMapImg)
 	FOG.material_override.set_shader_parameter("fogMap", tex)
+	# set the collision
+	FOG.get_child(0).shape = FOG.mesh.create_trimesh_shape()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):

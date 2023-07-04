@@ -44,11 +44,10 @@ func generate_mesh(new_value: bool) -> void:
 
 	# set the mesh
 	$MeshInstance3D.mesh = surface_tool.commit()
-	$Fog/Fog.mesh = surface_tool.commit()	
+	$Fog.mesh = surface_tool.commit()	
 	
 	# set the collision
 	$CollisionShape3D.shape = array_mesh.create_trimesh_shape()
-	$Fog/CollisionShape3D.shape = array_mesh.create_trimesh_shape()
 
 # Generate dynamically in game
 func _ready():
