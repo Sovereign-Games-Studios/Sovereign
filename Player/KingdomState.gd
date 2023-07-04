@@ -11,7 +11,7 @@ var gold
 var test
 var palace_ui
 var is_fow_explored = false
-var fog_bitmap
+var bitmap_node
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	available_items = []
@@ -19,9 +19,8 @@ func _ready():
 	heroes = []
 	objectives = []
 	is_palace_alive = true
-	var fog = get_node("Fog")
-	var bitmap_node = get_node("SubViewportContainer/SubViewport/Camera2D/Sprite2D")
-	fog_bitmap = bitmap_node.fogMapImg
+	var fog = get_node("Terrain/Fog")
+	bitmap_node = get_node("SubViewportContainer/SubViewport/Camera2D/Sprite2D")
 	gold = 2000
 	fog.startFog()
 	var user_interface = load("res://UserInterface/UserInterface.tscn")
@@ -35,16 +34,26 @@ func _ready():
 	gold_counter.wait_time = 5
 	gold_counter.timeout.connect(_gold_on_timer_timeout)
 	var fow_timer = get_node("CheckFogOfWar")
-	fow_timer.wait_time = 30
+	fow_timer.wait_time = 1
 	fow_timer.timeout.connect(_refresh_fow_state)
+	scatter_lairs(4)
 	pass # Replace with function body.
 
+func scatter_lairs(num: int):
+	for loc in range(0, num):
+		var randomx = randi_range(-50, 50)
+		var randomz = randi_range(-50, 50)
+		var lair_scene = load("res://Buildings/building_node.tscn")
+		var lair = lair_scene.instantiate()
+		lair.initialize(Vector3(randomx, 20, randomz), "greblin_den", "enemy")
+		add_child(lair)
 func _refresh_fow_state():
+	var fog_bitmap = bitmap_node.fogMapImg
 	if fog_bitmap:
 		if not is_fow_explored:
-			for pixelx in fog_bitmap.size().x:
-				for pixely in fog_bitmap.size().y:
-					var pixel_color = fog_bitmap.color(pixelx, pixely)
+			for pixelx in fog_bitmap.get_size().x:
+				for pixely in fog_bitmap.get_size().y:
+					var pixel_color = fog_bitmap.get_pixel(pixelx, pixely)
 					if pixel_color == Color(0.0, 0.0, 0.0):
 						is_fow_explored = false
 						return

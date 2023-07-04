@@ -9,8 +9,10 @@ var current_path: PackedVector3Array
 var nav_map: RID
 var definition: Resource
 var current_health
+var collision_info
 var sprite
 var team
+var target_array
 var healing_potions = 0
 var basic_attack: Resource
 var level
@@ -20,9 +22,11 @@ var personality: Personality
 var brain: NpcBrain
 # Array of actions to be done in order of queue starting at index 0.
 var action_queue: Array
+var thinking
 var occupied_building: Building
 # State the NPC is currently in.
 var state: String
+signal death_signal
 
 func _ready():
 	$NavigationAgent3D.target_position = position
@@ -34,14 +38,30 @@ func align_with_y(xform, new_y):
 	xform.basis = xform.basis.orthonormalized()
 	return xform
 
+func _handle_target_death():
+	self.thinking = true
+	self.brain.enemies_in_range.remove_at(self.target_array)
+	self.target = null
+	print("Size of Array in npc after queue free: ", self.brain.enemies_in_range.size(), " NPC name is ", self.name)
+	self.thinking = false
+	
+func _process(delta):
+	if current_health < 0:
+		self.death_signal.emit()
+		self.queue_free()
+		
 func _physics_process(delta):
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y -= gravity * delta
 	var overlapping = $Vision.get_overlapping_bodies()
 	for node in overlapping:
-		if node.team == "enemy":
-			set_destination(node.position)
+		if self.team == "player" and node.team == "enemy":
+			if not node in self.brain.enemies_in_range:
+				self.brain.enemies_in_range.append(node)
+		elif self.team == "enemy" and node.team == "player":
+			if not node in self.brain.enemies_in_range:
+				self.brain.enemies_in_range.append(node)		
 	# TODO: temporary fix -- do not use pathplanning. Just walk in direction
 	if is_on_floor():
 		var vec = ($NavigationAgent3D.target_position - self.global_position).normalized() * definition.speed
@@ -65,7 +85,7 @@ func initialize(start_position, character_name, team):
 	self.set_position(start_position)
 	self.definition = ResourceLoader.load("res://Resources/Characters/CharacterDefinitions/"+character_name.to_lower()+".tres")
 	self.definition.get_script()
-	if(self.definition.basic_attack):
+	if(self.definition.basic_attack != null):
 		self.basic_attack = ResourceLoader.load("res://Resources/AttackDefinitions/"+self.definition.basic_attack.to_lower()+"_attack.tres")	
 	else:
 		self.basic_attack = ResourceLoader.load("res://Resources/AttackDefinitions/basic_attack.tres")
@@ -97,8 +117,6 @@ func _on_timer_timeout():
 		
 func set_destination(new_destination:Vector3):
 	var destination = new_destination
-	print("New Destination: ", destination)
-	print("Current location: ", self.global_position )
 	$NavigationAgent3D.set_target_position(destination)
 
 func _on_navigation_agent_3d_velocity_computed(safe_velocity):

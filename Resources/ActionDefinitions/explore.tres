@@ -22,9 +22,36 @@ func consider(npc: NPC, kingdom_state):
 	consideration_value/considerations.size()
 	return consideration_value
 	
-func take_action(npc: NPC):
-	var random_offset = randi_range(-5, 5)
-	npc.set_destination(npc.global_position + Vector3(random_offset, 0, random_offset))
+func take_action(npc: NPC, kingdom_state):
+	var npc_nodes = npc.get_children()
+	# Raycast is final node in list
+	var npc_raycast = npc_nodes[0]
+	var count = 0
+	# Vision is second to last node
+	if npc_raycast.is_colliding():
+		var collision = npc_raycast.get_collision_point()
+		var body = npc_raycast.get_collider().get_parent()
+		print(\"Collided with something...\")	
+		# Only perform alignment when hit with terrain?
+		# Could apply to other scenarios
+		if (body.name == \"Fog\"):
+			print(\"Collided with fog at: \", collision)
+			# Get the normal right below us 
+			var n = npc_raycast.get_collision_normal()
+			# Transform and interpolate with current orientation
+			var xform = npc.global_transform
+			xform.basis.x = n
+			xform.basis.z = -xform.basis.y.cross(n)
+			xform.basis = xform.basis.orthonormalized()
+			npc.global_transform = npc.global_transform.interpolate_with(xform, 0.2)
+			npc.set_destination(collision)
+	elif count > 4:
+		print(\"No collision, looking around!\")
+		npc.global_rotate(Vector3(0,0,1), 90)
+		count +=1
+	else:
+		print(\"Sadge, we move around.\")
+		npc.set_destination(npc.global_position + Vector3(randi_range(-20, 20), 0, randi_range(-20, 20)))
 "
 
 [resource]

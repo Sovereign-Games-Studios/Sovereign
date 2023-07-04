@@ -1,9 +1,7 @@
-[gd_scene load_steps=27 format=3 uid="uid://dcoe5mgvaqmm1"]
+[gd_scene load_steps=22 format=3 uid="uid://dcoe5mgvaqmm1"]
 
 [ext_resource type="Script" path="res://Player/KingdomState.gd" id="1_uxe8e"]
 [ext_resource type="Script" path="res://Player/Camera3D.gd" id="2_ukdeo"]
-[ext_resource type="Script" path="res://WorldFiles/Rock.gd" id="3_d555j"]
-[ext_resource type="Texture2D" uid="uid://chnx641kh2xlm" path="res://Resources/Environment/Rock-1.png" id="6_dxjp2"]
 [ext_resource type="Script" path="res://WorldFiles/FogOfWarPermanent.gd" id="7_5y3eh"]
 [ext_resource type="Shader" path="res://WorldFiles/fog_permanent.gdshader" id="8_vhmlx"]
 [ext_resource type="Script" path="res://WorldFiles/Fog.gd" id="9_i77d3"]
@@ -14,25 +12,6 @@
 [ext_resource type="PackedScene" uid="uid://7isu71kfcn21" path="res://WorldFiles/water.tscn" id="13_5r6cg"]
 [ext_resource type="Texture2D" uid="uid://cf6kf4xxoot5f" path="res://WorldFiles/Textures/sand.jpg" id="14_thgou"]
 [ext_resource type="Shader" path="res://WorldFiles/sky.gdshader" id="14_y2p2y"]
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_g3sij"]
-height = 1.53318
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_h2c21"]
-render_priority = 2
-shader = ExtResource("8_vhmlx")
-shader_parameter/fogMaxDepth = null
-shader_parameter/maxRange = 20.0
-shader_parameter/defaultAlpha = 0.9
-shader_parameter/fogColor = Vector3(0, 0, 0)
-shader_parameter/mapWidth = 145.0
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_1hle4"]
-size = Vector2(200, 200)
-subdivide_width = 100
-subdivide_depth = 100
-
-[sub_resource type="HeightMapShape3D" id="HeightMapShape3D_rs3ou"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_auuxi"]
 transparency = 1
@@ -46,7 +25,15 @@ size = Vector2(145, 145)
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_5tiiv"]
 noise_type = 0
-seed = -712895706
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_h2c21"]
+render_priority = 2
+shader = ExtResource("8_vhmlx")
+shader_parameter/fogMaxDepth = null
+shader_parameter/maxRange = 20.0
+shader_parameter/defaultAlpha = 0.9
+shader_parameter/fogColor = Vector3(0, 0, 0)
+shader_parameter/mapWidth = 145.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8vlo4"]
 render_priority = 0
@@ -81,17 +68,6 @@ transform = Transform3D(1, 0, 0, 0, 0.422618, 0.906308, 0, -0.906308, 0.422618, 
 fov = 88.6608
 script = ExtResource("2_ukdeo")
 
-[node name="Rock" type="CharacterBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, 0, 20, 0)
-script = ExtResource("3_d555j")
-
-[node name="Rock" type="Sprite3D" parent="Rock"]
-transform = Transform3D(1, 0, 0, 0, 0.819151, 0.573576, 0, -0.573576, 0.819151, 0, 0, 0)
-texture = ExtResource("6_dxjp2")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Rock"]
-shape = SubResource("CylinderShape3D_g3sij")
-
 [node name="SubViewportContainer" type="SubViewportContainer" parent="."]
 show_behind_parent = true
 offset_left = -547.0
@@ -113,16 +89,6 @@ script = ExtResource("7_5y3eh")
 wait_time = 0.201
 autostart = true
 
-[node name="Fog" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 14, 0)
-visible = false
-material_override = SubResource("ShaderMaterial_h2c21")
-mesh = SubResource("PlaneMesh_1hle4")
-script = ExtResource("9_i77d3")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Fog"]
-shape = SubResource("HeightMapShape3D_rs3ou")
-
 [node name="Ground" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_1o0r8")
 
@@ -142,6 +108,18 @@ script = ExtResource("10_vwwvs")
 subdivide = 100
 amplitude = 10
 noise = SubResource("FastNoiseLite_5tiiv")
+
+[node name="Fog" type="MeshInstance3D" parent="Terrain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+material_override = SubResource("ShaderMaterial_h2c21")
+skeleton = NodePath("../..")
+script = ExtResource("9_i77d3")
+
+[node name="Area3D" type="Area3D" parent="Terrain/Fog"]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Terrain/Fog/Area3D"]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Terrain"]
 material_override = SubResource("ShaderMaterial_8vlo4")

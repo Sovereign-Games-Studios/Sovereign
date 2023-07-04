@@ -1,0 +1,44 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://djj0tc0c6kyvh"]
+
+[sub_resource type="GDScript" id="GDScript_pm8wv"]
+script/source = "extends Resource
+
+# Building types include: Guild, Merchant, Lair, Palace, Support
+var building_type = \"Lair\"
+var name = \"Greblin Den\"
+
+var biome = \"All\"
+var constructable = false
+var max_health = 200
+var current_health = 200
+# Dictionary where the key is the NPC Type (searches for NPC in Resources/NpcDefinitions)
+# and the value is the number of NPCs of that type this building can sustain. 
+var recruitable_npcs = {\"Greblin\": 4}
+
+# Dictionary where the key is the Building Name and the Value is the level of building required. 
+var prerequisites = {\"Palace\": 1}
+
+# Gold Cost
+var cost = 2400
+# Array of Strings, will automatically instantiate each type as needed and attach them to the building
+# Will search Resources/ServiceDefinitions to fetch them and instantiate. 
+var services = {}
+# Array of Upgrades, will search Resources/UpgradeDefinitions to fetch and instantiate
+var upgrades = []
+
+var PhysicalResistance = 0
+var MagicResistance = 0
+var FireResistance = 0
+var AirResistance = 0
+var EarthResistance = 0
+var WaterResistance = 0
+var ElectricResistance = 0 
+var NatureResistance = 0
+var ShadowResistance = 0 
+var LightResistance = 0
+
+var sprite_override
+"
+
+[resource]
+script = SubResource("GDScript_pm8wv")

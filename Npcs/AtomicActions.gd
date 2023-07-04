@@ -12,6 +12,8 @@ func set_destination(npc: NPC, target: Vector3):
 func set_target(npc: NPC, target: Node3D):
 	return
 func attack_target(attacker: Node3D, defender: Node3D):
+	var damage = Damage.calculateDamage(attacker, defender)
+	defender.current_health -= damage
 	return
 func leave_building(npc: NPC, building: Building):
 	return
@@ -40,6 +42,6 @@ func distance(npc: NPC, enemy_npc: Node3D):
 	var npc_y = npc_pos.y
 	var npc_z = npc_pos.z
 	
-	var distance = sqrt((enemy_x - npc_x)^2 + (enemy_y - npc_y)^2 + (enemy_z - npc_z)^2) 
-	
+	var distance = sqrt(pow((enemy_x - npc_x), 2) + pow((enemy_y - npc_y), 2) + pow((enemy_z - npc_z), 2)) 
+	print("Distance to enemy: ", distance)
 	return distance

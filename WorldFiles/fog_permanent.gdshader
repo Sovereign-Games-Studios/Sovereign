@@ -6,7 +6,7 @@ uniform float fogMaxDepth;
 uniform float maxRange = 20;
 uniform float defaultAlpha = 0.9;
 uniform vec3 fogColor = vec3(0.0, 0.0, 0.0);
-uniform float mapWidth = 145;
+uniform float mapWidth = 200;
 uniform sampler2D fogMap;
 
 vec2 worldPosToPixel(vec3 worldPos) {
@@ -39,7 +39,11 @@ void vertex() {
 	vec2 pixelPos = worldPosToPixel(worldPos);
 
 	vec4 bitmapPixel = getPixelColor(pixelPos);
-
+	
+	if (VERTEX.y < 0.0) {
+		VERTEX.y = 0.0;
+	} 
+	
 	if (bitmapPixel.r > 0.8) {
 		VERTEX.y = - (fogMaxDepth * bitmapPixel.r + 10.0);
 	}
@@ -47,7 +51,6 @@ void vertex() {
 	
 	VERTEX.x = VERTEX.x + (bitmapPixel.r) ;
 	VERTEX.z = VERTEX.z + (bitmapPixel.r) ;
-	
 }
 
 void fragment() {
