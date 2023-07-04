@@ -22,14 +22,18 @@ func consider(npc: NPC, kingdom_state):
 		var consider_node = kingdom_state.consider_list[consideration] 
 		consideration_value += consider_node.calculate_consideration_value(npc, kingdom_state)
 	consideration_value/considerations.size()
-	return consideration_value
+	return consideration_value  
 	
 func take_action(npc: NPC, kingdom_state):
-	if npc.target == null:
+	if npc.thinking:
+		return
+	print(\"Size of Array in Attack: \", npc.brain.enemies_in_range.size(), \" NPC is \", npc.name)
+	if npc.target == null and npc.brain.enemies_in_range.size() > 0:
 		var best_value = 0
 		var best_enemy = npc.brain.enemies_in_range[0]
-		for enemy in npc.brain.enemies_in_range:
+		for enemy in npc.brain.enemies_in_range:		
 			var enemy_consideration = 0
+			npc.target = enemy			
 			for consideration in action_considerations:
 				var consider_node = kingdom_state.consider_list[consideration]
 				enemy_consideration += consider_node.calculate_consideration_value(npc, kingdom_state)
@@ -38,12 +42,16 @@ func take_action(npc: NPC, kingdom_state):
 				best_value = enemy_consideration
 				best_enemy = enemy
 		npc.target = best_enemy
-	npc.set_destination(npc.target)
+		npc.target_array = npc.brain.enemies_in_range.find(npc.target)
+		best_enemy.death_signal.connect(npc._handle_target_death)
+	elif npc.target == null:
+		return
+	npc.set_destination(npc.target.global_position)
 		
-	while distance(npc, npc.target) < npc.basic_attack.range:
-		npc.set_destination(npc.target)		
-	
-	attack_target(npc, npc.target)
+	if distance(npc, npc.target) > npc.basic_attack.range:
+		npc.set_destination(npc.target.global_position)		
+	else:
+		attack_target(npc, npc.target)
 "
 
 [resource]

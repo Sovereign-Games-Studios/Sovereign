@@ -36,8 +36,17 @@ func _ready():
 	var fow_timer = get_node("CheckFogOfWar")
 	fow_timer.wait_time = 1
 	fow_timer.timeout.connect(_refresh_fow_state)
+	scatter_lairs(4)
 	pass # Replace with function body.
 
+func scatter_lairs(num: int):
+	for loc in range(0, num):
+		var randomx = randi_range(-50, 50)
+		var randomz = randi_range(-50, 50)
+		var lair_scene = load("res://Buildings/building_node.tscn")
+		var lair = lair_scene.instantiate()
+		lair.initialize(Vector3(randomx, 20, randomz), "greblin_den", "enemy")
+		add_child(lair)
 func _refresh_fow_state():
 	var fog_bitmap = bitmap_node.fogMapImg
 	if fog_bitmap:

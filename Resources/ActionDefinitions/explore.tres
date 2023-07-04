@@ -22,7 +22,7 @@ func consider(npc: NPC, kingdom_state):
 	consideration_value/considerations.size()
 	return consideration_value
 	
-func take_action(npc: NPC):
+func take_action(npc: NPC, kingdom_state):
 	var npc_nodes = npc.get_children()
 	# Raycast is final node in list
 	var npc_raycast = npc_nodes[0]

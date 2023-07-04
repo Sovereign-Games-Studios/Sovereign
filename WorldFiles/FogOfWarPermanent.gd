@@ -32,7 +32,7 @@ func _draw():
 	
 	for node in scene_tree.get_nodes_in_group("Player Entities"):	 
 		var pixel = FOG.getFogMapPixelForUnit(node)
-		var r = 200  # tier of the unit to multiply its viewing distance
+		var r = 10  # tier of the unit to multiply its viewing distance
 		
 		var blurSteps = 10.0
 		var blurMultRadius = 0.05
@@ -47,7 +47,7 @@ func _on_Timer_timeout():
 	var tex = ImageTexture.create_from_image(fogMapImg)
 	FOG.material_override.set_shader_parameter("fogMap", tex)
 	# set the collision
-	FOG.get_child(0).shape = FOG.mesh.create_trimesh_shape()
+	FOG.get_child(0).get_child(0).shape = FOG.mesh.create_trimesh_shape()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
