@@ -5,6 +5,16 @@ var original_position
 var colliding_entity = null
 var selected_ui = null
 var ui_node
+
+## the speed of the camera scroll is computed as scroll_speed_base^x + 1
+## where x is the distance from camera to the object
+var scroll_speed_base = 1.03
+
+## how close the camera allowed to zoom
+var min_distance = 1
+## how far the camera is allowed
+var max_distance = 50
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	ui_node = preload("res://UserInterface/selected_building_ui.tscn")
@@ -47,11 +57,16 @@ func _input(event):
 					
 			# Scroll Wheel interaction to Zoom in 
 			if event.button_index == 4:
-				self.transform.origin.y -= 5
+				var object_below = get_ray_intersect(event.position)
+				var distance = global_position.distance_to(object_below)
+				if distance > min_distance:
+					self.transform.origin.y -= pow(scroll_speed_base, distance) - 1
 			# Scroll Wheel interaction to Zoom out
 			elif event.button_index == 5:
-				self.transform.origin.y += 5			
-	pass
+				var object_below = get_ray_intersect(event.position)
+				var distance = global_position.distance_to(object_below)
+				if distance < max_distance:
+					self.transform.origin.y += pow(scroll_speed_base, distance) - 1
 
 func get_ray_intersect(mouse):
 
