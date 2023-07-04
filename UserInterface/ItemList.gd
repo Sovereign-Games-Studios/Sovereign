@@ -34,7 +34,9 @@ func _input(event):
 		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 			var new_building = building_node.instantiate()
 			# if player builds it, its on their team. 
-			new_building.initialize(camera.get_ray_intersect(event.position), get_filename(selected_building.name), "player")
+			var pos = camera.get_ray_intersect(event.position)
+			pos.y += 1
+			new_building.initialize(pos, get_filename(selected_building.name), "player")
 			add_child(new_building)
 			# Place Building
 			deselect_all()

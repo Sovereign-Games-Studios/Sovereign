@@ -35,9 +35,9 @@ func align_with_y(xform, new_y):
 	return xform
 
 func _physics_process(delta):
+	velocity.y -= gravity * delta
 	# Add the gravity.
-	if not is_on_floor():
-		velocity.y -= gravity * delta
+	#if not is_on_floor():
 	var overlapping = $Vision.get_overlapping_bodies()
 	for node in overlapping:
 		if node.team == "enemy":

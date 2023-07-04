@@ -1,4 +1,4 @@
-extends CharacterBody3D
+extends StaticBody3D
 class_name Building
 
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -14,6 +14,8 @@ var sprite
 var npc_node = preload("res://Npcs/npc_node.tscn")
 # Array of instantiated Services
 var services = {}
+
+var fall_speed = 50;
 
 func initialize(start_position, building_name, team):
 	self.team = team
@@ -85,21 +87,11 @@ func align_with_y(xform, new_y):
 	return xform
 
 func _physics_process(delta):
-	# print(global_transform)
-	
-	# Add the gravity.
-	if not is_on_floor():
-		velocity.y -= gravity * delta
-		move_and_slide()
-	
-	for index in get_slide_collision_count():
-		var collision := get_slide_collision(index)
-		var body := collision.get_collider()
-		# Only perform alignment when hit with terrain?
-		# Could apply to other scenarios
-		if (body.name == "Terrain"):
-			# Get the normal right below us 
-			var n = $RayCast3D.get_collision_normal()
-			# Transform and interpolate with current orientation
-			var xform = align_with_y(global_transform, n)
-			global_transform = global_transform.interpolate_with(xform, 0.2)
+	if not $RayCast3D.is_colliding():
+		position.y -= fall_speed * delta
+	else:
+		# Get the normal right below us 
+		var n = $RayCast3D.get_collision_normal()
+		# Transform and interpolate with current orientation
+		var xform = align_with_y(global_transform, n)
+		global_transform = global_transform.interpolate_with(xform, 0.2)

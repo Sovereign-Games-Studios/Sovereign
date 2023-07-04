@@ -11,7 +11,7 @@ radius = 2.0
 top_radius = 2.0
 bottom_radius = 2.0
 
-[node name="BuildingNode" type="CharacterBody3D"]
+[node name="BuildingNode" type="StaticBody3D"]
 script = ExtResource("1_v8rkq")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
