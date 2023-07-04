@@ -59,12 +59,16 @@ func _input(event):
 			if event.button_index == 4:
 				var object_below = get_ray_intersect(event.position)
 				var distance = global_position.distance_to(object_below)
+				if distance > max_distance:
+					distance = max_distance - 1
 				if distance > min_distance:
 					self.transform.origin.y -= pow(scroll_speed_base, distance) - 1
 			# Scroll Wheel interaction to Zoom out
 			elif event.button_index == 5:
 				var object_below = get_ray_intersect(event.position)
 				var distance = global_position.distance_to(object_below)
+				if distance > max_distance:
+					distance = max_distance - 1
 				if distance < max_distance:
 					self.transform.origin.y += pow(scroll_speed_base, distance) - 1
 
