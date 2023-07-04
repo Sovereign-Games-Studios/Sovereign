@@ -30,7 +30,8 @@ func take_action(npc: NPC):
 	# Vision is second to last node
 	if npc_raycast.is_colliding():
 		var collision = npc_raycast.get_collision_point()
-		var body = npc_raycast.get_collider()
+		var body = npc_raycast.get_collider().get_parent()
+		print(\"Collided with something...\")	
 		# Only perform alignment when hit with terrain?
 		# Could apply to other scenarios
 		if (body.name == \"Fog\"):
