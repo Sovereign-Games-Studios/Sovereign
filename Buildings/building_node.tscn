@@ -29,7 +29,7 @@ autostart = true
 curve = SubResource("Curve3D_4pv3y")
 
 [node name="SpawnLocation" type="PathFollow3D" parent="SpawnPath"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.92686)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 3)
 
 [node name="RayCast3D" type="RayCast3D" parent="."]
 

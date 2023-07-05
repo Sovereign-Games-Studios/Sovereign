@@ -25,9 +25,9 @@ func consider(npc: NPC, kingdom_state):
 	return consideration_value  
 	
 func take_action(npc: NPC, kingdom_state):
-	if npc.thinking:
-		return
-	print(\"Size of Array in Attack: \", npc.brain.enemies_in_range.size(), \" NPC is \", npc.name)
+	# lock down NPC.brain
+	var mutex = Mutex.new()
+	mutex.lock()
 	if npc.target == null and npc.brain.enemies_in_range.size() > 0:
 		var best_value = 0
 		var best_enemy = npc.brain.enemies_in_range[0]
@@ -44,14 +44,20 @@ func take_action(npc: NPC, kingdom_state):
 		npc.target = best_enemy
 		npc.target_array = npc.brain.enemies_in_range.find(npc.target)
 		best_enemy.death_signal.connect(npc._handle_target_death)
+		mutex.unlock()		
 	elif npc.target == null:
-		return
+		mutex.unlock()
+		return \"idle\"
+		
 	npc.set_destination(npc.target.global_position)
 		
 	if distance(npc, npc.target) > npc.basic_attack.range:
-		npc.set_destination(npc.target.global_position)		
+		npc.set_destination(npc.target.get_global_position)
+		return \"pursuing target\"
 	else:
 		attack_target(npc, npc.target)
+		await npc.get_tree().create_timer(npc.basic_attack.attack_speed).timeout
+		return \"attacking target\"
 "
 
 [resource]

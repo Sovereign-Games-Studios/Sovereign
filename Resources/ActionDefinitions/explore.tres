@@ -31,11 +31,9 @@ func take_action(npc: NPC, kingdom_state):
 	if npc_raycast.is_colliding():
 		var collision = npc_raycast.get_collision_point()
 		var body = npc_raycast.get_collider().get_parent()
-		print(\"Collided with something...\")	
 		# Only perform alignment when hit with terrain?
 		# Could apply to other scenarios
 		if (body.name == \"Fog\"):
-			print(\"Collided with fog at: \", collision)
 			# Get the normal right below us 
 			var n = npc_raycast.get_collision_normal()
 			# Transform and interpolate with current orientation
@@ -45,13 +43,16 @@ func take_action(npc: NPC, kingdom_state):
 			xform.basis = xform.basis.orthonormalized()
 			npc.global_transform = npc.global_transform.interpolate_with(xform, 0.2)
 			npc.set_destination(collision)
-	elif count > 4:
-		print(\"No collision, looking around!\")
+			if npc.get_node(\"NavigationAgent3D\").target_position.x > 200 or npc.get_node(\"NavigationAgent3D\").target_position.z > 200:
+				print(\"TURN AROUND!\")
+				npc.set_destination(npc.get_parent_node_3d().global_position)
+			return \"exploring\"
+	elif count < 4:
 		npc.global_rotate(Vector3(0,0,1), 90)
 		count +=1
 	else:
-		print(\"Sadge, we move around.\")
 		npc.set_destination(npc.global_position + Vector3(randi_range(-20, 20), 0, randi_range(-20, 20)))
+		return \"exploring\"		
 "
 
 [resource]

@@ -43,5 +43,4 @@ func distance(npc: NPC, enemy_npc: Node3D):
 	var npc_z = npc_pos.z
 	
 	var distance = sqrt(pow((enemy_x - npc_x), 2) + pow((enemy_y - npc_y), 2) + pow((enemy_z - npc_z), 2)) 
-	print("Distance to enemy: ", distance)
 	return distance

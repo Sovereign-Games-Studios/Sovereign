@@ -63,10 +63,13 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	var text = ("Building Name: " + attached_building.definition.name +
-	 "\n Team: " + attached_building.team +
-	 "\n Currently Housed NPCs: {npcs}" +
-	 "\n Recruited NPCs: {recruited_npcs}").format({"npcs": attached_building.current_occupants, 
-	"recruited_npcs": attached_building.recruited_npcs})
-	$"Control/AspectRatioContainer/TabContainer/Building Info".text = text
+	if attached_building.is_visible_in_tree():
+		var text = ("Building Name: " + attached_building.definition.name +
+		 "\n Team: " + attached_building.team +
+		 "\n Currently Housed NPCs: {npcs}" +
+		 "\n Recruited NPCs: {recruited_npcs}").format({"npcs": attached_building.current_occupants, 
+		"recruited_npcs": attached_building.recruited_npcs})
+		$"Control/AspectRatioContainer/TabContainer/Building Info".text = text
+	else:
+		attached_building = null
 	pass

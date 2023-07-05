@@ -16,17 +16,19 @@ var target_array
 var healing_potions = 0
 var basic_attack: Resource
 var level
+var expose_position
 var exp
 var behaviour
 var personality: Personality
 var brain: NpcBrain
 # Array of actions to be done in order of queue starting at index 0.
 var action_queue: Array
-var thinking
 var occupied_building: Building
 # State the NPC is currently in.
 var state: String
 signal death_signal
+var mutex = Mutex.new()
+var root_node = GameStateInit.list_of_bts["idle"]
 
 func _ready():
 	$NavigationAgent3D.target_position = position
@@ -38,36 +40,66 @@ func align_with_y(xform, new_y):
 	xform.basis = xform.basis.orthonormalized()
 	return xform
 
+
 func _handle_target_death():
-	self.thinking = true
+	mutex.lock()
 	self.brain.enemies_in_range.remove_at(self.target_array)
 	self.target = null
-	print("Size of Array in npc after queue free: ", self.brain.enemies_in_range.size(), " NPC name is ", self.name)
-	self.thinking = false
+	var node = root_node
+	if self.brain.enemies_in_range.size() > 0:
+		node = GameStateInit.list_of_bts["combat"]	
+	else: 
+		self.state = "idle"
+	self.behaviour._adapt(self, node)	
+	mutex.unlock()
 	
 func _process(delta):
+	expose_position = self.global_position
 	if current_health < 0:
 		self.death_signal.emit()
 		self.queue_free()
 		
+	if $NavigationAgent3D.target_reached and self.state == "exploring":
+		mutex.lock()			
+		self.state = "idle"
+		mutex.unlock()			
+		velocity.x = 0
+		velocity.z = 0
+	elif $NavigationAgent3D.target_reached and self.state == "pursuing target":
+		mutex.lock()		
+		self.state = "idle"				
+		self.behaviour._adapt(self, GameStateInit.list_of_bts["combat"])	
+		mutex.unlock()			
+		velocity.x = 0
+		velocity.z = 0
+		
 func _physics_process(delta):
 	velocity.y -= gravity * delta
 	# Add the gravity.
-	#if not is_on_floor():
+	if self.global_position.y < -10:
+		self.global_position.y = 10 
 	var overlapping = $Vision.get_overlapping_bodies()
+
 	for node in overlapping:
 		if self.team == "player" and node.team == "enemy":
 			if not node in self.brain.enemies_in_range:
+				mutex.lock()			
 				self.brain.enemies_in_range.append(node)
+				mutex.unlock()
 		elif self.team == "enemy" and node.team == "player":
 			if not node in self.brain.enemies_in_range:
-				self.brain.enemies_in_range.append(node)		
+				mutex.lock()
+				self.brain.enemies_in_range.append(node)
+				mutex.unlock()		
+				
 	# TODO: temporary fix -- do not use pathplanning. Just walk in direction
 	if is_on_floor():
 		var vec = ($NavigationAgent3D.target_position - self.global_position).normalized() * definition.speed
 		velocity.x = vec.x
 		velocity.z = vec.z
+		
 	move_and_slide()
+	
 	for index in get_slide_collision_count():
 		var collision := get_slide_collision(index)
 		var body := collision.get_collider()
@@ -90,7 +122,7 @@ func initialize(start_position, character_name, team):
 	else:
 		self.basic_attack = ResourceLoader.load("res://Resources/AttackDefinitions/basic_attack.tres")
 	self.basic_attack.get_script()	
-	self.team = team		
+	self.team = team
 	self.current_health = self.definition.max_health
 	if(team == "player"):
 		self.add_to_group("Player Entities")
@@ -103,20 +135,24 @@ func initialize(start_position, character_name, team):
 	level = 1
 	exp = 0
 	$Timer.wait_time = 5
-	$Timer.timeout.connect(_on_timer_timeout)
+	$Timer.timeout.connect(_idle_check)
 	self.personality = Personality.new()
 	self.personality.initialize(self.definition)
 	self.brain = NpcBrain.new()
 	self.brain.initialize(self.personality)
 	self.behaviour = Behaviour.new()
-	self.behaviour.root_node = GameStateInit.list_of_bts["idle"]
+	self.state = "idle"
+	self.behaviour.start_thinking(self, GameStateInit.list_of_bts["idle"])
 
-	
-func _on_timer_timeout():
-	self.behaviour.think(self, GameStateInit.list_of_bts["idle"])
+func _idle_check():
+	if self.state == "idle":
+		self.behaviour.start_thinking(self, GameStateInit.list_of_bts["idle"])
+	elif self.state == "attacking target":
+		self.behaviour.start_thinking(self, GameStateInit.list_of_bts["combat"])
 		
 func set_destination(new_destination:Vector3):
 	var destination = new_destination
+	print(self.definition.name + " new position is " + destination)
 	$NavigationAgent3D.set_target_position(destination)
 
 func _on_navigation_agent_3d_velocity_computed(safe_velocity):
@@ -137,4 +173,3 @@ func enterBuilding(target_building:Building):
 	if self.global_position.distance_to(target_building.global_position) < 10:
 		target_building.current_occupants.append(self)
 		self.hide()
-		self.status = "Inside Building"

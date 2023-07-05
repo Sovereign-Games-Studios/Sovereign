@@ -43,7 +43,7 @@ var Charisma = 5
 var Wisdom = 5
 var Intelligence = 5
 
-var PhysicalResistance = 50
+var PhysicalResistance = 1
 var MagicResistance = 0
 var FireResistance = 0
 var AirResistance = 0
