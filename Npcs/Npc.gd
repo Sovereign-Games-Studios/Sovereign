@@ -32,7 +32,8 @@ var root_node = GameStateInit.list_of_bts["idle"]
 var home
 
 func _ready():
-	$NavigationAgent3D.target_position = position
+	self.behaviour.initialize(GameStateInit.list_of_bts["idle"], get_node("/root/World"), self)	
+	add_child(self.behaviour)
 	pass # Replace with function body.
 
 func align_with_y(xform, new_y):
@@ -44,33 +45,27 @@ func align_with_y(xform, new_y):
 
 func _handle_target_death():
 	mutex.lock()
-	self.brain.enemies_in_range.remove_at(self.target_array)
+	self.brain.enemies_in_range.remove_at(self.brain.enemies_in_range.find(self.target))
 	self.target = null
 	var node = root_node
 	if self.brain.enemies_in_range.size() > 0:
 		node = GameStateInit.list_of_bts["combat"]	
 	else: 
 		self.state = "idle"
-	await self.behaviour._adapt(self, node)	
+	await self.behaviour.interrupt(node)	
 	mutex.unlock()
 	
 func _process(delta):
 	expose_position = self.global_position
 	if current_health < 0:
+		self.team = "corpse"		
 		self.death_signal.emit()
+		if is_instance_valid(self.behaviour):
+			self.behaviour.queue_free()	
+		await get_tree().create_timer(12).timeout			
 		self.queue_free()
 		
-	if $NavigationAgent3D.target_reached and self.state == "exploring":
-		mutex.lock()			
-		self.state = "idle"
-		mutex.unlock()			
-		velocity.x = 0
-		velocity.z = 0
-	elif $NavigationAgent3D.target_reached and self.state == "pursuing target":
-		mutex.lock()		
-		self.state = "idle"				
-		await self.behaviour._adapt(self, GameStateInit.list_of_bts["combat"])	
-		mutex.unlock()			
+	if $NavigationAgent3D.target_reached:
 		velocity.x = 0
 		velocity.z = 0
 		
@@ -142,17 +137,11 @@ func initialize(start_position, character_name, team, home: Building):
 	self.personality.initialize(self.definition)
 	self.brain = NpcBrain.new()
 	self.brain.initialize(self.personality)
-	self.behaviour = Behaviour.new()
-	self.state = "idle"
-	await self.behaviour._adapt(self, GameStateInit.list_of_bts["idle"])
+	self.behaviour = BehaviourTree.new()
 
 func _idle_check():
-	if self.state == "idle":
-		print("NPC is idle, changing behaviour.")
-		await self.behaviour._adapt(self, GameStateInit.list_of_bts["idle"])
-	elif self.state == "attacking target":
-		await self.behaviour._adapt(self, GameStateInit.list_of_bts["combat"])
-		
+	pass
+	
 func set_destination(new_destination):
 	var destination = new_destination
 	$NavigationAgent3D.set_target_position(destination)

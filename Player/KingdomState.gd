@@ -60,7 +60,6 @@ func _refresh_fow_state():
 		is_fow_explored = true
 	
 func _gold_on_timer_timeout():
-	print("adding_gold")
 	gold += 100
 	pass
 # Called every frame. 'delta' is the elapsed time since the previous frame.

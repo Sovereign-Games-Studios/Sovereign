@@ -16,7 +16,7 @@ var child_nodes = []
 var type = \"ActionQueue\"
 
 func consider(npc: NPC, kingdom_state: KingdomState):
-	var consideration_value = 0
+	var consideration_value = 100
 	for consideration in considerations:
 		var consider_node = kingdom_state.consider_list[consideration] 
 		consideration_value += consider_node.calculate_consideration_value(npc, kingdom_state)

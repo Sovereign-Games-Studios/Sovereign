@@ -6,43 +6,66 @@ The standard actions in game all Behaviour Nodes reference. These scripts handle
 '''
 
 
-func set_destination(npc: NPC, target: Vector3):
+func set_target(npc: NPC, team_state: KingdomState):
+	var best_distance = 10000
+	var best_enemy = null
+	for enemy in npc.brain.enemies_in_range:
+		if is_instance_valid(enemy):
+			npc.target = enemy
+			var distance = distance(npc, team_state)
+			if distance < best_distance:
+				best_enemy = enemy
+	if is_instance_valid(best_enemy):
+		best_enemy.death_signal.connect(npc._handle_target_death)
+		npc.target = best_enemy
+	if is_instance_valid(npc.target):
+		return "SUCCESS"
+	else:
+		return "FAILURE"
+		
+func attack_target(npc: NPC, team_state: KingdomState):
+	var damage = Damage.calculateDamage(npc, npc.target)
+	npc.target.current_health -= damage
 	return
-func set_target(npc: NPC, target: Node3D):
+	
+func move_to_target(npc: NPC, team_state: KingdomState):
+	var counter = 0
+	var distance = 9999999
+	while npc.basic_attack.range < distance:
+		await npc.get_tree().create_timer(1).timeout
+		if npc.target != null:
+			counter += 1
+			distance = distance(npc, team_state)			
+			if counter > 10:
+				return "FAILURE"
+		else:
+			return "FAILURE"
+	return "SUCCESS"
+	
+func leave_building(npc: NPC, team_state: KingdomState):
 	return
-func attack_target(attacker: Node3D, defender: Node3D):
-	var damage = Damage.calculateDamage(attacker, defender)
-	defender.current_health -= damage
+func equip_item(npc: NPC, team_state: KingdomState):
 	return
-func move_to_target(npc: NPC, building: Building):
+func sell_item(npc: NPC, team_state: KingdomState):
 	return
-func leave_building(npc: NPC, building: Building):
+func buy_item(npc: NPC, team_state: KingdomState):
 	return
-func equip_item(npc: NPC, item):
+func use_ability(npc: NPC, team_state: KingdomState):
 	return
-func sell_item(building: Building, item):
+func use_item(npc: NPC, team_state: KingdomState):
 	return
-func buy_item(building: Building, item):
+func enter_building(npc: NPC, team_state: KingdomState):
 	return
-func use_ability(npc: NPC, target_location: Vector3):
-	return
-func use_item(npc: NPC, item):
-	return
-func enter_building(npc: NPC, building: Building):
-	return
-func idle():
+func idle(npc: NPC, team_state: KingdomState):
 	return	
-func go_home():
+func go_home(npc: NPC, team_state: KingdomState):
 	return
-func explore(npc):
-	print("NPC in action:", npc)
+func explore(npc: NPC, team_state: KingdomState):
 	var npc_raycast = npc.get_child(0)
 	
-	print("Raycast: ", npc_raycast)
 	var count = 0
 	while count < 4:
 		if npc_raycast.is_colliding():
-			print("Collided with something: ", npc_raycast.get_collider())			
 			var collision = npc_raycast.get_collision_point()
 			var body = npc_raycast.get_collider().get_parent()
 			# Only perform alignment when hit with terrain?
@@ -58,21 +81,33 @@ func explore(npc):
 				xform.basis = xform.basis.orthonormalized()
 				npc.global_transform = npc.global_transform.interpolate_with(xform, 0.2)
 				npc.set_destination(collision)
-				print("Exploring Fog")
-				return "exploring"
+				var counter = 0
+				while not npc.get_children()[3].is_target_reached():
+					await npc.get_tree().create_timer(1).timeout
+					counter += 1
+					if counter > 10:
+						return "FAILURE"
+				return "SUCCESS"
 			else:
-				print("Rotate to find FoW")
 				npc.basis = npc.basis.rotated(Vector3(0,1,0), 90)
 				count +=1
 		else:
-			print("Rotate to find FoW")
 			npc.basis = npc.basis.rotated(Vector3(0,1,0), 90)
 			count +=1
 			
-	print("Fog Not Found")
 	npc.set_destination(npc.global_position + Vector3(randi_range(-20, 20), 0, randi_range(-20, 20)))
-
-func distance(npc: NPC, enemy_npc: Node3D):
+	var counter = 0
+	while not npc.get_children()[3].is_target_reached():
+		await npc.get_tree().create_timer(1).timeout
+		if not is_instance_valid(npc):
+			return "FAILURE"
+		counter += 1
+		if counter > 10:
+			return "FAILURE"
+	return "SUCCESS"
+	
+func distance(npc: NPC, team_state: KingdomState):
+	var enemy_npc = npc.target
 	var enemy_pos = enemy_npc.global_position
 	var enemy_x = enemy_pos.x
 	var enemy_y = enemy_pos.y

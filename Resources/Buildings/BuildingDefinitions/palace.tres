@@ -13,7 +13,7 @@ var max_health = 1000
 var current_health = 1000
 # Dictionary where the key is the NPC Type (searches for NPC in Resources/NpcDefinitions)
 # and the value is the number of NPCs of that type this building can sustain. 
-var recruitable_npcs = {\"Guard\": 3}
+var recruitable_npcs = {\"Guard\": 1}
 
 # Dictionary where the key is the Building Name and the Value is the level of building required. 
 var prerequisites = {\"Palace\": 1}

@@ -33,7 +33,7 @@ func _process(delta):
 				add_sibling(selected_ui)
 			elif camera.colliding_entity is NPC:
 				$BuildList.hide()
-				print("NPC state: ", camera.colliding_entity.state)
+				print("NPC state: ", camera.colliding_entity.behaviour.current_node)
 	else:
 		if(selected_ui):
 			selected_ui.queue_free()

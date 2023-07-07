@@ -41,7 +41,7 @@ func initialize(start_position, building_name, team):
 	$Sprite3D.texture = self.sprite	
 	
 	if definition.building_type == "Support" or definition.building_type == "Lair" or definition.building_type == "Merchant":
-		$RecruitTimer.wait_time = 10
+		$RecruitTimer.wait_time = 1
 		$RecruitTimer.timeout.connect(_recruit_on_timer_timeout)
 	attach_services(definition.services)
 
@@ -79,7 +79,7 @@ func _recruit_on_timer_timeout():
 		if self.recruited_npcs[npc_type].size() < maximum_npcs[npc_type]:
 			var npc = npc_node.instantiate()
 			var spawn_location = self.get_node("SpawnPath/SpawnLocation").get_global_position()
-			npc.initialize(spawn_location, npc_type, team)
+			npc.initialize(spawn_location, npc_type, team, self)
 			if npc.team == "player":
 				npc.add_to_group("Player Entities")
 			self.recruited_npcs[npc_type].append(npc)
