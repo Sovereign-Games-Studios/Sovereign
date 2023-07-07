@@ -63,7 +63,7 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if attached_building.is_visible_in_tree():
+	if attached_building:
 		var text = ("Building Name: " + attached_building.definition.name +
 		 "\n Team: " + attached_building.team +
 		 "\n Currently Housed NPCs: {npcs}" +

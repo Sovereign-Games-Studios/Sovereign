@@ -50,6 +50,7 @@ func _process(delta):
 		print(self.name, " has been destroyed!")		
 		self.death_signal.emit()
 		self.queue_free()
+		
 # TODO Services in general.
 func attach_services(services):
 	for service in services:

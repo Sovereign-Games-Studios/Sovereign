@@ -3,9 +3,10 @@
 [sub_resource type="GDScript" id="GDScript_exf21"]
 script/source = "extends Resource
 
-var value = 100
 
 func calculate_consideration_value(npc: NPC, kingdom_state):
+	var value = 100
+	
 	var npc_knowledge = npc.brain
 	
 	if (npc.current_health / npc.definition.max_health) < .3 :

@@ -29,6 +29,7 @@ var state: String
 signal death_signal
 var mutex = Mutex.new()
 var root_node = GameStateInit.list_of_bts["idle"]
+var home
 
 func _ready():
 	$NavigationAgent3D.target_position = position
@@ -50,7 +51,7 @@ func _handle_target_death():
 		node = GameStateInit.list_of_bts["combat"]	
 	else: 
 		self.state = "idle"
-	self.behaviour._adapt(self, node)	
+	await self.behaviour._adapt(self, node)	
 	mutex.unlock()
 	
 func _process(delta):
@@ -68,7 +69,7 @@ func _process(delta):
 	elif $NavigationAgent3D.target_reached and self.state == "pursuing target":
 		mutex.lock()		
 		self.state = "idle"				
-		self.behaviour._adapt(self, GameStateInit.list_of_bts["combat"])	
+		await self.behaviour._adapt(self, GameStateInit.list_of_bts["combat"])	
 		mutex.unlock()			
 		velocity.x = 0
 		velocity.z = 0
@@ -113,7 +114,8 @@ func _physics_process(delta):
 			global_transform = global_transform.interpolate_with(xform, 0.2)
 
 
-func initialize(start_position, character_name, team):
+func initialize(start_position, character_name, team, home: Building):
+	self.home = home
 	self.set_position(start_position)
 	self.definition = ResourceLoader.load("res://Resources/Characters/CharacterDefinitions/"+character_name.to_lower()+".tres")
 	self.definition.get_script()
@@ -134,7 +136,7 @@ func initialize(start_position, character_name, team):
 	$Sprite.texture = self.sprite
 	level = 1
 	exp = 0
-	$Timer.wait_time = 5
+	$Timer.wait_time = 10
 	$Timer.timeout.connect(_idle_check)
 	self.personality = Personality.new()
 	self.personality.initialize(self.definition)
@@ -142,17 +144,17 @@ func initialize(start_position, character_name, team):
 	self.brain.initialize(self.personality)
 	self.behaviour = Behaviour.new()
 	self.state = "idle"
-	self.behaviour.start_thinking(self, GameStateInit.list_of_bts["idle"])
+	await self.behaviour._adapt(self, GameStateInit.list_of_bts["idle"])
 
 func _idle_check():
 	if self.state == "idle":
-		self.behaviour.start_thinking(self, GameStateInit.list_of_bts["idle"])
+		print("NPC is idle, changing behaviour.")
+		await self.behaviour._adapt(self, GameStateInit.list_of_bts["idle"])
 	elif self.state == "attacking target":
-		self.behaviour.start_thinking(self, GameStateInit.list_of_bts["combat"])
+		await self.behaviour._adapt(self, GameStateInit.list_of_bts["combat"])
 		
-func set_destination(new_destination:Vector3):
+func set_destination(new_destination):
 	var destination = new_destination
-	print(self.definition.name + " new position is " + destination)
 	$NavigationAgent3D.set_target_position(destination)
 
 func _on_navigation_agent_3d_velocity_computed(safe_velocity):

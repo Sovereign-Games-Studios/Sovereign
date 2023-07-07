@@ -12,8 +12,8 @@ radius = 21.0
 script = ExtResource("1_sdoy5")
 
 [node name="VisionRay" type="RayCast3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.13142, 0)
-target_position = Vector3(30, -6, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0)
+target_position = Vector3(35, -15, 0)
 collision_mask = 2
 hit_from_inside = true
 collide_with_areas = true
@@ -29,7 +29,6 @@ shape = SubResource("CylinderShape3D_s5j36")
 target_desired_distance = 3.0
 path_max_distance = 10.01
 radius = 1.0
-ignore_y = false
 
 [node name="Timer" type="Timer" parent="."]
 autostart = true
@@ -40,5 +39,6 @@ autostart = true
 shape = SubResource("SphereShape3D_cfbix")
 
 [node name="RayCast3D" type="RayCast3D" parent="."]
+collide_with_areas = true
 
 [connection signal="velocity_computed" from="NavigationAgent3D" to="." method="_on_navigation_agent_3d_velocity_computed"]

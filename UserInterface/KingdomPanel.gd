@@ -3,6 +3,7 @@ extends Control
 var camera
 var selected_ui: SelectedBuildingUi = null
 var ui_node = preload("res://UserInterface/selected_building_ui.tscn")
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	camera = get_node("../../Camera3D")
@@ -11,7 +12,7 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if camera.colliding_entity != null:
+	if camera.colliding_entity is Node3D:
 		if camera.colliding_entity is NPC or camera.colliding_entity is Building: 
 			if camera.colliding_entity.definition.name == "Palace":
 				if(selected_ui):

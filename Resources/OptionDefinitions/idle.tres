@@ -13,9 +13,9 @@ engage_enemies:
 
 # List of considerations for choosing this specific option
 var considerations = [\"idle\"]
-var name = \"Idle\"
+var type = \"Option\"
 # Child node, can either be an action or another behaviour node. 
-var options = [\"hunt_monsters\"]
+var child_nodes = [\"hunt_monsters\"]
 
 func consider(npc: NPC, kingdom_state: KingdomState):
 	var consideration_value = 0

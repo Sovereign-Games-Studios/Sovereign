@@ -15,8 +15,9 @@ engage_enemies:
 var considerations = [\"personal_strength\"]
 
 # Child node, can either be an action or another behaviour node. 
-var options = [\"explore\", \"combat\"]
-var name = \"Hunt Monsters\"
+var child_nodes = [\"explore\", \"combat\"]
+var type = \"Option\"
+
 func consider(npc: NPC, kingdom_state):
 	var consideration_value = 0
 	for consideration in considerations:
