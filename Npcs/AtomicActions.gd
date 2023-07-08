@@ -31,8 +31,14 @@ func attack_target(npc: NPC, team_state: KingdomState):
 		return "SUCCESS"
 	else:
 		return "FAILURE"
-	
+		
 func move_to_target(npc: NPC, team_state: KingdomState):
+	if npc.get_children()[3].distance_to_target() > npc.basic_attack.range:
+		return "RUNNING"
+	else:
+		return "SUCCESS"
+	
+func move_to_destination(npc: NPC, team_state: KingdomState):
 	# moves to current target, will loop until target is reached or becomes unreachable.
 	if not npc.get_children()[3].is_navigation_finished():
 		# print("Navigation running from {current} to {destination}".format({"current": npc.global_position, "destination": npc.get_child(3).target_position}))

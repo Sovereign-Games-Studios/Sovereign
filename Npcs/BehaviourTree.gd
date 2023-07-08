@@ -31,7 +31,7 @@ func _process(_delta):
 	if 	parent_npc.action_queue.size() < 4 and tree_status != "RUNNING" and not should_exit:
 		process_tree(self.root_node)
 	if parent_npc.action_queue.size() > 0 and not should_exit:
-		if action_status == "RUNNING" and current_action != null and ticks_since_last_action < 5000:
+		if action_status == "RUNNING" and current_action != null and ticks_since_last_action < 1000:
 			ticks_since_last_action += 1
 			action_status = await process_action(current_action)
 			return
@@ -49,6 +49,7 @@ func _process(_delta):
 			mutex.lock()
 			var action = parent_npc.action_queue.pop_front()
 			mutex.unlock()
+			print("Processing New Action: ", action)			
 			action_status = await process_action(action)			
 	pass
 

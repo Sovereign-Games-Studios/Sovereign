@@ -12,8 +12,8 @@ radius = 21.0
 script = ExtResource("1_sdoy5")
 
 [node name="VisionRay" type="RayCast3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0)
-target_position = Vector3(35, -15, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9.53055, 0)
+target_position = Vector3(22, -9, 0)
 collision_mask = 2
 hit_from_inside = true
 collide_with_areas = true
