@@ -32,6 +32,7 @@ var root_node = GameStateInit.list_of_bts["idle"]
 var home
 
 func _ready():
+	$NavigationAgent3D.set_target_position(self.global_position)
 	self.behaviour.initialize(GameStateInit.list_of_bts["idle"], get_node("/root/World"), self)	
 	add_child(self.behaviour)
 	pass # Replace with function body.

@@ -26,10 +26,13 @@ func set_target(npc: NPC, team_state: KingdomState):
 		
 func attack_target(npc: NPC, team_state: KingdomState):
 	if npc.basic_attack.range >= distance(npc, team_state):
+		print("Target in range")
 		var damage = Damage.calculateDamage(npc, npc.target)
 		npc.target.current_health -= damage
 		return "SUCCESS"
 	else:
+		print("Target out of range!")
+		print("Target: {target} - {trange}, Self: {self} - {arange}".format({"target": npc.target, "trange": distance(npc, team_state), "self": npc, "arange": npc.basic_attack.range}))
 		return "FAILURE"
 		
 func move_to_target(npc: NPC, team_state: KingdomState):
