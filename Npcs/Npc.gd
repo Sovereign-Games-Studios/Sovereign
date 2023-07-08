@@ -44,7 +44,6 @@ func align_with_y(xform, new_y):
 
 
 func _handle_target_death():
-	mutex.lock()
 	self.brain.enemies_in_range.remove_at(self.brain.enemies_in_range.find(self.target))
 	self.target = null
 	var node = root_node
@@ -53,21 +52,14 @@ func _handle_target_death():
 	else: 
 		self.state = "idle"
 	await self.behaviour.interrupt(node)	
-	mutex.unlock()
 	
 func _process(delta):
 	expose_position = self.global_position
 	if current_health < 0:
 		self.team = "corpse"		
 		self.death_signal.emit()
-		if is_instance_valid(self.behaviour):
-			self.behaviour.queue_free()	
-		await get_tree().create_timer(12).timeout			
 		self.queue_free()
-		
-	if $NavigationAgent3D.target_reached:
-		velocity.x = 0
-		velocity.z = 0
+		self.hide()
 		
 func _physics_process(delta):
 	velocity.y -= gravity * delta

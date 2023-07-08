@@ -48,9 +48,14 @@ func initialize(start_position, building_name, team):
 func _process(delta):
 	if current_health < 0:
 		print(self.name, " has been destroyed!")		
+		self.team = "corpse"		
 		self.death_signal.emit()
-		self.queue_free()
-		
+		await get_tree().create_timer(12).timeout			
+		self.hide()
+	for npc_type in self.recruited_npcs:
+		for npc in self.recruited_npcs[npc_type]:
+			if not is_instance_valid(npc):
+				self.recruited_npcs[npc_type].remove_at(self.recruited_npcs[npc_type].find(npc))
 # TODO Services in general.
 func attach_services(services):
 	for service in services:
@@ -85,7 +90,7 @@ func _recruit_on_timer_timeout():
 			self.recruited_npcs[npc_type].append(npc)
 			#add_child(npc)
 			get_tree().get_root().add_child(npc)
-			print("The ", self.definition.name, " Spawned NPC of type: ", npc_type, " using entity: ", npc.definition.name, " at ", spawn_location)
+			# print("The ", self.definition.name, " Spawned NPC of type: ", npc_type, " using entity: ", npc.definition.name, " at ", spawn_location)
 			# We only want to spawn once a tick. 
 			return
 

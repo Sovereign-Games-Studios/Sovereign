@@ -19,28 +19,30 @@ func set_target(npc: NPC, team_state: KingdomState):
 		best_enemy.death_signal.connect(npc._handle_target_death)
 		npc.target = best_enemy
 	if is_instance_valid(npc.target):
+		npc.set_destination(npc.target.global_position)
 		return "SUCCESS"
 	else:
 		return "FAILURE"
 		
 func attack_target(npc: NPC, team_state: KingdomState):
-	var damage = Damage.calculateDamage(npc, npc.target)
-	npc.target.current_health -= damage
-	return
+	if npc.basic_attack.range >= distance(npc, team_state):
+		var damage = Damage.calculateDamage(npc, npc.target)
+		npc.target.current_health -= damage
+		return "SUCCESS"
+	else:
+		return "FAILURE"
 	
 func move_to_target(npc: NPC, team_state: KingdomState):
-	var counter = 0
-	var distance = 9999999
-	while npc.basic_attack.range < distance:
-		await npc.get_tree().create_timer(1).timeout
-		if npc.target != null:
-			counter += 1
-			distance = distance(npc, team_state)			
-			if counter > 10:
-				return "FAILURE"
-		else:
-			return "FAILURE"
-	return "SUCCESS"
+	# moves to current target, will loop until target is reached or becomes unreachable.
+	if not npc.get_children()[3].is_navigation_finished():
+		# print("Navigation running from {current} to {destination}".format({"current": npc.global_position, "destination": npc.get_child(3).target_position}))
+		return "RUNNING"
+	elif npc.get_children()[3].is_navigation_finished():
+		print("Navigation Finished")		
+		return "SUCCESS"
+	else:
+		print("Navigation Failed")		
+		return "FAILURE"
 	
 func leave_building(npc: NPC, team_state: KingdomState):
 	return
@@ -60,11 +62,11 @@ func idle(npc: NPC, team_state: KingdomState):
 	return	
 func go_home(npc: NPC, team_state: KingdomState):
 	return
-func explore(npc: NPC, team_state: KingdomState):
+func set_exploration_destination(npc: NPC, team_state: KingdomState):
+	# Sets our Destination based on fog of war collision or picks a random adjustment.
 	var npc_raycast = npc.get_child(0)
-	
 	var count = 0
-	while count < 4:
+	while count <= 4:
 		if npc_raycast.is_colliding():
 			var collision = npc_raycast.get_collision_point()
 			var body = npc_raycast.get_collider().get_parent()
@@ -81,31 +83,15 @@ func explore(npc: NPC, team_state: KingdomState):
 				xform.basis = xform.basis.orthonormalized()
 				npc.global_transform = npc.global_transform.interpolate_with(xform, 0.2)
 				npc.set_destination(collision)
-				var counter = 0
-				while not npc.get_children()[3].is_target_reached():
-					await npc.get_tree().create_timer(1).timeout
-					counter += 1
-					if counter > 10:
-						return "FAILURE"
 				return "SUCCESS"
-			else:
-				npc.basis = npc.basis.rotated(Vector3(0,1,0), 90)
-				count +=1
+				
 		else:
 			npc.basis = npc.basis.rotated(Vector3(0,1,0), 90)
 			count +=1
-			
+	# Failed to collide with anything after rotating 4 times. 		
 	npc.set_destination(npc.global_position + Vector3(randi_range(-20, 20), 0, randi_range(-20, 20)))
-	var counter = 0
-	while not npc.get_children()[3].is_target_reached():
-		await npc.get_tree().create_timer(1).timeout
-		if not is_instance_valid(npc):
-			return "FAILURE"
-		counter += 1
-		if counter > 10:
-			return "FAILURE"
 	return "SUCCESS"
-	
+
 func distance(npc: NPC, team_state: KingdomState):
 	var enemy_npc = npc.target
 	var enemy_pos = enemy_npc.global_position
