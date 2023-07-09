@@ -50,8 +50,7 @@ func _process(delta):
 		print(self.name, " has been destroyed!")		
 		self.team = "corpse"		
 		self.death_signal.emit()
-		await get_tree().create_timer(12).timeout			
-		self.hide()
+		self.queue_free()
 	for npc_type in self.recruited_npcs:
 		for npc in self.recruited_npcs[npc_type]:
 			if not is_instance_valid(npc):

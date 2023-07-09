@@ -13,7 +13,7 @@ var mutex = Mutex.new()
 # current tree status
 var tree_status: String
 # current activity
-var current_action
+var current_action = null
 # current action status
 var action_status
 # Root Node of the Behaviour Tree, only used at init or in fail states
@@ -28,9 +28,16 @@ signal interrupt_success
 var ticks_since_last_action = 0
 
 func _process(_delta):
-	if 	parent_npc.action_queue.size() < 4 and tree_status != "RUNNING" and not should_exit:
+	if 	(parent_npc.action_queue.size() < 4 and tree_status != "RUNNING") or should_exit:
 		process_tree(self.root_node)
-	if parent_npc.action_queue.size() > 0 and not should_exit:
+	if current_action == null:
+		ticks_since_last_action = 0
+		# On success or no current action, we process a new one
+		mutex.lock()
+		current_action = parent_npc.action_queue.pop_front()
+		mutex.unlock()
+		action_status = await process_action(current_action)
+	elif parent_npc.action_queue.size() > 0 and not should_exit:
 		if action_status == "RUNNING" and current_action != null and ticks_since_last_action < 500:
 			ticks_since_last_action += 1
 			action_status = await process_action(current_action)
@@ -47,14 +54,15 @@ func _process(_delta):
 			ticks_since_last_action = 0
 			# On success or no current action, we process a new one
 			mutex.lock()
-			var action = parent_npc.action_queue.pop_front()
+			current_action = parent_npc.action_queue.pop_front()
 			mutex.unlock()
-			action_status = await process_action(action)			
+			action_status = await process_action(current_action)
 	pass
 
 func process_action(action: Callable):
 	# If we manage to catch it here first
 	if should_exit:
+		print("Clearing action tree!")
 		current_action = null		
 		action_status = "FAILURE"		
 		# Might be necessary to force us back into the tree

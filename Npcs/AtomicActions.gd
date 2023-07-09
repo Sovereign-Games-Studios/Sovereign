@@ -31,19 +31,22 @@ func attack_target(npc: NPC, team_state: KingdomState):
 		npc.target.current_health -= damage
 		return "SUCCESS"
 	else:
-		print("Target out of range!")
-		print("Target: {target} - {trange}, Self: {self} - {arange}".format({"target": npc.target, "trange": distance(npc, team_state), "self": npc, "arange": npc.basic_attack.range}))
+		# print("Target out of range!")
+		# print("Target: {target} - {trange}, Self: {self} - {arange}".format({"target": npc.target, "trange": distance(npc, team_state), "self": npc, "arange": npc.basic_attack.range}))
+		# print("Distance to nav agent target ", npc.get_children()[3].distance_to_target()) 
 		return "FAILURE"
 		
 func move_to_target(npc: NPC, team_state: KingdomState):
 	if npc.get_children()[3].distance_to_target() > npc.basic_attack.range:
 		return "RUNNING"
 	else:
+		print("At target!")
 		return "SUCCESS"
 	
 func move_to_destination(npc: NPC, team_state: KingdomState):
 	# moves to current target, will loop until target is reached or becomes unreachable.
 	if not npc.get_children()[3].is_navigation_finished():
+		# print(npc.get_children()[3].distance_to_target())
 		# print("Navigation running from {current} to {destination}".format({"current": npc.global_position, "destination": npc.get_child(3).target_position}))
 		return "RUNNING"
 	elif npc.get_children()[3].is_navigation_finished():

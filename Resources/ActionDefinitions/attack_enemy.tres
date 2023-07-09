@@ -25,9 +25,8 @@ func consider(npc: NPC, kingdom_state: KingdomState):
 	
 func queue_actions(npc: NPC, kingdom_state: KingdomState, mutex: Mutex):
 	mutex.lock()
-	if not is_instance_valid(npc.target):
-		# Find a valid enemy in range and set them as our target
-		npc.action_queue.push_back(set_target)
+	# Find a valid enemy in range and set them as our target
+	npc.action_queue.push_back(set_target)
 	# Move within range of the target to begin attacking them
 	npc.action_queue.push_back(move_to_target)	
 	# Attack the target
