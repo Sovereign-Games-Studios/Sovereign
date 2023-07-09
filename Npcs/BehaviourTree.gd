@@ -43,8 +43,9 @@ func _process(_delta):
 			action_status = process_action(current_action)
 			return
 		elif action_status == "FAILURE":
+			parent_npc.state = "idle"
 			# If we failed, reset our queue
-			print("ERROR: Action {action} failed!".format({"action": current_action}))
+			# print("ERROR: Action {action} failed!".format({"action": current_action}))
 			ticks_since_last_action = 0
 			current_action = null
 			should_exit = true

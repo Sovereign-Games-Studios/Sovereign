@@ -7,17 +7,19 @@ script/source = "extends Resource
 func calculate_consideration_value(npc: NPC, kingdom_state):
 	var value = 100
 	var npc_knowledge = npc.brain
-	var enemy_npc = npc_knowledge.current_target
-	if enemy_npc:
+	var enemy_npc = npc.target
+	if enemy_npc is NPC:
 		# The way we calculate this means that units with a very high bravery essentially won't flee monsters despite low health.	
-		if enemy_npc.definition.level > npc_knowledge.me.level:
-			value -= clamp(5 * ((npc_knowledge.personality.bravery-npc_knowledge.personality.cowardice)/100), 0, 100)
+		if enemy_npc.level > npc.level:
+			value -= clamp(5 * ((npc.bravery-npc.personality.cowardice)/100), 0, 100)
 		# The way we calculate this means that units with a very high bravery essentially won't flee monsters despite low health.
-		if enemy_npc.current_health > npc_knowledge.me.current_health:		
-			value -= clamp((5 * ((npc_knowledge.personality.cowardice - npc_knowledge.personality.bravery)/100)), 0, 100)
+		if enemy_npc.current_health > npc.current_health:		
+			value -= clamp((5 * ((npc.personality.cowardice - npc.personality.bravery)/100)), 0, 100)
 		# If an enemy npc is near death, go for the killing blow.
-		if enemy_npc.current_health / enemy_npc.max_health < .2:
+		if enemy_npc.current_health / enemy_npc.definition.max_health < .2:
 			value += 10
+	elif enemy_npc is Building:
+		value = 100
 	else:
 		value = 0
 	

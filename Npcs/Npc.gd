@@ -63,8 +63,8 @@ func _physics_process(delta):
 	# Add the gravity.
 	if self.global_position.y < -10:
 		self.global_position.y = 10 
-	var overlapping = $Vision.get_overlapping_bodies()
-
+	var overlapping = $Vision.get_overlapping_bodies()	
+			
 	for node in overlapping:
 		if self.team == "player" and node.team == "enemy":
 			if not node in self.brain.enemies_in_range:
@@ -132,7 +132,7 @@ func initialize(start_position, character_name, team, home: Building):
 		self.basic_attack = ResourceLoader.load("res://Resources/AttackDefinitions/basic_attack.tres")
 	self.basic_attack.get_script()		
 	$AttackSpeed.wait_time = self.basic_attack.attack_speed
-	
+	$AttackSpeed.timeout.connect(_attack_target)
 	# instantiate personality of NPC.
 	self.personality = Personality.new()
 	self.personality.initialize(self.definition)
@@ -171,6 +171,15 @@ func align_with_y(xform, new_y):
 	xform.basis = xform.basis.orthonormalized()
 	return xform
 	
+func _attack_target():
+	if self.state == "combat":
+		if is_instance_valid(self.target):
+			var distance_to_target = distance(self, self.team_state)
+			if distance_to_target < self.basic_attack.range:
+				var damage = Damage.calculateDamage(self, self.target)
+				self.target.current_health -= damage
+				if self.target is NPC:
+					self.target._handle_state_change("combat")
 '''
 Signal handling function that connects to the target's death signal.
 '''
@@ -217,3 +226,17 @@ func enterBuilding(target_building:Building):
 	if self.global_position.distance_to(target_building.global_position) < 10:
 		target_building.current_occupants.append(self)
 		self.hide()
+
+func distance(npc: NPC, team_state: TeamState):
+	var enemy_npc = npc.target
+	var enemy_pos = enemy_npc.global_position
+	var enemy_x = enemy_pos.x
+	var enemy_y = enemy_pos.y
+	var enemy_z = enemy_pos.z
+	var npc_pos = npc.global_position
+	var npc_x = npc_pos.x
+	var npc_y = npc_pos.y
+	var npc_z = npc_pos.z
+	
+	var distance = sqrt(pow((enemy_x - npc_x), 2) + pow((enemy_y - npc_y), 2) + pow((enemy_z - npc_z), 2)) 
+	return distance

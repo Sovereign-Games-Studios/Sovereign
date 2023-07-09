@@ -24,20 +24,6 @@ func set_target(npc: NPC, team_state: TeamState):
 	else:
 		return "FAILURE"
 		
-func attack_target(npc: NPC, team_state: TeamState):
-	if npc.basic_attack.range >= distance(npc, team_state):
-		npc.state = "combat"
-		var damage = Damage.calculateDamage(npc, npc.target)
-		npc.target.current_health -= damage
-		if npc.target is NPC:
-			npc.target._handle_state_change("combat")
-		return "SUCCESS"
-	else:
-		# print("Target out of range!")
-		# print("Target: {target} - {trange}, Self: {self} - {arange}".format({"target": npc.target, "trange": distance(npc, team_state), "self": npc, "arange": npc.basic_attack.range}))
-		# print("Distance to nav agent target ", npc.get_children()[3].distance_to_target()) 
-		return "FAILURE"
-		
 func move_to_target(npc: NPC, team_state: TeamState):
 	if npc.get_children()[3].distance_to_target() > npc.basic_attack.range:
 		return "RUNNING"

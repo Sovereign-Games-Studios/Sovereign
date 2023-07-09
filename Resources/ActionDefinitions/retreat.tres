@@ -23,7 +23,7 @@ func consider(npc: NPC, kingdom_state):
 		consideration_value += consider_node.calculate_consideration_value(npc, kingdom_state)
 	return consideration_value/considerations.size() 
 	
-func take_action(npc: NPC, kingdom_state: TeamState, mutex: Mutex):
+func queue_actions(npc: NPC, kingdom_state: TeamState, mutex: Mutex):
 	mutex.lock()
 	npc.action_queue.push_back(go_home)
 	mutex.unlock()
