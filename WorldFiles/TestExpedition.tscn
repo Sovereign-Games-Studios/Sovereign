@@ -1,6 +1,6 @@
 [gd_scene load_steps=22 format=3 uid="uid://dcoe5mgvaqmm1"]
 
-[ext_resource type="Script" path="res://Player/KingdomState.gd" id="1_uxe8e"]
+[ext_resource type="Script" path="res://Player/KingdomState.gd" id="1_wt1qe"]
 [ext_resource type="Script" path="res://Player/Camera3D.gd" id="2_ukdeo"]
 [ext_resource type="Script" path="res://WorldFiles/FogOfWarPermanent.gd" id="7_5y3eh"]
 [ext_resource type="Shader" path="res://WorldFiles/fog_permanent.gdshader" id="8_vhmlx"]
@@ -61,7 +61,7 @@ ambient_light_source = 3
 reflected_light_source = 2
 
 [node name="World" type="Node3D"]
-script = ExtResource("1_uxe8e")
+script = ExtResource("1_wt1qe")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.422618, 0.906308, 0, -0.906308, 0.422618, -5.49149, 43.5312, 54.3621)

@@ -8,6 +8,8 @@ var value = 100
 func calculate_consideration_value(npc: NPC, kingdom_state):
 	var npc_knowledge = npc.brain
 	var enemy_npc = npc.target
+	if !(is_instance_valid(enemy_npc)):
+		return 0
 	var enemy_pos = enemy_npc.global_position
 	var enemy_x = enemy_pos.x
 	var enemy_y = enemy_pos.y

@@ -1,7 +1,7 @@
 [gd_resource type="Resource" load_steps=2 format=3 uid="uid://bm5gr6g018aum"]
 
 [sub_resource type="GDScript" id="GDScript_nhm6f"]
-script/source = "extends Resource
+script/source = "extends Action
 '''
 Actions directly modify the npc to set in motion events based on a series of considerations. 
 These are the \"leaf nodes\" of the behaviour tree. 
@@ -13,7 +13,8 @@ find_target:
 
 # List of considerations for choosing this specific reasoner
 var considerations = [\"enemy_strength\", \"distance\"]
-var name = \"Retreat\"
+var child_nodes = []
+var type = \"ActionQueue\"
 
 func consider(npc: NPC, kingdom_state):
 	var consideration_value = 0
@@ -22,9 +23,11 @@ func consider(npc: NPC, kingdom_state):
 		consideration_value += consider_node.calculate_consideration_value(npc, kingdom_state)
 	return consideration_value/considerations.size() 
 	
-func take_action(npc: NPC, best_target: NPC):
-	npc.set_destination(Vector3(0,0,0))
-	return
+func take_action(npc: NPC, kingdom_state: KingdomState, mutex: Mutex):
+	mutex.lock()
+	npc.action_queue.push_back(go_home)
+	mutex.unlock()
+	return \"SUCCESS\"
 "
 
 [resource]

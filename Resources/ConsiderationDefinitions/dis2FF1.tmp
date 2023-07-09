@@ -1,0 +1,32 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://b0sademrxrxoe"]
+
+[sub_resource type="GDScript" id="GDScript_exf21"]
+script/source = "extends Resource
+
+var value = 100
+
+func calculate_consideration_value(npc: NPC, kingdom_state):
+	var npc_knowledge = npc.brain
+	var enemy_npc = npc.target
+	if !(enemy_npc is Node3D):
+		return 0
+	var enemy_pos = enemy_npc.global_position
+	var enemy_x = enemy_pos.x
+	var enemy_y = enemy_pos.y
+	var enemy_z = enemy_pos.z
+	var npc_pos = npc.global_position
+	var npc_x = npc_pos.x
+	var npc_y = npc_pos.y
+	var npc_z = npc_pos.z
+	
+	var distance = sqrt(pow((enemy_x - npc_x), 2) + pow((enemy_y - npc_y), 2) + pow((enemy_z - npc_z), 2)) 
+	
+	value -= 1 * distance
+	
+
+	
+	return value
+"
+
+[resource]
+script = SubResource("GDScript_exf21")

@@ -63,7 +63,7 @@ func define_bts():
 			var behaviour_definition = load(OP_DEF_DIR + file)
 			behaviour_definition.get_script()
 			var behaviour
-			behaviour = OptionNode.new()
+			behaviour = BehaviourNode.new()
 			behaviour.initialize(behaviour_definition)
 			list_of_bts[file.get_slice(".", 0)] = behaviour
 			print("Added: ", file.get_slice(".", 0), " resource ", behaviour)			
@@ -74,7 +74,7 @@ func define_bts():
 			var behaviour_definition = load(ACT_DEF_DIR + file)
 			behaviour_definition.get_script()
 			var behaviour
-			behaviour = ActionNode.new()
+			behaviour = BehaviourNode.new()
 			behaviour.initialize(behaviour_definition)
 			list_of_bts[file.get_slice(".", 0)] = behaviour	
 			print("Added: ", file.get_slice(".", 0), " resource: ", behaviour)

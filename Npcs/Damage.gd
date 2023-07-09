@@ -37,7 +37,7 @@ static func calculateDamage(attacker, defender):
 	var damage_dealt = physical_damage + magic_damage + fire_damage + air_damage + earth_damage + water_damage + light_damage + shadow_damage + nature_damage + electric_damage
 	if damage_dealt < 0:
 		damage_dealt = 0
-	print(attacker.name, " is attacking ", defender.name, "! They deal ", damage_dealt)
+	print(attacker.definition.name, " is attacking ", target_node.name, "! They deal ", damage_dealt)
 	
 	return damage_dealt
 	

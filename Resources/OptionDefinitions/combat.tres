@@ -15,9 +15,10 @@ engage_enemies:
 var considerations = [\"personal_strength\"]
 
 # Child node, can either be an action or another behaviour node. 
-var options = [\"attack_enemy\"]
-var name = \"Combat\"
-func consider(npc: NPC, kingdom_state):
+var child_nodes = [\"attack_enemy\"]
+var type = \"OptionNode\"
+
+func consider(npc: NPC, kingdom_state: KingdomState):
 	if npc.brain.enemies_in_range.size() == 0:
 		return -10
 	var consideration_value = 0
@@ -25,7 +26,7 @@ func consider(npc: NPC, kingdom_state):
 		var consider_node = kingdom_state.consider_list[consideration]
 		consideration_value += consider_node.calculate_consideration_value(npc, kingdom_state)
 	consideration_value/considerations.size()
-	return consideration_value + 100
+	return consideration_value + 1000
 "
 
 [resource]

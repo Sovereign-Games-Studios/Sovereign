@@ -7,7 +7,7 @@ script/source = "extends Resource
 var character_type = \"Monster\"
 var name = \"Greblin\"
 
-var speed = 10
+var speed = 3
 var max_health = 100
 var current_health = 100
 # Dictionary where the key is the item and value is number of that item. 
@@ -23,7 +23,7 @@ var cost = 1000
 var abilities = []
 # The basic attack definition for the character, by default it will use a basic attack definition
 # Setting this points to a specific Resource in Resources/AttackDefintions to use 
-var basic_attack = null
+var basic_attack = \"barbarian\"
 # How responsive a character is to gold incentive, 1-100
 var greed = 50
 # How responsive a character is to threats to the Kingdom, 1-100

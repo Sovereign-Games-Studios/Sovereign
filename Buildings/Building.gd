@@ -41,15 +41,20 @@ func initialize(start_position, building_name, team):
 	$Sprite3D.texture = self.sprite	
 	
 	if definition.building_type == "Support" or definition.building_type == "Lair" or definition.building_type == "Merchant":
-		$RecruitTimer.wait_time = 10
+		$RecruitTimer.wait_time = 1
 		$RecruitTimer.timeout.connect(_recruit_on_timer_timeout)
 	attach_services(definition.services)
 
 func _process(delta):
 	if current_health < 0:
 		print(self.name, " has been destroyed!")		
+		self.team = "corpse"		
 		self.death_signal.emit()
 		self.queue_free()
+	for npc_type in self.recruited_npcs:
+		for npc in self.recruited_npcs[npc_type]:
+			if not is_instance_valid(npc):
+				self.recruited_npcs[npc_type].remove_at(self.recruited_npcs[npc_type].find(npc))
 # TODO Services in general.
 func attach_services(services):
 	for service in services:
@@ -78,13 +83,13 @@ func _recruit_on_timer_timeout():
 		if self.recruited_npcs[npc_type].size() < maximum_npcs[npc_type]:
 			var npc = npc_node.instantiate()
 			var spawn_location = self.get_node("SpawnPath/SpawnLocation").get_global_position()
-			npc.initialize(spawn_location, npc_type, team)
+			npc.initialize(spawn_location, npc_type, team, self)
 			if npc.team == "player":
 				npc.add_to_group("Player Entities")
 			self.recruited_npcs[npc_type].append(npc)
 			#add_child(npc)
 			get_tree().get_root().add_child(npc)
-			print("The ", self.definition.name, " Spawned NPC of type: ", npc_type, " using entity: ", npc.definition.name, " at ", spawn_location)
+			# print("The ", self.definition.name, " Spawned NPC of type: ", npc_type, " using entity: ", npc.definition.name, " at ", spawn_location)
 			# We only want to spawn once a tick. 
 			return
 

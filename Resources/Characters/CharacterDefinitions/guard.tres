@@ -7,7 +7,7 @@ script/source = "extends Resource
 var character_type = \"Support\"
 var name = \"Guard\"
 
-var speed = 10
+var speed = 1
 var max_health = 100
 var current_health = 100
 # Dictionary where the key is the item and value is number of that item. 
@@ -43,7 +43,7 @@ var Charisma = 5
 var Wisdom = 5
 var Intelligence = 5
 
-var PhysicalResistance = 50
+var PhysicalResistance = 1
 var MagicResistance = 0
 var FireResistance = 0
 var AirResistance = 0

@@ -1,0 +1,64 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://cyorxvle2uhvb"]
+
+[sub_resource type="GDScript" id="GDScript_iptki"]
+script/source = "extends Action
+'''
+Actions directly modify the npc to set in motion events based on a series of considerations. 
+These are the \"leaf nodes\" of the behaviour tree. 
+
+find_target:
+	Selects the best target from the list of npc's currently colliding with the NPC's vision radius. 
+	Once best target is found, sets the target and initiates combat. 
+'''
+
+# List of considerations for choosing this specific reasoner
+var considerations = [\"personal_strength\"]
+var name = \"explore\"
+func consider(npc: NPC, kingdom_state):
+	var consideration_value = 100
+	for consideration in considerations:
+		var consider_node = kingdom_state.consider_list[consideration] 
+		consideration_value += consider_node.calculate_consideration_value(npc, kingdom_state)
+	consideration_value/considerations.size()
+	return consideration_value
+	
+func take_action(npc: NPC, kingdom_state):
+	var npc_raycast = npc.get_child(0)
+	print(\"Raycast: \", npc_raycast)
+	var count = 0
+	while count < 4:
+		if npc_raycast.is_colliding():
+			print(\"Collided with something: \", npc_raycast.get_collider())			
+			var collision = npc_raycast.get_collision_point()
+			var body = npc_raycast.get_collider().get_parent()
+			# Only perform alignment when hit with terrain?
+			# Could apply to other scenarios
+			
+			if (body.name == \"Fog\"):
+				# Get the normal right below us 
+				var n = npc_raycast.get_collision_normal()
+				# Transform and interpolate with current orientation
+				var xform = npc.global_transform
+				xform.basis.x = n
+				xform.basis.z = -xform.basis.y.cross(n)
+				xform.basis = xform.basis.orthonormalized()
+				npc.global_transform = npc.global_transform.interpolate_with(xform, 0.2)
+				npc.set_destination(collision)
+				print(\"Exploring Fog\")
+				return \"exploring\"
+			else:
+				print(\"Rotate to find FoW\")
+				npc.basis = npc.basis.rotated(Vector3(0,1,0), 90)
+				count +=1
+		else:
+			print(\"Rotate to find FoW\")
+			npc.basis = npc.basis.rotated(Vector3(0,1,0), 90)
+			count +=1
+			
+	print(\"Fog Not Found\")
+	npc.set_destination(npc.global_position + Vector3(randi_range(-20, 20), 0, randi_range(-20, 20)))
+	return \"exploring\"
+"
+
+[resource]
+script = SubResource("GDScript_iptki")

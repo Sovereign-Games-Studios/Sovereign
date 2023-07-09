@@ -11,7 +11,7 @@ func recruit_npc(npc_name, building):
 		if building.recruited_npcs[npc_type].size() < maximum_npcs[npc_type]:
 			var npc = npc_scene.instantiate()
 			var spawn_location = building.get_node(\"SpawnPath/SpawnLocation\").position
-			npc.initialize(spawn_location, npc_type, building.team)
+			npc.initialize(spawn_location, npc_type, building.team, building)
 			if building.team == \"player\":
 				npc.add_to_group(\"Player Entities\")
 			building.recruited_npcs[npc_type].append(npc)
