@@ -18,10 +18,10 @@ func initialize(new_definition: Resource):
 	child_nodes = new_definition.child_nodes
 	type = new_definition.type
 
-func think(npc: NPC, kingdom_state: KingdomState, mutex: Mutex):
+func think(npc: NPC, kingdom_state: TeamState, mutex: Mutex):
 	if self.child_nodes.size() > 0:
 		var status
-		var best_option = self.child_nodes[0]
+		var best_option = kingdom_state.list_of_bts["idle"]
 		var best_value = 0
 		# exits thought process early
 		for option_name in self.child_nodes:

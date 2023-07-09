@@ -18,7 +18,7 @@ var considerations = [\"personal_strength\"]
 var child_nodes = [\"attack_enemy\"]
 var type = \"OptionNode\"
 
-func consider(npc: NPC, kingdom_state: KingdomState):
+func consider(npc: NPC, kingdom_state: TeamState):
 	if npc.brain.enemies_in_range.size() == 0:
 		return -10
 	var consideration_value = 0

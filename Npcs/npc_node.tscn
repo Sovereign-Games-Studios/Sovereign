@@ -30,7 +30,7 @@ target_desired_distance = 2.0
 path_max_distance = 10.01
 radius = 1.0
 
-[node name="Timer" type="Timer" parent="."]
+[node name="AttackSpeed" type="Timer" parent="."]
 autostart = true
 
 [node name="Vision" type="Area3D" parent="."]

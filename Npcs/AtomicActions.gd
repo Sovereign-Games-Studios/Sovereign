@@ -6,7 +6,7 @@ The standard actions in game all Behaviour Nodes reference. These scripts handle
 '''
 
 
-func set_target(npc: NPC, team_state: KingdomState):
+func set_target(npc: NPC, team_state: TeamState):
 	var best_distance = 10000
 	var best_enemy = null
 	for enemy in npc.brain.enemies_in_range:
@@ -24,11 +24,13 @@ func set_target(npc: NPC, team_state: KingdomState):
 	else:
 		return "FAILURE"
 		
-func attack_target(npc: NPC, team_state: KingdomState):
+func attack_target(npc: NPC, team_state: TeamState):
 	if npc.basic_attack.range >= distance(npc, team_state):
-		print("Target in range")
+		npc.state = "combat"
 		var damage = Damage.calculateDamage(npc, npc.target)
 		npc.target.current_health -= damage
+		if npc.target is NPC:
+			npc.target._handle_state_change("combat")
 		return "SUCCESS"
 	else:
 		# print("Target out of range!")
@@ -36,49 +38,55 @@ func attack_target(npc: NPC, team_state: KingdomState):
 		# print("Distance to nav agent target ", npc.get_children()[3].distance_to_target()) 
 		return "FAILURE"
 		
-func move_to_target(npc: NPC, team_state: KingdomState):
+func move_to_target(npc: NPC, team_state: TeamState):
 	if npc.get_children()[3].distance_to_target() > npc.basic_attack.range:
 		return "RUNNING"
 	else:
-		print("At target!")
 		return "SUCCESS"
 	
-func move_to_destination(npc: NPC, team_state: KingdomState):
+func move_to_destination(npc: NPC, team_state: TeamState):
 	# moves to current target, will loop until target is reached or becomes unreachable.
 	if not npc.get_children()[3].is_navigation_finished():
 		# print(npc.get_children()[3].distance_to_target())
 		# print("Navigation running from {current} to {destination}".format({"current": npc.global_position, "destination": npc.get_child(3).target_position}))
 		return "RUNNING"
 	elif npc.get_children()[3].is_navigation_finished():
-		print("Navigation Finished")		
+		print("Navigation Finished")
 		return "SUCCESS"
 	else:
 		print("Navigation Failed")		
 		return "FAILURE"
 	
-func leave_building(npc: NPC, team_state: KingdomState):
+func take_potion(npc: NPC, team_state: TeamState):
+	npc.healing_potions -= 1
+	npc.current_health = npc.definition.maximum_health
+	return "SUCCESS"	
+
+func leave_building(npc: NPC, team_state: TeamState):
 	return
-func equip_item(npc: NPC, team_state: KingdomState):
+func equip_item(npc: NPC, team_state: TeamState):
 	return
-func sell_item(npc: NPC, team_state: KingdomState):
+func sell_item(npc: NPC, team_state: TeamState):
 	return
-func buy_item(npc: NPC, team_state: KingdomState):
+func buy_item(npc: NPC, team_state: TeamState):
 	return
-func use_ability(npc: NPC, team_state: KingdomState):
+func use_ability(npc: NPC, team_state: TeamState):
 	return
-func use_item(npc: NPC, team_state: KingdomState):
+func use_item(npc: NPC, team_state: TeamState):
 	return
-func enter_building(npc: NPC, team_state: KingdomState):
+func enter_building(npc: NPC, team_state: TeamState):
 	return
-func idle(npc: NPC, team_state: KingdomState):
+func idle(npc: NPC, team_state: TeamState):
 	return	
-func go_home(npc: NPC, team_state: KingdomState):
+func go_home(npc: NPC, team_state: TeamState):
 	return
-func set_exploration_destination(npc: NPC, team_state: KingdomState):
+func set_exploration_destination(npc: NPC, team_state: TeamState):
+	npc.state = "explore"
 	# Sets our Destination based on fog of war collision or picks a random adjustment.
 	var npc_raycast = npc.get_child(0)
 	var count = 0
-	while count <= 4:
+	# Enemy NPCs don't care about the fog of war. 
+	while count <= 4 and npc.team != "enemy":
 		if npc_raycast.is_colliding():
 			var collision = npc_raycast.get_collision_point()
 			var body = npc_raycast.get_collider().get_parent()
@@ -101,10 +109,10 @@ func set_exploration_destination(npc: NPC, team_state: KingdomState):
 			npc.basis = npc.basis.rotated(Vector3(0,1,0), 90)
 			count +=1
 	# Failed to collide with anything after rotating 4 times. 		
-	npc.set_destination(npc.global_position + Vector3(randi_range(-20, 20), 0, randi_range(-20, 20)))
+	npc.set_destination(npc.global_position + Vector3(randi_range(-10, 10), 0, randi_range(-10, 10)))
 	return "SUCCESS"
 
-func distance(npc: NPC, team_state: KingdomState):
+func distance(npc: NPC, team_state: TeamState):
 	var enemy_npc = npc.target
 	var enemy_pos = enemy_npc.global_position
 	var enemy_x = enemy_pos.x

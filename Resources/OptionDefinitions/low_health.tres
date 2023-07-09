@@ -1,4 +1,4 @@
-[gd_resource type="Resource" load_steps=2 format=3 uid="uid://cx40qk375nly3"]
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://cx5fmdawbfg6l"]
 
 [sub_resource type="GDScript" id="GDScript_jfxgr"]
 script/source = "extends Resource
@@ -12,10 +12,12 @@ engage_enemies:
 '''
 
 # List of considerations for choosing this specific option
-var considerations = [\"idle\"]
-var type = \"Option\"
+var considerations = []
+
 # Child node, can either be an action or another behaviour node. 
-var child_nodes = [\"hunt_monsters\"]
+var child_nodes = [\"take_potion\", \"retreat\"]
+
+var type = \"OptionNode\"
 
 func consider(npc: NPC, kingdom_state: TeamState):
 	var consideration_value = 0

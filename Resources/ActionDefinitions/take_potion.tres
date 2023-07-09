@@ -1,6 +1,6 @@
-[gd_resource type="Resource" load_steps=2 format=3 uid="uid://cyorxvle2uhvb"]
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://k75dh2cp0x2d"]
 
-[sub_resource type="GDScript" id="GDScript_iptki"]
+[sub_resource type="GDScript" id="GDScript_nhm6f"]
 script/source = "extends Action
 '''
 Actions directly modify the npc to set in motion events based on a series of considerations. 
@@ -12,25 +12,23 @@ find_target:
 '''
 
 # List of considerations for choosing this specific reasoner
-var considerations = [\"personal_strength\"]
+var considerations = [\"enemy_strength\", \"available_potions\"]
 var child_nodes = []
 var type = \"ActionQueue\"
 
 func consider(npc: NPC, kingdom_state):
-	var consideration_value = 100
+	var consideration_value = 0
 	for consideration in considerations:
 		var consider_node = kingdom_state.consider_list[consideration] 
 		consideration_value += consider_node.calculate_consideration_value(npc, kingdom_state)
-	consideration_value/considerations.size()
-	return consideration_value
+	return consideration_value/considerations.size() 
 	
-func queue_actions(npc: NPC, kingdom_state: TeamState, mutex: Mutex):
+func take_action(npc: NPC, kingdom_state: TeamState, mutex: Mutex):
 	mutex.lock()
-	npc.action_queue.push_back(set_exploration_destination)
-	npc.action_queue.push_back(move_to_destination)
+	npc.action_queue.push_back(take_potion)
 	mutex.unlock()
 	return \"SUCCESS\"
 "
 
 [resource]
-script = SubResource("GDScript_iptki")
+script = SubResource("GDScript_nhm6f")

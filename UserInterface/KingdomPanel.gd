@@ -6,7 +6,7 @@ var ui_node = preload("res://UserInterface/selected_building_ui.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	camera = get_node("../../Camera3D")
+	camera = get_node("../../../Camera3D")
 	$BuildList.show()
 
 

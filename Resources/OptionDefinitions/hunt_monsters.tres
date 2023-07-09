@@ -18,7 +18,7 @@ var considerations = [\"personal_strength\"]
 var child_nodes = [\"explore\", \"combat\"]
 var type = \"Option\"
 
-func consider(npc: NPC, kingdom_state):
+func consider(npc: NPC, kingdom_state: TeamState):
 	var consideration_value = 0
 	for consideration in considerations:
 		var consider_node = kingdom_state.consider_list[consideration]

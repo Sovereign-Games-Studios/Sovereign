@@ -12,7 +12,7 @@ find_target:
 '''
 
 # List of considerations for choosing this specific reasoner
-var considerations = [\"enemy_strength\", \"distance\"]
+var considerations = [\"enemy_strength\"]
 var child_nodes = []
 var type = \"ActionQueue\"
 
@@ -23,7 +23,7 @@ func consider(npc: NPC, kingdom_state):
 		consideration_value += consider_node.calculate_consideration_value(npc, kingdom_state)
 	return consideration_value/considerations.size() 
 	
-func take_action(npc: NPC, kingdom_state: KingdomState, mutex: Mutex):
+func take_action(npc: NPC, kingdom_state: TeamState, mutex: Mutex):
 	mutex.lock()
 	npc.action_queue.push_back(go_home)
 	mutex.unlock()

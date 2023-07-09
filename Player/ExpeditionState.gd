@@ -1,38 +1,33 @@
-class_name KingdomState
-extends GameState
+class_name ExpeditionState
+extends Node3D
 
-var available_items
-var available_enchants
-var heroes
-var objectives
-var is_palace_alive
 var size
-var gold
 var test
-var palace_ui
 var is_fow_explored = false
 var bitmap_node
+var teams = {}
+var objectives = []
+var game_state: GameState
+
+'''
+Called during Expedition Instantiation.
+'''
+func initialize(game_state: GameState, teams = {"player": ["enemy"], "enemy": ["player"]}, objectives = []):
+	self.objectives = objectives
+	self.game_state = game_state
+	# Teams are nodes that store all the faction relevant information which is usually a subset of the Expedition's status.
+	for team in teams:
+		var team_state = TeamState.new()
+		team_state.initialize(team, self, teams[team])
+		self.teams[team] = team_state
+		add_child(team_state)
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	available_items = []
-	available_enchants = []
-	heroes = []
-	objectives = []
-	is_palace_alive = true
+	self.initialize(GameStateInit)
 	var fog = get_node("Terrain/Fog")
 	bitmap_node = get_node("SubViewportContainer/SubViewport/Camera2D/Sprite2D")
-	gold = 2000
 	fog.startFog()
-	var user_interface = load("res://UserInterface/UserInterface.tscn")
-	palace_ui = user_interface.instantiate()
-	add_child(palace_ui)
-	var palace_scene = load("res://Buildings/building_node.tscn")
-	var palace = palace_scene.instantiate()
-	palace.initialize(Vector3(6, 20, 37), "Palace", "player")
-	add_child(palace)
-	var gold_counter = get_node("PassiveIncome")
-	gold_counter.wait_time = 5
-	gold_counter.timeout.connect(_gold_on_timer_timeout)
 	var fow_timer = get_node("CheckFogOfWar")
 	fow_timer.wait_time = 1
 	fow_timer.timeout.connect(_refresh_fow_state)
@@ -47,6 +42,7 @@ func scatter_lairs(num: int):
 		var lair = lair_scene.instantiate()
 		lair.initialize(Vector3(randomx, 20, randomz), "greblin_den", "enemy")
 		add_child(lair)
+		
 func _refresh_fow_state():
 	var fog_bitmap = bitmap_node.fogMapImg
 	if fog_bitmap:
@@ -59,9 +55,6 @@ func _refresh_fow_state():
 						return
 		is_fow_explored = true
 	
-func _gold_on_timer_timeout():
-	gold += 100
-	pass
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	pass
