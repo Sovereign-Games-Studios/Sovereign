@@ -24,7 +24,7 @@ func consider(npc: NPC, kingdom_state):
 	consideration_value/considerations.size()
 	return consideration_value
 	
-func queue_actions(npc: NPC, kingdom_state: KingdomState, mutex: Mutex):
+func queue_actions(npc: NPC, kingdom_state: TeamState, mutex: Mutex):
 	mutex.lock()
 	npc.action_queue.push_back(set_exploration_destination)
 	npc.action_queue.push_back(move_to_destination)

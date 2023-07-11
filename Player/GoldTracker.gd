@@ -8,6 +8,6 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	var kingdom_stats = get_node("../../../../World")
+	var kingdom_stats = get_node("/root/World").teams["player"]
 	text = "Gold: " + str(kingdom_stats.gold)
 	pass

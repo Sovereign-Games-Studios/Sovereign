@@ -6,7 +6,7 @@
 height = 1.53318
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_cfbix"]
-radius = 21.0
+radius = 10.0
 
 [node name="NPC" type="CharacterBody3D"]
 script = ExtResource("1_sdoy5")
@@ -30,7 +30,7 @@ target_desired_distance = 2.0
 path_max_distance = 10.01
 radius = 1.0
 
-[node name="Timer" type="Timer" parent="."]
+[node name="AttackSpeed" type="Timer" parent="."]
 autostart = true
 
 [node name="Vision" type="Area3D" parent="."]

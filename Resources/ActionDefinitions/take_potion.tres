@@ -1,4 +1,4 @@
-[gd_resource type="Resource" load_steps=2 format=3 uid="uid://bm5gr6g018aum"]
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://k75dh2cp0x2d"]
 
 [sub_resource type="GDScript" id="GDScript_nhm6f"]
 script/source = "extends Action
@@ -12,7 +12,7 @@ find_target:
 '''
 
 # List of considerations for choosing this specific reasoner
-var considerations = [\"enemy_strength\"]
+var considerations = [\"enemy_strength\", \"available_potions\"]
 var child_nodes = []
 var type = \"ActionQueue\"
 
@@ -25,7 +25,7 @@ func consider(npc: NPC, kingdom_state):
 	
 func queue_actions(npc: NPC, kingdom_state: TeamState, mutex: Mutex):
 	mutex.lock()
-	npc.action_queue.push_back(go_home)
+	npc.action_queue.push_back(take_potion)
 	mutex.unlock()
 	return \"SUCCESS\"
 "

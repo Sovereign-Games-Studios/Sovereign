@@ -1,0 +1,64 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://klrapwwf48fj"]
+
+[sub_resource type="GDScript" id="GDScript_hremp"]
+script/source = "extends Resource
+
+# Ability range
+var range = 5
+# Target of Ability, includes Single, Area
+var target = \"Area\"
+# Area Abilities must define a radius
+var radius = 10
+''' 
+Type of Ability includes Buff/Debuff, Damage, Summon, Utility
+
+The Type determines what function we call when processing abilities
+The target determines what algorithm is used to select the target of the ability
+'''
+var type = \"Damage\"
+# Time it takes to execute ability
+var cast_time = 2
+
+func damage_ability(caster, location):
+	# Make Collision Object
+	var collision_bubble = CollisionShape3D.new()
+	collision_bubble.shape = SphereShape3D.new()
+	collision_bubble.shape.radius = radius
+	# Make Area 3D
+	var area3d = Area3D.new()
+	area3d.add_child(collision_bubble)
+	area3d.global_position = caster.global_position
+	area3d.name = \"SlamRadius\"
+	# Add to Caster
+	caster.add_child(area3d)
+	
+	# Make Timer
+	var cast_timer = Timer.new()
+	cast_timer.wait_time = cast_time
+	cast_timer.timeout.connect(_execute_ability.bind(caster))
+	cast_timer.name = \"SlamTimer\"
+	cast_timer.one_shot = true
+	caster.add_child(cast_timer)
+	caster.get_node(\"SlamTimer\").start()
+	
+func _execute_ability(caster):
+	print(\"CASTING SLAM!\")
+	var area = caster.get_node(\"SlamRadius\")
+	var colliding_entities = area.get_overlapping_bodies()
+	for entity in colliding_entities:
+		if entity is NPC or entity is Building:
+			if entity.team != caster.team:
+				print(\"Slam damages \", entity.definition.name)
+				var damage = Damage.calculateDamage(caster, entity)
+				entity.current_health -= damage
+	
+	# Cleanup
+	caster.ability_cooldown = false
+	area.queue_free()
+	var timer = caster.get_node(\"SlamTimer\")
+	timer.queue_free()
+	
+"
+
+[resource]
+script = SubResource("GDScript_hremp")

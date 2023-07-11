@@ -6,7 +6,7 @@ var building_node = preload("res://Buildings/building_node.tscn")
 var npc_node = preload("res://Npcs/npc_node.tscn")
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	camera = get_node("../../../Camera3D")
+	camera = get_node("../../../../Camera3D")
 	for building in GameStateInit.buildable_list.values():
 		var building_sprite
 		if(building.sprite_override):

@@ -1,6 +1,6 @@
-[gd_resource type="Resource" load_steps=2 format=3 uid="uid://bm5gr6g018aum"]
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://c1e3eckorl844"]
 
-[sub_resource type="GDScript" id="GDScript_nhm6f"]
+[sub_resource type="GDScript" id="GDScript_iptki"]
 script/source = "extends Action
 '''
 Actions directly modify the npc to set in motion events based on a series of considerations. 
@@ -10,25 +10,31 @@ find_target:
 	Selects the best target from the list of npc's currently colliding with the NPC's vision radius. 
 	Once best target is found, sets the target and initiates combat. 
 '''
-
 # List of considerations for choosing this specific reasoner
-var considerations = [\"enemy_strength\"]
+var considerations = [\"personal_strength\"]
 var child_nodes = []
 var type = \"ActionQueue\"
 
-func consider(npc: NPC, kingdom_state):
-	var consideration_value = 0
+func consider(npc: NPC, kingdom_state: TeamState):
+	var consideration_value = 100
 	for consideration in considerations:
 		var consider_node = kingdom_state.consider_list[consideration] 
 		consideration_value += consider_node.calculate_consideration_value(npc, kingdom_state)
-	return consideration_value/considerations.size() 
+	consideration_value/considerations.size()
+	return consideration_value  
 	
 func queue_actions(npc: NPC, kingdom_state: TeamState, mutex: Mutex):
 	mutex.lock()
-	npc.action_queue.push_back(go_home)
+	if not is_instance_valid(npc.target) or npc.target == null or npc.target.team == \"corpse\":
+		# Find a valid enemy in range and set them as our target
+		npc.action_queue.push_back(set_target)
+	# Move within range of the target to begin attacking them
+	npc.action_queue.push_back(move_to_target)	
+	# Attack the target
+	npc.action_queue.push_back(attack_target)
 	mutex.unlock()
 	return \"SUCCESS\"
 "
 
 [resource]
-script = SubResource("GDScript_nhm6f")
+script = SubResource("GDScript_iptki")

@@ -20,7 +20,7 @@ var equipped_items: Dictionary
 # Gold Cost
 var cost = 1000
 # Array of Abilities, will fetch them from Resources/AbilityDefinitions
-var abilities = []
+var abilities = [\"slam\"]
 # The basic attack definition for the character, by default it will use a basic attack definition
 # Setting this points to a specific Resource in Resources/AttackDefintions to use 
 var basic_attack = \"Barbarian\"
@@ -43,7 +43,7 @@ var Charisma = 5
 var Wisdom = 5
 var Intelligence = 5
 
-var PhysicalResistance = 0
+var PhysicalResistance = .5
 var MagicResistance = 0
 var FireResistance = 0
 var AirResistance = 0
