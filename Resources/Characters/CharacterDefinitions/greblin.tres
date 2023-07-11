@@ -8,8 +8,8 @@ var character_type = \"Monster\"
 var name = \"Greblin\"
 
 var speed = 3
-var max_health = 100
-var current_health = 100
+var max_health = 20
+var current_health = 20
 # Dictionary where the key is the item and value is number of that item. 
 var inventory: Dictionary
 # Gold in character's inventory. 
@@ -23,7 +23,7 @@ var cost = 1000
 var abilities = []
 # The basic attack definition for the character, by default it will use a basic attack definition
 # Setting this points to a specific Resource in Resources/AttackDefintions to use 
-var basic_attack = \"barbarian\"
+var basic_attack = \"greblin\"
 # How responsive a character is to gold incentive, 1-100
 var greed = 50
 # How responsive a character is to threats to the Kingdom, 1-100
@@ -34,7 +34,7 @@ var bravery = 100
 var cowardice = 1
 
 
-var Strength = 20
+var Strength = 5
 var Spirit = 5
 var Stamina = 20
 var Agility = 10

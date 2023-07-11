@@ -16,7 +16,7 @@ var child_nodes = []
 var type = \"ActionQueue\"
 
 func consider(npc: NPC, kingdom_state: TeamState):
-	var consideration_value = 100
+	var consideration_value = 1000
 	for consideration in considerations:
 		var consider_node = kingdom_state.consider_list[consideration] 
 		consideration_value += consider_node.calculate_consideration_value(npc, kingdom_state)
@@ -25,9 +25,8 @@ func consider(npc: NPC, kingdom_state: TeamState):
 	
 func queue_actions(npc: NPC, kingdom_state: TeamState, mutex: Mutex):
 	mutex.lock()
-	if not is_instance_valid(npc.target) or npc.target == null or npc.target.team == \"corpse\":
 		# Find a valid enemy in range and set them as our target
-		npc.action_queue.push_back(set_target)
+	npc.action_queue.push_back(set_target)
 	# Move within range of the target to begin attacking them
 	npc.action_queue.push_back(move_to_target)	
 	# Attack the target

@@ -1,8 +1,9 @@
 extends Control
 
 var camera
-var selected_ui: SelectedBuildingUi = null
-var ui_node = preload("res://UserInterface/selected_building_ui.tscn")
+var selected_ui = null
+var building_ui_node = preload("res://UserInterface/selected_building_ui.tscn")
+var npc_ui_node = preload("res://UserInterface/selected_unit_ui.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -19,7 +20,7 @@ func _process(delta):
 					selected_ui.queue_free()
 					selected_ui = null
 				$BuildList.show()			
-				selected_ui = ui_node.instantiate()
+				selected_ui = building_ui_node.instantiate()
 				selected_ui.initialize(camera.colliding_entity)
 				selected_ui.position = Vector2(0, 150)
 				add_sibling(selected_ui)
@@ -28,12 +29,17 @@ func _process(delta):
 					selected_ui.queue_free()
 					selected_ui = null
 				$BuildList.hide()		
-				selected_ui = ui_node.instantiate()
+				selected_ui = building_ui_node.instantiate()
 				selected_ui.initialize(camera.colliding_entity)
 				add_sibling(selected_ui)
 			elif camera.colliding_entity is NPC:
-				$BuildList.hide()
-				print("NPC state: ", camera.colliding_entity.behaviour.current_action)
+				if(selected_ui):
+					selected_ui.queue_free()
+					selected_ui = null
+				$BuildList.hide()		
+				selected_ui = npc_ui_node.instantiate()
+				selected_ui.initialize(camera.colliding_entity)
+				add_sibling(selected_ui)
 	else:
 		if(selected_ui):
 			selected_ui.queue_free()

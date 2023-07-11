@@ -27,6 +27,8 @@ var mutex = Mutex.new()
 var root_node = GameStateInit.list_of_bts["idle"]
 var home: Building
 var team_state: TeamState
+var ability_list = []
+var ability_cooldown = false
 
 signal death_signal
 
@@ -113,7 +115,7 @@ func initialize(start_position, character_name, team, home: Building):
 	# Used to track Fog of War Reveal
 	if(team == "player"):
 		self.add_to_group("Player Entities")
-		
+	
 	# Handle Sprite
 	if(self.definition.sprite_override):
 		self.sprite = load("res://Resources/Characters/Images/"+self.definition.sprite_override+".png")
@@ -133,6 +135,12 @@ func initialize(start_position, character_name, team, home: Building):
 	self.basic_attack.get_script()		
 	$AttackSpeed.wait_time = self.basic_attack.attack_speed
 	$AttackSpeed.timeout.connect(_attack_target)
+	
+	# Ability Handling
+	if(self.definition.abilities.size() > 0):
+		for ability_name in self.definition.abilities:
+			self.ability_list.append(ResourceLoader.load("res://Resources/AbilityDefinitions/"+ability_name+".tres"))
+	
 	# instantiate personality of NPC.
 	self.personality = Personality.new()
 	self.personality.initialize(self.definition)
@@ -180,6 +188,18 @@ func _attack_target():
 				self.target.current_health -= damage
 				if self.target is NPC:
 					self.target._handle_state_change("combat")
+				for ability in ability_list:
+					if not self.ability_cooldown:					
+						if distance_to_target < ability.range:
+							handle_ability_cast(ability)
+
+func handle_ability_cast(ability):
+	
+	self.ability_cooldown = true
+	if ability.type == "Damage":
+		if ability.target == "Area":
+			ability.damage_ability(self, self.target.global_position)
+
 '''
 Signal handling function that connects to the target's death signal.
 '''
@@ -224,7 +244,7 @@ Tell NPC to enter building
 '''
 func enterBuilding(target_building:Building):
 	if self.global_position.distance_to(target_building.global_position) < 10:
-		target_building.current_occupants.append(self)
+		target_building.current_occupants.append(self) 
 		self.hide()
 
 func distance(npc: NPC, team_state: TeamState):

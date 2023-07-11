@@ -1,0 +1,22 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://nfj1yb5gyx41"]
+
+[sub_resource type="GDScript" id="GDScript_lnjxd"]
+script/source = "extends Resource
+
+var range = 3
+var attack_speed = 2
+var physical = 10
+var magic = 0
+var fire = 0
+var air = 0
+var earth = 0 
+var water = 0
+var light = 0
+var shadow = 0
+var nature = 0
+var electric = 0
+
+"
+
+[resource]
+script = SubResource("GDScript_lnjxd")

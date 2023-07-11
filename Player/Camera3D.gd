@@ -82,7 +82,7 @@ func get_ray_intersect(mouse):
 	
 	# check that position exists
 	if(check_colliding_entity.has("collider")):
-		colliding_entity = check_colliding_entity["collider"]
+		#colliding_entity = check_colliding_entity["collider"]
 		return check_colliding_entity.position
 	return Vector3(0,0,0)
 	

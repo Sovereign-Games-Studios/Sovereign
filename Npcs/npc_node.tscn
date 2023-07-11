@@ -6,7 +6,7 @@
 height = 1.53318
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_cfbix"]
-radius = 21.0
+radius = 10.0
 
 [node name="NPC" type="CharacterBody3D"]
 script = ExtResource("1_sdoy5")
