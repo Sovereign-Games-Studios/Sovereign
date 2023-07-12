@@ -5,7 +5,7 @@ script/source = "extends Resource
 
 var range = 3
 var attack_speed = 2
-var physical = 10
+var physical = 7
 var magic = 0
 var fire = 0
 var air = 0

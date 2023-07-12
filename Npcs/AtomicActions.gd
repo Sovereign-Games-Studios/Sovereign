@@ -45,7 +45,7 @@ func move_to_destination(npc: NPC, team_state: TeamState):
 	
 func take_potion(npc: NPC, team_state: TeamState):
 	npc.healing_potions -= 1
-	npc.current_health = npc.definition.maximum_health
+	npc.current_health = npc.max_health
 	return "SUCCESS"	
 
 func leave_building(npc: NPC, team_state: TeamState):

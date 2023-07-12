@@ -7,9 +7,10 @@ script/source = "extends Resource
 var character_type = \"Monster\"
 var name = \"Greblin\"
 
-var speed = 3
-var max_health = 20
-var current_health = 20
+var speed = 2
+var max_health = 10
+var current_health = 10
+var exp_value = 250
 # Dictionary where the key is the item and value is number of that item. 
 var inventory: Dictionary
 # Gold in character's inventory. 
@@ -33,25 +34,27 @@ var bravery = 100
 # Determines threshold at which a character will flee a powerful foe or losing fight, 1-100
 var cowardice = 1
 
+var min_drop = 10
+var max_drop = 100
 
-var Strength = 5
-var Spirit = 5
-var Stamina = 20
-var Agility = 10
-var Charisma = 5
-var Wisdom = 5
-var Intelligence = 5
+var strength = 5
+var spirit = 5
+var stamina = 5
+var agility = 10
+var charisma = 5
+var wisdom = 5
+var intelligence = 10
 
-var PhysicalResistance = 0
-var MagicResistance = 0
-var FireResistance = 0
-var AirResistance = 0
-var EarthResistance = 0
-var WaterResistance = 0
-var ElectricResistance = 0
-var NatureResistance = 0
-var ShadowResistance = 0
-var LightResistance = 0
+var physical_resistance = 0
+var magic_resistance = 0
+var fire_resistance = 0
+var air_resistance = 0
+var earth_resistance = 0
+var water_resistance = 0
+var electric_resistance = 0
+var nature_resistance = 0
+var shadow_resistance = 0
+var light_resistance = 0
 
 # Normally will search for associated sprite in the Resources/Images/Characters using the same name as this file. 
 # List override name here but ensure sprite is in Resources/Images/Characters

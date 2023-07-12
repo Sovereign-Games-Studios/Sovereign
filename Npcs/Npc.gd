@@ -8,13 +8,15 @@ var target: Node3D
 var current_path: PackedVector3Array
 var nav_map: RID
 var definition: Resource
+var attributes: Attributes
 var current_health: int
 var sprite
 var team: String
 var healing_potions = 0
-var basic_attack: Resource
+var basic_attack: Attack
 var level: int
 var exp: int
+var gold: int
 var behaviour: BehaviourTree
 var personality: Personality
 var brain: NpcBrain
@@ -30,6 +32,8 @@ var team_state: TeamState
 var ability_list = []
 var ability_cooldown = false
 
+var max_health
+
 signal death_signal
 
 '''
@@ -40,6 +44,8 @@ func _ready():
 	self.team_state = get_node("/root/World").teams[self.team]	
 	self.behaviour.initialize(self.team_state.list_of_bts["idle"], self.team_state, self)
 	add_child(self.behaviour)
+	if self.definition.character_type == "Hero":
+		self.healing_potions = 10
 	pass # Replace with function body.
 
 	
@@ -52,10 +58,29 @@ func _process(delta):
 		_handle_state_change("low_health")				
 		
 	if self.current_health < 0:
-		self.team = "corpse"		
+		self.team = "corpse"
+		var gold_roll = 0
+		if self.definition.character_type == "Monster":
+			gold_roll = randi_range(self.definition.min_drop, self.definition.max_drop)
+			for node in $Vision.get_overlapping_bodies():
+				if node is NPC and node.definition.character_type == "Hero" and node.team != self.team:
+					node.exp += self.definition.exp_value
+					node.gold += gold_roll
+					print(self.definition.name, " has died! Gold and exp has been distributed to ", node.definition.name)
+				
 		self.death_signal.emit()
 		self.queue_free()
 		self.hide()
+	
+	# Every character handles the level up differently as defined in their definiton.
+	if self.exp > 1000:
+		self.exp -= 1000
+		self.level += 1
+		if self.definition.character_type == "Hero":
+			print(self.definition.name, " has levelled up! Previous Strength: ", self.attributes.strength)
+			self.definition._handle_level_up(self)
+			print("New Strength: ", self.attributes.strength)
+			
 		
 '''
 Runs every physics tick
@@ -83,7 +108,7 @@ func _physics_process(delta):
 				
 	# TODO: temporary fix -- do not use pathplanning. Just walk in direction
 	if is_on_floor():
-		var vec = ($NavigationAgent3D.target_position - self.global_position).normalized() * self.definition.speed
+		var vec = ($NavigationAgent3D.target_position - self.global_position).normalized() * self.attributes.speed
 		velocity.x = vec.x
 		velocity.z = vec.z
 		
@@ -110,6 +135,7 @@ func initialize(start_position, character_name, team, home: Building):
 	self.definition = ResourceLoader.load("res://Resources/Characters/CharacterDefinitions/"+character_name.to_lower()+".tres")
 	self.definition.get_script()
 	self.team = team
+	self.max_health = self.definition.max_health	
 	self.current_health = self.definition.max_health
 	self.state = "idle"
 	# Used to track Fog of War Reveal
@@ -126,12 +152,17 @@ func initialize(start_position, character_name, team, home: Building):
 	# Level and Experience - Not yet implemented.
 	self.level = 1
 	self.exp = 0
-	
+
+	# Attributes
+	self.attributes = Attributes.new()
+	self.attributes.initialize(self, self.definition)
+
 	# Attacks
+	self.basic_attack = Attack.new()
 	if(self.definition.basic_attack != null):
-		self.basic_attack = ResourceLoader.load("res://Resources/AttackDefinitions/"+self.definition.basic_attack.to_lower()+"_attack.tres")	
+		self.basic_attack.initialize(ResourceLoader.load("res://Resources/AttackDefinitions/"+self.definition.basic_attack.to_lower()+"_attack.tres"))
 	else:
-		self.basic_attack = ResourceLoader.load("res://Resources/AttackDefinitions/basic_attack.tres")
+		self.basic_attack.initialize(ResourceLoader.load("res://Resources/AttackDefinitions/basic_attack.tres"))
 	self.basic_attack.get_script()		
 	$AttackSpeed.wait_time = self.basic_attack.attack_speed
 	$AttackSpeed.timeout.connect(_attack_target)
@@ -184,14 +215,18 @@ func _attack_target():
 		if is_instance_valid(self.target):
 			var distance_to_target = distance(self, self.team_state)
 			if distance_to_target < self.basic_attack.range:
+				if self.definition.character_type == "Hero":	
+					self.exp += 50				
 				var damage = Damage.calculateDamage(self, self.target)
 				self.target.current_health -= damage
 				if self.target is NPC:
 					self.target._handle_state_change("combat")
 				for ability in ability_list:
-					if not self.ability_cooldown:					
+					if not self.ability_cooldown:
 						if distance_to_target < ability.range:
 							handle_ability_cast(ability)
+							if self.definition.character_type == "Hero":							
+								self.exp += 100
 
 func handle_ability_cast(ability):
 	
@@ -206,7 +241,7 @@ Signal handling function that connects to the target's death signal.
 func _handle_target_death():
 	mutex.lock()
 	self.brain.enemies_in_range.remove_at(self.brain.enemies_in_range.find(self.target))
-	mutex.unlock()	
+	mutex.unlock()
 	self.target = null
 	if self.brain.enemies_in_range.size() > 0:
 		self.behaviour.interrupt(self.team_state.list_of_bts["combat"])
