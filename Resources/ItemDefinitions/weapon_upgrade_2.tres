@@ -1,4 +1,4 @@
-[gd_resource type="Resource" load_steps=2 format=3 uid="uid://dov5mts0fixv0"]
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://wdbt74jsrkan"]
 
 [sub_resource type="GDScript" id="GDScript_acsrv"]
 script/source = "extends Resource
@@ -7,7 +7,7 @@ var level = 1
 var name = \"Sword of Bashing\"
 var type = \"Weapon\"
 var class_requirements = [\"Barbarian\"]
-var value = 5
+var cost = 250
 
 # only weapons and armor can be enchanted to grant a bonus to hit and damage
 var enchantment = 0

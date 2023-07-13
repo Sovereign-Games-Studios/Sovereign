@@ -12,7 +12,7 @@ func calculate_consideration_value(npc: NPC, kingdom_state):
 	if (npc.current_health / npc.definition.max_health) < .3 :
 		value -= 10
 		
-	value += 10 * (npc.personality.bravery/100)
+	value += 1 * (npc.personality.bravery/100)
 	
 	if npc.healing_potions > 1:
 		value += 10

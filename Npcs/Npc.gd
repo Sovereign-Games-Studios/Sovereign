@@ -30,7 +30,35 @@ var root_node = GameStateInit.list_of_bts["idle"]
 var home: Building
 var team_state: TeamState
 var ability_list = []
+var inventory = []
 var ability_cooldown = false
+var purchase_goal = null
+var target_building
+var current_equipment = {
+	"head": null,
+	"neck": null,
+	"shoulders": null,
+	"chest": null,
+	"hands": null,
+	"legs": null,
+	"feet": null,
+	"ring1": null,
+	"ring2": null,
+	"trinket": null
+}
+
+var desired_equipment = {
+	"head": null,
+	"neck": null,
+	"shoulders": null,
+	"chest": null,
+	"hands": null,
+	"legs": null,
+	"feet": null,
+	"ring1": null,
+	"ring2": null,
+	"trinket": null
+}
 
 var max_health
 
@@ -40,12 +68,15 @@ signal death_signal
 Runs as soon as the NPC enters the world.
 '''
 func _ready():
+	self.gold = 0
 	$NavigationAgent3D.set_target_position(self.global_position)
 	self.team_state = get_node("/root/World").teams[self.team]	
 	self.behaviour.initialize(self.team_state.list_of_bts["idle"], self.team_state, self)
+	self.team_state.items_added.connect(_item_check)
 	add_child(self.behaviour)
 	if self.definition.character_type == "Hero":
 		self.healing_potions = 10
+	_item_check()
 	pass # Replace with function body.
 
 	
@@ -67,6 +98,7 @@ func _process(delta):
 					node.exp += self.definition.exp_value
 					node.gold += gold_roll
 					print(self.definition.name, " has died! Gold and exp has been distributed to ", node.definition.name)
+					print("Node gold: ", node.gold)
 				
 		self.death_signal.emit()
 		self.queue_free()
@@ -213,21 +245,22 @@ func align_with_y(xform, new_y):
 func _attack_target():
 	if self.state == "combat":
 		if is_instance_valid(self.target):
-			var distance_to_target = distance(self, self.team_state)
-			if distance_to_target < self.basic_attack.range:
-				if self.definition.character_type == "Hero":	
-					self.exp += 50				
-				var damage = Damage.calculateDamage(self, self.target)
-				self.target.current_health -= damage
-				if self.target is NPC:
-					self.target._handle_state_change("combat")
-				for ability in ability_list:
-					if not self.ability_cooldown:
-						if distance_to_target < ability.range:
-							handle_ability_cast(ability)
-							if self.definition.character_type == "Hero":							
-								self.exp += 100
-
+			if self.target.team != self.team and self.target.is_visible_in_tree():
+				var distance_to_target = distance(self, self.team_state)
+				if distance_to_target < self.basic_attack.range:
+					if self.definition.character_type == "Hero":	
+						self.exp += 50				
+					var damage = Damage.calculateDamage(self, self.target)
+					self.target.current_health -= damage
+					if self.target is NPC:
+						self.target._handle_state_change("combat")
+					for ability in ability_list:
+						if not self.ability_cooldown:
+							if distance_to_target < ability.range:
+								handle_ability_cast(ability)
+								if self.definition.character_type == "Hero":							
+									self.exp += 100
+									
 func handle_ability_cast(ability):
 	
 	self.ability_cooldown = true
@@ -295,3 +328,68 @@ func distance(npc: NPC, team_state: TeamState):
 	
 	var distance = sqrt(pow((enemy_x - npc_x), 2) + pow((enemy_y - npc_y), 2) + pow((enemy_z - npc_z), 2)) 
 	return distance
+
+'''
+Handler for equipment inventory change signal on team
+
+TODO: Better decision making and weights for this, probably break it out into its own file too.
+'''
+func _item_check():
+	for item_list in team_state.available_items:
+		for new_item in team_state.available_items[item_list]:
+			for equipment in self.current_equipment:
+				if self.current_equipment[equipment] != null:
+					var current_item = self.current_equipment[equipment]
+					var new_item_stat
+					var current_item_stat 
+					match self.definition.primary_stat:
+						"strength":
+							print("matched")
+							new_item_stat = new_item.strength
+							if self.desired_equipment[equipment] != null:
+								current_item_stat = self.desired_equipment[equipment].strength	
+							else:														
+								current_item_stat = current_item.strength
+						"agility":
+							new_item_stat = new_item.agility
+							if self.desired_equipment[equipment] != null:
+								current_item_stat = self.desired_equipment[equipment].agility	
+							else:														
+								current_item_stat = current_item.agility
+						"charisma":
+							new_item_stat = new_item.charisma
+							if self.desired_equipment[equipment] != null:
+								current_item_stat = self.desired_equipment[equipment].charisma	
+							else:														
+								current_item_stat = current_item.charisma
+						"stamina":
+							new_item_stat = new_item.stamina
+							if self.desired_equipment[equipment] != null:
+								current_item_stat = self.desired_equipment[equipment].stamina	
+							else:														
+								current_item_stat = current_item.stamina
+						"wisdom":
+							new_item_stat = new_item.wisdom
+							if self.desired_equipment[equipment] != null:
+								current_item_stat = self.desired_equipment[equipment].wisdom	
+							else:														
+								current_item_stat = current_item.wisdom
+						"spirit":
+							new_item_stat = new_item.spirit
+							if self.desired_equipment[equipment] != null:
+								current_item_stat = self.desired_equipment[equipment].spirit	
+							else:														
+								current_item_stat = current_item.spirit
+							
+					if _compare_items(new_item_stat, current_item_stat):
+						self.desired_equipment[equipment] = new_item
+				else: 
+					self.desired_equipment[equipment] = new_item
+'''
+Compares two items against the NPCs desired roles
+'''
+func _compare_items(new_item, current_item):
+	print("Comparing items.")
+	if new_item > current_item:
+		return true
+	return false

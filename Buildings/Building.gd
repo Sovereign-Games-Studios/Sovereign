@@ -11,14 +11,21 @@ var current_occupants: Array
 var recruited_npcs: Dictionary
 # Image
 var sprite
+var team_state: TeamState
 var current_health
 var npc_node = preload("res://Npcs/npc_node.tscn")
 # Array of instantiated Services
-var services = {}
+var services: Dictionary = {}
 signal death_signal
 
 var fall_speed = 50;
 
+func _ready():
+	self.team_state = get_node("/root/World").teams[self.team]	
+	if self.services.has("Item Seller"):
+		var items = self.services["Item Seller"].inventory.keys()
+		self.team_state._add_items(self, items)
+		
 func initialize(start_position, building_name, team):
 	self.team = team
 	set_global_position(start_position)
@@ -49,6 +56,7 @@ func initialize(start_position, building_name, team):
 		$RecruitTimer.wait_time = 10
 		$RecruitTimer.timeout.connect(_recruit_on_timer_timeout)
 	attach_services(definition.services)
+		
 
 func _process(delta):
 	if current_health < 0:
@@ -67,6 +75,7 @@ func _process(delta):
 		for npc in self.recruited_npcs[npc_type]:
 			if not is_instance_valid(npc):
 				self.recruited_npcs[npc_type].remove_at(self.recruited_npcs[npc_type].find(npc))
+				
 # TODO Services in general.
 func attach_services(services):
 	for service in services:

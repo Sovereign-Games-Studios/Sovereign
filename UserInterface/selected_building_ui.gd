@@ -38,7 +38,7 @@ func handle_item_seller_service():
 	var text = "---Available Items--- \n"
 	for item in attached_building.services["Item Seller"].inventory:
 		item.get_script()
-		text += "\n - {item}: {cost}".format({"item": item.name,"cost": item.cost})
+		text += "\n - {item}: {cost}".format({"item": item.name,"cost": item.value})
 	var text_node = Button.new()
 	text_node.name = "ServiceText"
 	text_node.text = text
