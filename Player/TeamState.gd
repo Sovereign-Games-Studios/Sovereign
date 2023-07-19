@@ -14,10 +14,10 @@ var is_fow_explored
 var team_buildings
 var list_of_bts = {}
 var consider_list = {}
-
+signal items_added
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	self.available_items = []
+	self.available_items = {}
 	self.available_enchants = []
 	self.team_npcs = []
 	self.team_buildings = []
@@ -39,6 +39,10 @@ func _ready():
 		gold_counter.timeout.connect(_gold_on_timer_timeout)
 	pass # Replace with function body.
 
+func _add_items(building, items):
+	self.available_items[building] = items
+	self.items_added.emit()
+	
 func initialize(team_name: String, expedition_state: ExpeditionState , hostile_teams):
 	self.team_name = team_name
 	self.expedition_state = expedition_state

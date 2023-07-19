@@ -26,16 +26,16 @@ var services = {\"Guild\": []}
 # Array of Upgrades, will search Resources/UpgradeDefinitions to fetch and instantiate
 var upgrades = []
 
-var PhysicalResistance = 0
-var MagicResistance = 0
-var FireResistance = 0
-var AirResistance = 0
-var EarthResistance = 0
-var WaterResistance = 0
-var ElectricResistance = 0 
-var NatureResistance = 0
-var ShadowResistance = 0 
-var LightResistance = 0
+var physical_resistance = .5
+var magic_resistance = 0
+var fire_resistance = 0
+var air_resistance = 0
+var earth_resistance = 0
+var water_resistance = 0
+var electric_resistance = 0
+var nature_resistance = 0
+var shadow_resistance = 0
+var light_resistance = 0
 
 var sprite_override
 "

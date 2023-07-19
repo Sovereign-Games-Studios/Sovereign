@@ -2,7 +2,7 @@ extends StaticBody3D
 class_name Building
 
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
-
+var attributes: Attributes
 var team: String
 var definition: Resource
 # Array of NPCs inside the building
@@ -11,19 +11,31 @@ var current_occupants: Array
 var recruited_npcs: Dictionary
 # Image
 var sprite
+var team_state: TeamState
 var current_health
 var npc_node = preload("res://Npcs/npc_node.tscn")
 # Array of instantiated Services
-var services = {}
+var services: Dictionary = {}
 signal death_signal
 
 var fall_speed = 50;
 
+func _ready():
+	self.team_state = get_node("/root/World").teams[self.team]	
+	if self.services.has("Item Seller"):
+		var items = self.services["Item Seller"].inventory.keys()
+		self.team_state._add_items(self, items)
+		
 func initialize(start_position, building_name, team):
 	self.team = team
 	set_global_position(start_position)
 	self.definition = ResourceLoader.load("res://Resources/Buildings/BuildingDefinitions/"+building_name.to_lower()+".tres")
 	self.definition.get_script()
+	
+	# Attributes
+	self.attributes = Attributes.new()
+	self.attributes.initialize(self, self.definition)
+	
 	current_health = self.definition.max_health
 	self.current_occupants = []
 	if(team == "player"):
@@ -41,12 +53,20 @@ func initialize(start_position, building_name, team):
 	$Sprite3D.texture = self.sprite	
 	
 	if definition.building_type == "Support" or definition.building_type == "Lair" or definition.building_type == "Merchant":
-		$RecruitTimer.wait_time = 1
+		$RecruitTimer.wait_time = 10
 		$RecruitTimer.timeout.connect(_recruit_on_timer_timeout)
 	attach_services(definition.services)
+		
 
 func _process(delta):
 	if current_health < 0:
+		if self.definition.building_type == "Lair":
+			var gold_roll = randi_range(self.definition.min_drop, self.definition.max_drop)
+			for node in $InfluenceZone.get_overlapping_bodies():
+				if node is NPC and node.definition.character_type == "Hero" and node.team != self.team:
+					node.exp += self.definition.exp_value
+					node.gold += gold_roll
+					print(self.definition.name, " has died! Gold and exp has been distributed to ", node.definition.name)
 		print(self.name, " has been destroyed!")		
 		self.team = "corpse"		
 		self.death_signal.emit()
@@ -55,6 +75,7 @@ func _process(delta):
 		for npc in self.recruited_npcs[npc_type]:
 			if not is_instance_valid(npc):
 				self.recruited_npcs[npc_type].remove_at(self.recruited_npcs[npc_type].find(npc))
+				
 # TODO Services in general.
 func attach_services(services):
 	for service in services:

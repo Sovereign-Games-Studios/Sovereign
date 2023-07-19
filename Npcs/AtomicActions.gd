@@ -45,7 +45,7 @@ func move_to_destination(npc: NPC, team_state: TeamState):
 	
 func take_potion(npc: NPC, team_state: TeamState):
 	npc.healing_potions -= 1
-	npc.current_health = npc.definition.maximum_health
+	npc.current_health = npc.max_health
 	return "SUCCESS"	
 
 func leave_building(npc: NPC, team_state: TeamState):
@@ -55,6 +55,30 @@ func equip_item(npc: NPC, team_state: TeamState):
 func sell_item(npc: NPC, team_state: TeamState):
 	return
 func buy_item(npc: NPC, team_state: TeamState):
+	if npc.state != "acquire_upgrades":
+		for equipment in npc.desired_equipment:
+			if npc.desired_equipment[equipment] != null:
+				if npc.desired_equipment[equipment].value < npc.gold:
+					for building in team_state.available_items:
+						for item in team_state.available_items[building]:
+							if item == npc.desired_equipment[equipment]:	
+								npc.set_destination(building.global_position)
+								npc.target_building = building
+								npc.state = "acquire_upgrades"
+								npc.purchase_goal = npc.desired_equipment[equipment]
+								return "RUNNING"
+	elif npc.get_children()[3].distance_to_target() < 10:
+		npc.enterBuilding(npc.target_building)
+		npc.target_building.services["Item Seller"].sell_item(npc, npc.purchase_goal)
+		for slot in npc.desired_equipment:
+			if npc.desired_equipment[slot] == npc.purchase_goal:
+				npc.current_equipment[slot] = npc.inventory[-1]				
+				npc.desired_equipment[slot] = null
+		npc.purchase_goal = null
+		npc.state = "idle"
+		return "SUCCESS"
+	else:
+		return "RUNNING"
 	return
 func use_ability(npc: NPC, team_state: TeamState):
 	return

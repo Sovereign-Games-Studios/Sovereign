@@ -20,6 +20,7 @@ var type = \"Damage\"
 var cast_time = 2
 
 func damage_ability(caster, location):
+	caster.ability_cooldown = true
 	# Make Collision Object
 	var collision_bubble = CollisionShape3D.new()
 	collision_bubble.shape = SphereShape3D.new()

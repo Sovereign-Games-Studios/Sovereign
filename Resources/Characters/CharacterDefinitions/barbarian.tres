@@ -9,7 +9,6 @@ var name = \"Barbarian\"
 
 var speed = 2
 var max_health = 100
-var current_health = 100
 # Dictionary where the key is the item and value is number of that item. 
 var inventory: Dictionary
 # Gold in character's inventory. 
@@ -17,13 +16,17 @@ var gold = 0
 # Dictionary where the key is the item and value is location equipped. 
 var equipped_items: Dictionary
 
+# Used for equipment acquisition
+var primary_stat = \"strength\"
+var role = \"damage\"
+
 # Gold Cost
 var cost = 1000
 # Array of Abilities, will fetch them from Resources/AbilityDefinitions
 var abilities = [\"slam\"]
 # The basic attack definition for the character, by default it will use a basic attack definition
 # Setting this points to a specific Resource in Resources/AttackDefintions to use 
-var basic_attack = \"Barbarian\"
+var basic_attack = \"barbarian\"
 
 # How responsive a character is to gold incentive, 1-100
 var greed = 50
@@ -35,28 +38,50 @@ var bravery = 100
 var cowardice = 1
 
 
-var Strength = 20
-var Spirit = 5
-var Stamina = 20
-var Agility = 10
-var Charisma = 5
-var Wisdom = 5
-var Intelligence = 5
+var strength = 20
+var spirit = 5
+var stamina = 20
+var agility = 10
+var charisma = 5
+var wisdom = 5
+var intelligence = 5
 
-var PhysicalResistance = .5
-var MagicResistance = 0
-var FireResistance = 0
-var AirResistance = 0
-var EarthResistance = 0
-var WaterResistance = 0
-var ElectricResistance = 0
-var NatureResistance = 0
-var ShadowResistance = 0
-var LightResistance = 0
+var physical_resistance = .5
+var magic_resistance = 0
+var fire_resistance = 0
+var air_resistance = 0
+var earth_resistance = 0
+var water_resistance = 0
+var electric_resistance = 0
+var nature_resistance = 0
+var shadow_resistance = 0
+var light_resistance = 0
 
 # Normally will search for associated sprite in the Resources/Images/Characters using the same name as this file. 
 # List override name here but ensure sprite is in Resources/Images/Characters
 var sprite_override: String
+
+func _handle_level_up(character):
+	
+	character.attributes.strength += 10
+	character.attributes.spirit += 5
+	character.attributes.stamina += 10
+	character.attributes.agility += 5
+	character.attributes.charisma += 5
+	character.attributes.intelligence += 0
+	character.attributes.wisdom += 5
+	
+	character.attributes.physical_resistance += 0.1
+	character.attributes.magic_resistance += 0.1
+	
+	character.attributes.speed += 0.25
+	
+	character.basic_attack.attack_speed -= 0.05	
+	
+	character.max_health += 25
+	character.current_health += character.max_health
+	
+	return
 "
 
 [resource]

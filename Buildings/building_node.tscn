@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://cvniqy3tp5mdn"]
+[gd_scene load_steps=6 format=3 uid="uid://cvniqy3tp5mdn"]
 
 [ext_resource type="Script" path="res://Buildings/Building.gd" id="1_v8rkq"]
 
@@ -10,6 +10,9 @@ radius = 2.0
 [sub_resource type="CylinderMesh" id="CylinderMesh_swhj0"]
 top_radius = 2.0
 bottom_radius = 2.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_sesj0"]
+radius = 10.0
 
 [node name="BuildingNode" type="StaticBody3D"]
 script = ExtResource("1_v8rkq")
@@ -36,3 +39,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3)
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 visible = false
 mesh = SubResource("CylinderMesh_swhj0")
+
+[node name="InfluenceZone" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InfluenceZone"]
+shape = SubResource("SphereShape3D_sesj0")
