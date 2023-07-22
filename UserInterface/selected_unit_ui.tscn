@@ -35,7 +35,7 @@ offset_bottom = 175.0
 custom_minimum_size = Vector2(150, 200)
 layout_mode = 2
 
-[node name="Building Info" type="RichTextLabel" parent="Control/AspectRatioContainer/TabContainer"]
+[node name="UnitInfo" type="RichTextLabel" parent="Control/AspectRatioContainer/TabContainer"]
 clip_contents = false
 custom_minimum_size = Vector2(150, 150)
 layout_mode = 2

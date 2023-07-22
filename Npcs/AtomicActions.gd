@@ -76,6 +76,8 @@ func buy_item(npc: NPC, team_state: TeamState):
 				npc.desired_equipment[slot] = null
 		npc.purchase_goal = null
 		npc.state = "idle"
+		npc.leaveBuilding(npc.target_building)
+		npc.target_building = null
 		return "SUCCESS"
 	else:
 		return "RUNNING"

@@ -22,11 +22,22 @@ var party_leader: NPC
 var leading_party: bool
 # How long the npc has been idle
 var idle_ticks
+var mutex
 
-
-
-func initialize(npc_personality):
+func initialize(npc_personality: Personality, mutex: Mutex):
 	self.personality = npc_personality
 	self.known_enemies = {}
 	self.known_lairs = {}
-	self.current_target = null
+	self.mutex = mutex
+	
+func _physics_process(delta):
+	var npc = self.get_parent()
+	var vision = npc.find_child("Vision")
+	var i = 0
+	# Cleanup
+	for enemy in enemies_in_range:
+		if not enemy in vision.get_overlapping_bodies():
+			self.mutex.lock
+			enemies_in_range.remove_at(i)
+			self.mutex.unlock()
+		i += 1

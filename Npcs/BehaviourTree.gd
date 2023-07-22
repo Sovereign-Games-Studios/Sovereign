@@ -47,8 +47,9 @@ func _process(_delta):
 		elif action_status == "FAILURE":
 			parent_npc.state = "idle"
 			# If we failed, reset our queue
-			# print("ERROR: Action {action} failed!".format({"action": current_action}))
+			print("ERROR: Action {action} failed!".format({"action": current_action}))
 			ticks_since_last_action = 0
+			action_status= "SUCCESS"
 			current_action = null
 			should_exit = true
 			interrupt(root_node)
@@ -66,7 +67,7 @@ func _process(_delta):
 			current_action = null
 			parent_npc.action_queue = []		
 			mutex.unlock()
-			action_status = "FAILURE"
+			action_status = "SUCCESS"
 			
 			# Process new behaviour
 			process_tree(self.root_node)			
@@ -112,5 +113,6 @@ func interrupt(priorityNode: BehaviourNode):
 	interrupt_success.connect(_interrupt_success.bind(priorityNode))
 	
 func _interrupt_success(priorityNode: BehaviourNode):
+	print("Processing interrupt using priority: ", priorityNode.definition.resource_path)
 	process_tree(priorityNode)
 	interrupt_success.disconnect(_interrupt_success)

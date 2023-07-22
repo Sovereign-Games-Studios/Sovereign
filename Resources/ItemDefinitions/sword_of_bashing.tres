@@ -5,9 +5,9 @@ script/source = "extends Resource
 
 var level = 1
 var name = \"Sword of Bashing\"
-var type = \"Weapon\"
-var class_requirements = [\"Barbarian\"]
-var value = 5
+var type = \"weapon\"
+var class_requirements = [\"barbarian\"]
+var value = 250
 
 # only weapons and armor can be enchanted to grant a bonus to hit and damage
 var enchantment = 0
@@ -29,13 +29,13 @@ var nature = 0
 var electric = 0
 
 # Attribute Mods
-var Strength = 5
-var Spirit = 0
-var Stamina = 5
-var Agility = 0
-var Charisma = 0
-var Wisdom = 0
-var Intelligence = 0
+var strength = 5
+var spirit = 0
+var stamina = 5
+var agility = 0
+var charisma = 0
+var wisdom = 0
+var intelligence = 0
 
 # Resistance Mods
 var PhysicalResistance = 0
