@@ -70,6 +70,7 @@ var desired_equipment = {
 var max_health
 
 signal death_signal
+signal level_up
 
 '''
 Runs as soon as the NPC enters the world.
@@ -113,6 +114,7 @@ func _process(delta):
 	
 	# Every character handles the level up differently as defined in their definiton.
 	if self.exp > 1000:
+		self.level_up.emit()
 		self.exp -= 1000
 		self.level += 1
 		if self.definition.character_type == "Hero":
@@ -142,6 +144,18 @@ func _physics_process(delta):
 			if not node in self.brain.enemies_in_range:
 				mutex.lock()
 				self.brain.enemies_in_range.append(node)
+				mutex.unlock()		
+				_handle_state_change("combat")						
+		elif self.team == "player" and node.team == "player":
+			if not node in self.brain.allies_in_range:
+				mutex.lock()			
+				self.brain.allies_in_range.append(node)
+				mutex.unlock()
+				_handle_state_change("combat")
+		elif self.team == "enemy" and node.team == "enemy":
+			if not node in self.brain.allies_in_range:
+				mutex.lock()
+				self.brain.allies_in_range.append(node)
 				mutex.unlock()		
 				_handle_state_change("combat")				
 				
@@ -213,15 +227,16 @@ func initialize(start_position, character_name, team, home: Building):
 	
 	# instantiate personality of NPC.
 	self.personality = Personality.new()
+	self.add_child(self.personality)
 	self.personality.initialize(self.definition)
 	
 	# The NPC's blackboard/knowledge of its own state
 	self.brain = NpcBrain.new()
+	self.add_child(self.brain)	
 	self.brain.initialize(self.personality, self.mutex)
-	
 	# The NPC's behaviour Tree which handles basic actions and decides which ones to take. 
 	self.behaviour = BehaviourTree.new()
-
+	self.add_child(self.behaviour)
 '''
 Sets the NPC's destination in the Nav Agent.
 '''
@@ -261,6 +276,7 @@ func _attack_target():
 					self.target.current_health -= damage
 					if self.target is NPC:
 						self.target._handle_state_change("combat")
+					# TODO this needs to be extended to account for more than one ability and for utility abilities
 					for ability in ability_list:
 						if not self.ability_cooldown:
 							if distance_to_target < ability.range:

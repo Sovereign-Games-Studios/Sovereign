@@ -44,3 +44,24 @@ func interrupt(npc: NPC):
 		current_node.interrupt(npc)
 		current_node = null
 	return
+	
+func reconsider(npc: NPC, kingdom_state: TeamState, mutex: Mutex, option):
+	var role = npc.definition.role
+	var stat_prio = npc.definition.stat_priority
+	var value = 0
+	var considerations = 3
+	if option.earns_exp:
+		value += 10
+	if option.earns_gold:
+		value += 10
+	if option.improves_stat:
+		value += 10
+	if option.is_combat:
+		considerations += 1
+		if role == "damage" or role == "tank":
+			value += 10
+		else:
+			value -= 10
+	
+	
+	return
