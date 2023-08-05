@@ -39,33 +39,6 @@ var shopping: ShoppingHandler
 var current_armor_upgrade = 0
 var current_weapon_upgrade = 0
 
-var current_equipment = {
-	"weapon": null,
-	"head": null,
-	"neck": null,
-	"shoulders": null,
-	"chest": null,
-	"hands": null,
-	"legs": null,
-	"feet": null,
-	"ring1": null,
-	"ring2": null,
-	"trinket": null
-}
-
-var desired_equipment = {
-	"weapon": null,	
-	"head": null,
-	"neck": null,
-	"shoulders": null,
-	"chest": null,
-	"hands": null,
-	"legs": null,
-	"feet": null,
-	"ring1": null,
-	"ring2": null,
-	"trinket": null
-}
 
 var max_health
 
@@ -151,13 +124,11 @@ func _physics_process(delta):
 				mutex.lock()			
 				self.brain.allies_in_range.append(node)
 				mutex.unlock()
-				_handle_state_change("combat")
 		elif self.team == "enemy" and node.team == "enemy":
 			if not node in self.brain.allies_in_range:
 				mutex.lock()
 				self.brain.allies_in_range.append(node)
 				mutex.unlock()		
-				_handle_state_change("combat")				
 				
 	# TODO: temporary fix -- do not use pathplanning. Just walk in direction
 	if is_on_floor():
@@ -191,6 +162,8 @@ func initialize(start_position, character_name, team, home: Building):
 	self.max_health = self.definition.max_health	
 	self.current_health = self.definition.max_health
 	self.state = "idle"
+	self.equipment = EquippedItems.new()
+	self.add_child(self.equipment)
 	# Used to track Fog of War Reveal
 	if(team == "player"):
 		self.add_to_group("Player Entities")

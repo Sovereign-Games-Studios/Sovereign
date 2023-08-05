@@ -1,6 +1,8 @@
 class_name Attributes
 extends Node
 
+var primary_stat
+
 var agility
 var strength
 var stamina
@@ -20,7 +22,7 @@ var nature_resistance
 var shadow_resistance 
 var light_resistance 
 var speed
-
+var attribute_dict
 func initialize(owner: Node3D, definition: Resource):
 	
 	if owner is NPC:
@@ -35,7 +37,18 @@ func initialize(owner: Node3D, definition: Resource):
 		
 		self.speed = definition.speed
 		
-	
+		if definition.character_type == "Hero":
+			self.primary_stat = definition.primary_stat
+			
+		self.attribute_dict = {
+			"agility": self.agility,
+			"charisma": self.charisma,
+			"intelligence": self.intelligence,
+			"spirit": self.spirit,
+			"stamina": self.stamina,
+			"strength": self.strength,
+			"wisdom": self.wisdom
+		}
 	# Handle Resists
 	self.physical_resistance = definition.physical_resistance 
 	self.magic_resistance = definition.magic_resistance 

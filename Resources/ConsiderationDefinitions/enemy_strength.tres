@@ -5,11 +5,10 @@ script/source = "extends Resource
 
 
 func calculate_consideration_value(npc: NPC, kingdom_state):
-	var value = 100
+	var value = 0
 	var npc_knowledge = npc.brain
 	var enemy_npc = npc.target
-	if npc.definition.character_type == \"Monster\":
-		return 1000 
+	
 	if enemy_npc is NPC and npc.definition.character_type == \"Hero\":
 		# The way we calculate this means that units with a very high bravery essentially won't flee monsters despite low health.	
 		if enemy_npc.level > npc.level:
@@ -25,6 +24,43 @@ func calculate_consideration_value(npc: NPC, kingdom_state):
 	else:
 		value = 0
 	
+	for enemy in npc_knowledge.enemies_in_range:
+		# The way we calculate this means that units with a very high bravery essentially won't flee monsters despite low health.	
+		if enemy_npc.level > npc.level:
+			value -= clamp(5 * ((npc.bravery-npc.personality.cowardice)/100), 0, 100)
+		else:
+			value += clamp(5 * ((npc.bravery-npc.personality.cowardice)/100), 0, 100)
+		# The way we calculate this means that units with a very high bravery essentially won't flee monsters despite low health.
+		if enemy_npc.current_health > npc.current_health:		
+			value -= clamp((5 * ((npc.personality.cowardice - npc.personality.bravery)/100)), 0, 100)
+		else:
+			value += clamp((5 * ((npc.personality.cowardice - npc.personality.bravery)/100)), 0, 100)
+		# If an enemy npc is near death, go for the killing blow.
+		if enemy_npc.current_health / enemy_npc.max_health < .2:
+			value += 10
+		# We are thoroughly outclassed by the enemy.
+		if npc.attributes.attribute_dict[npc.attributes.primary_stat] < enemy_npc.attribute_dict[npc.attributes.primary_stat]:
+			value -= clamp(10 * ((npc.bravery-npc.personality.cowardice)/100), 0, 100)
+		else:
+			value += clamp(5 * ((npc.bravery-npc.personality.cowardice)/100), 0, 100)
+	
+	
+	for ally in npc_knowledge.allies_in_range:
+		# The way we calculate this means that units with a very high bravery essentially won't flee monsters despite low health.	
+		if ally.level > npc.level:
+			value += clamp(5 * ((npc.bravery-npc.personality.cowardice)/100), 0, 100)
+		else:
+			value += clamp(1 * ((npc.bravery-npc.personality.cowardice)/100), 0, 100)
+		# The way we calculate this means that units with a very high bravery essentially won't flee monsters despite low health.
+		if ally.current_health > npc.current_health:		
+			value += clamp((5 * ((npc.personality.cowardice - npc.personality.bravery)/100)), 0, 100)
+		else:
+			value += clamp((1 * ((npc.personality.cowardice - npc.personality.bravery)/100)), 0, 100)
+		# If an ally npc is near death, get spooked.
+		if ally.current_health / enemy_npc.max_health < .2:
+			value -= 5
+		
+		
 	return value
 "
 
