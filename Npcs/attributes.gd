@@ -23,6 +23,7 @@ var shadow_resistance
 var light_resistance 
 var speed
 var attribute_dict
+
 func initialize(owner: Node3D, definition: Resource):
 	
 	if owner is NPC:
@@ -60,3 +61,15 @@ func initialize(owner: Node3D, definition: Resource):
 	self.nature_resistance = definition.nature_resistance  
 	self.shadow_resistance = definition.shadow_resistance  
 	self.light_resistance = definition.light_resistance  
+	
+# update function
+func _process(delta):
+	self.attribute_dict = {
+		"agility": self.agility,
+		"charisma": self.charisma,
+		"intelligence": self.intelligence,
+		"spirit": self.spirit,
+		"stamina": self.stamina,
+		"strength": self.strength,
+		"wisdom": self.wisdom
+	}

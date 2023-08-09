@@ -74,6 +74,7 @@ func buy_item(npc: NPC, team_state: TeamState):
 			if npc.desired_equipment[slot] == npc.purchase_goal:
 				npc.current_equipment[slot] = npc.inventory[-1]				
 				npc.desired_equipment[slot] = null
+				npc.equipmentHandler.equipment_change.emit()
 		npc.purchase_goal = null
 		npc.state = "idle"
 		npc.leaveBuilding(npc.target_building)
