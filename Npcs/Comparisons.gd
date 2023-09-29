@@ -1,15 +1,13 @@
-[gd_resource type="Resource" load_steps=2 format=3 uid="uid://bwq2lcpe60tpp"]
-
-[sub_resource type="GDScript" id="GDScript_exf21"]
-script/source = "extends Resource
+class_name Comparisons
+extends Node
 
 
-func calculate_consideration_value(npc: NPC, enemy_npc: NPC, kingdom_state):
+static func calculate_enemy_strength(npc: NPC, enemy_npc: NPC, kingdom_state):
 	var value = 0
 	var npc_knowledge = npc.brain
 	# var enemy_npc = npc.target
 	
-	if enemy_npc is NPC and npc.definition.character_type == \"Hero\":
+	if enemy_npc is NPC and npc.definition.character_type == "Hero":
 		# The way we calculate this means that units with a very high bravery essentially won't flee monsters despite low health.	
 		if enemy_npc.level > npc.level:
 			value -= clamp(5 * ((npc.bravery-npc.personality.cowardice)/100), 0, 100)
@@ -59,11 +57,7 @@ func calculate_consideration_value(npc: NPC, enemy_npc: NPC, kingdom_state):
 			value -= 5
 		
 		# If an ally npc is a spellcaster, and we are smart, we should acknowledge the power advantage.
-		if ally.definition.character_type == \"Wizard\" && npc.attributes.intelligence > 15:
+		if ally.definition.character_type == "Wizard" && npc.attributes.intelligence > 15:
 			value += 5
 		
 	return clamp(value, 0, 100)
-"
-
-[resource]
-script = SubResource("GDScript_exf21")

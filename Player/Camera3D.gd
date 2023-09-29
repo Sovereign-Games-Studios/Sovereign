@@ -9,11 +9,12 @@ var ui_node
 ## the speed of the camera scroll is computed as scroll_speed_base^x + 1
 ## where x is the distance from camera to the object
 var scroll_speed_base = 1.03
-
 ## how close the camera allowed to zoom
 var min_distance = 1
 ## how far the camera is allowed
 var max_distance = 50
+
+signal double_click
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -54,7 +55,8 @@ func _input(event):
 				var check_colliding_entity = worldspace.intersect_ray(PhysicsRayQueryParameters3D.create(start, end))
 				if(check_colliding_entity.has("collider")):
 					colliding_entity = check_colliding_entity["collider"]
-					
+				if event.is_pressed() and event.double_click:
+					double_click.emit()
 			# Scroll Wheel interaction to Zoom in 
 			if event.button_index == 4:
 				var object_below = get_ray_intersect(event.position)

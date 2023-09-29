@@ -1,0 +1,31 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://cx0pvptld84ts"]
+
+[sub_resource type="GDScript" id="GDScript_fc5yk"]
+script/source = "extends Resource
+
+
+func calculate_consideration_value(npc: NPC, kingdom_state: TeamState):
+	var value = 0
+	
+	var npc_knowledge = npc.brain
+	
+	var best_bounty = 0
+	
+	if kingdom_state.combat_reward_flags.size() > 0:
+		for flag in kingdom_state.combat_reward_flags:
+			# Money is a powerful motivator
+			var flag_val = flag  * .01 * npc.personality.greed
+			# Likewise, very strong opponents require more motivation
+			var combat_val = Comparisons.calculate_enemy_strength(npc, kingdom_state.combat_reward_flags[flag], kingdom_state) * npc.personality.cowardice
+			
+			var total_val = clamp((flag_val - combat_val), 0, 100)
+			
+			if total_val > best_bounty:
+				best_bounty = total_val
+				
+	value = best_bounty
+	return value
+"
+
+[resource]
+script = SubResource("GDScript_fc5yk")

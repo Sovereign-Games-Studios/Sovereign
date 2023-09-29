@@ -258,7 +258,6 @@ func _attack_target():
 									self.exp += 100
 									
 func handle_ability_cast(ability):
-	
 	self.ability_cooldown = true
 	if ability.type == "Damage":
 		if ability.target == "Area":
