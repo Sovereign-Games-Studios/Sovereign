@@ -15,7 +15,7 @@ engage_enemies:
 var considerations = [\"idle\"]
 var type = \"Option\"
 # Child node, can either be an action or another behaviour node. 
-var child_nodes = [\"hunt_monsters\", \"purchase_item\"]
+var child_nodes = [\"hunt_monsters\"]
 
 func consider(npc: NPC, kingdom_state: TeamState):
 	var consideration_value = 0

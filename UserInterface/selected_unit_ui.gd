@@ -16,12 +16,12 @@ func initialize(unit: NPC):
 	var new_node = Panel.new()	
 	new_node.name = "Equipment"		
 	text = ""
-	var new_text_box = ItemList.new()
-	for equipment_type in unit.current_equipment:
-		new_text_box.add_item("{equipment_type}: {equipment} \n".format({"equipment_type": equipment_type, "equipment": unit.current_equipment[equipment_type]}), null, false)
-	new_node.add_child(new_text_box)
-	new_text_box.show()
-	$Control/AspectRatioContainer/TabContainer.add_child(new_node)
+	# var new_text_box = ItemList.new()
+	# for equipment_type in unit.current_equipment:
+		# new_text_box.add_item("{equipment_type}: {equipment} \n".format({"equipment_type": equipment_type, "equipment": unit.current_equipment[equipment_type]}), null, false)
+	# new_node.add_child(new_text_box)
+	# new_text_box.show()
+	# $Control/AspectRatioContainer/TabContainer.add_child(new_node)
 		
 	if is_instance_valid(unit.target):	
 		new_node = Panel.new()	

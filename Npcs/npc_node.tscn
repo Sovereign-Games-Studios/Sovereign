@@ -1,6 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://di5uvenjjsoia"]
+[gd_scene load_steps=6 format=3 uid="uid://di5uvenjjsoia"]
 
 [ext_resource type="Script" path="res://Npcs/Npc.gd" id="1_sdoy5"]
+[ext_resource type="Texture2D" uid="uid://ew2lbdr1eosr" path="res://Resources/Characters/Images/rewardflag.png" id="2_6jqg2"]
+[ext_resource type="Script" path="res://Npcs/reward_flag.gd" id="2_wmb6h"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_s5j36"]
 height = 1.53318
@@ -40,5 +42,11 @@ shape = SubResource("SphereShape3D_cfbix")
 
 [node name="RayCast3D" type="RayCast3D" parent="."]
 collide_with_areas = true
+
+[node name="RewardFlag" type="Sprite3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.409576, 0.286788, 0, -0.286788, 0.409576, 0, 2.11499, 0)
+visible = false
+texture = ExtResource("2_6jqg2")
+script = ExtResource("2_wmb6h")
 
 [connection signal="velocity_computed" from="NavigationAgent3D" to="." method="_on_navigation_agent_3d_velocity_computed"]

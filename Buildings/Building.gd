@@ -17,7 +17,7 @@ var npc_node = preload("res://Npcs/npc_node.tscn")
 # Array of instantiated Services
 var services: Dictionary = {}
 signal death_signal
-
+var reward_flag: RewardFlag
 var fall_speed = 50;
 
 func _ready():

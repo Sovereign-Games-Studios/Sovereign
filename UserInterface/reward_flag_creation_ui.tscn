@@ -1,0 +1,88 @@
+[gd_scene load_steps=2 format=3 uid="uid://cqu6c3fgy6gdn"]
+
+[ext_resource type="Script" path="res://UserInterface/reward_flag_creation_ui.gd" id="1_rvexx"]
+
+[node name="RewardFlagCreationUI" type="Control"]
+z_index = 2
+custom_minimum_size = Vector2(150, 450)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1002.0
+offset_bottom = -198.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_rvexx")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -75.0
+offset_right = 150.0
+offset_bottom = 75.0
+grow_vertical = 2
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="Control"]
+layout_mode = 2
+offset_top = -25.0
+offset_right = 150.0
+offset_bottom = 175.0
+
+[node name="TabContainer" type="TabContainer" parent="Control/AspectRatioContainer"]
+custom_minimum_size = Vector2(150, 200)
+layout_mode = 2
+
+[node name="Target" type="RichTextLabel" parent="Control/AspectRatioContainer/TabContainer"]
+clip_contents = false
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+fit_content = true
+
+[node name="DecreaseReward" type="Button" parent="Control/AspectRatioContainer/TabContainer/Target"]
+layout_mode = 2
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_top = 138.0
+offset_right = -115.0
+text = "-"
+
+[node name="IncreaseReward" type="Button" parent="Control/AspectRatioContainer/TabContainer/Target"]
+layout_mode = 2
+offset_left = 121.0
+offset_top = 138.0
+offset_right = 149.0
+offset_bottom = 169.0
+text = "+"
+
+[node name="Reward" type="RichTextLabel" parent="Control/AspectRatioContainer/TabContainer/Target"]
+layout_mode = 0
+offset_left = 35.0
+offset_top = 140.0
+offset_right = 121.0
+offset_bottom = 170.0
+
+[node name="Control2" type="Control" parent="."]
+custom_minimum_size = Vector2(150, 100)
+layout_mode = 1
+anchors_preset = 0
+offset_right = 150.0
+offset_bottom = 100.0
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="Control2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Node2D" type="Node2D" parent="Control2/AspectRatioContainer"]
+position = Vector2(25, 0)
+
+[node name="BuildingSprite2" type="Sprite2D" parent="Control2/AspectRatioContainer/Node2D"]
+z_index = 5
+scale = Vector2(0.2, 0.2)

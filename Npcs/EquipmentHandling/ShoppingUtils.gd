@@ -16,7 +16,7 @@ func _shopper(npc: NPC):
 			_item_check(npc, new_item)
 			
 func _item_check(npc: NPC, new_item: Resource):
-	for equipment in npc.equipment.current_equipment:
+	for equipment sin npc.equipment.current_equipment:
 		# If the item we are looking at doesn't match the slot, skip it.
 		if equipment != new_item.type:
 			continue

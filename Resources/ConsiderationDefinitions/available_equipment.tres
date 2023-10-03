@@ -11,13 +11,14 @@ func calculate_consideration_value(npc: NPC, kingdom_state: TeamState):
 	
 	if npc.healing_potions < 2 and npc.gold > 250:
 		value += 10
-	for item in npc.desired_equipment:
-		if npc.desired_equipment[item] != null:
-			if npc.gold > npc.desired_equipment[item].value:
-				value += 25
-	if value == 100:
-		# We don't have any items we want.
-		return 0
+	if npc.desired_equipment.size() > 0:
+		for item in npc.desired_equipment:
+			if npc.desired_equipment[item] != null:
+				if npc.gold > npc.desired_equipment[item].value:
+					value += 25
+		if value == 100:
+			# We don't have any items we want.
+			return 0
 	return value
 "
 
