@@ -163,8 +163,9 @@ func initialize(start_position, character_name, team, home: Building):
 	self.max_health = self.definition.max_health	
 	self.current_health = self.definition.max_health
 	self.state = "idle"
-	#self.equipment_handler = EquipmentHandler.new()
-	#self.add_child(self.equipment_handler)
+	var new_handler = EquipmentHandler.new()
+	self.equipment_handler = new_handler.initialize()
+	self.add_child(self.equipment_handler)
 	# Used to track Fog of War Reveal
 	if(team == "player"):
 		self.add_to_group("Player Entities")
