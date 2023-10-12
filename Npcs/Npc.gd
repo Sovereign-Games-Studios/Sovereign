@@ -36,9 +36,11 @@ var purchase_goal = null
 var target_building
 var shopping: ShoppingHandler
 var reward_flag: RewardFlag
-
-var current_armor_upgrade = 0
-var current_weapon_upgrade = 0
+var equipment_handler: EquipmentHandler
+var greed: int
+var valor: int
+var bravery: int
+var cowardice: int
 
 
 var max_health
@@ -164,8 +166,8 @@ func initialize(start_position, character_name, team, home: Building):
 	self.current_health = self.definition.max_health
 	self.state = "idle"
 	var new_handler = EquipmentHandler.new()
-	self.equipment_handler = new_handler.initialize()
-	self.add_child(self.equipment_handler)
+	new_handler.initialize(self.definition.starting_equipment)
+	self.equipment_handler = new_handler
 	# Used to track Fog of War Reveal
 	if(team == "player"):
 		self.add_to_group("Player Entities")
@@ -184,7 +186,10 @@ func initialize(start_position, character_name, team, home: Building):
 	# Attributes
 	self.attributes = Attributes.new()
 	self.attributes.initialize(self, self.definition)
-
+	self.greed = self.definition.greed
+	self.valor = self.definition.valor
+	self.bravery = self.definition.bravery
+	self.cowardice = self.definition.cowardice
 	# Attacks
 	self.basic_attack = Attack.new()
 	if(self.definition.basic_attack != null):

@@ -1,5 +1,5 @@
 class_name EquipmentHandler
-extends Node
+extends Node3D
 var weapon: Item = null
 var head: Item = null
 var neck: Item = null
@@ -28,4 +28,3 @@ signal equipment_change
 
 func initialize(starting_equipment: Dictionary):
 	current_equipment = starting_equipment
-	pass

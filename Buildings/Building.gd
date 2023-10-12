@@ -19,6 +19,7 @@ var services: Dictionary = {}
 signal death_signal
 var reward_flag: RewardFlag
 var fall_speed = 50;
+var level = 1;
 
 func _ready():
 	self.team_state = get_node("/root/World").teams[self.team]	

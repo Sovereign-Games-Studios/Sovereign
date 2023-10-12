@@ -26,6 +26,7 @@ func _shopper(npc: NPC):
 			_item_check(npc, new_item)
 			
 func _item_check(npc: NPC, new_item: Resource):
+	print(npc.equipment_handler)
 	var equipment = npc.equipment_handler.current_equipment[new_item.equipment_slot]
 	if equipment != null:
 		var current_item = equipment
@@ -71,9 +72,9 @@ func _item_check(npc: NPC, new_item: Resource):
 					current_item_stat = current_item.spirit
 				
 		if _compare_items(new_item_stat, current_item_stat):
-			npc.equipment.desired_equipment[new_item.equipment_slot] = new_item
+			npc.equipment_handler.desired_equipment[new_item.equipment_slot] = new_item
 	else: 
-		npc.equipment.desired_equipment[new_item.equipment_slot] = new_item
+		npc.equipment_handler.desired_equipment[new_item.equipment_slot] = new_item
 '''
 Compares two items against the NPCs desired roles
 '''
