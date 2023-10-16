@@ -20,6 +20,7 @@ signal death_signal
 var reward_flag: RewardFlag
 var fall_speed = 50;
 var level = 1;
+var max_health: int
 
 func _ready():
 	self.team_state = get_node("/root/World").teams[self.team]	
@@ -36,7 +37,7 @@ func initialize(start_position, building_name, team):
 	# Attributes
 	self.attributes = Attributes.new()
 	self.attributes.initialize(self, self.definition)
-	
+	self.max_health = self.definition.max_health
 	current_health = self.definition.max_health
 	self.current_occupants = []
 	if(team == "player"):
