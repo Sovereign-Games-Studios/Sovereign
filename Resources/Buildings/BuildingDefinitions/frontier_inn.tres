@@ -1,0 +1,46 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://ew1p2jsonsda"]
+
+[sub_resource type="GDScript" id="GDScript_pm8wv"]
+script/source = "extends Resource
+
+# Building types include: Guild, Merchant, Relaxation, Lair, Palace, Support
+var building_type = \"Relaxation\"
+var name = \"Frontier Inn\"
+
+var biome = \"All\"
+var constructable = true
+var max_health = 1000
+var current_health = 1000
+# Dictionary where the key is the NPC Type (searches for NPC in Resources/NpcDefinitions)
+# and the value is the number of NPCs of that type this building can sustain. 
+var recruitable_npcs = {}
+
+# Dictionary where the key is the Building Name and the Value is the level of building required. 
+var prerequisites = {\"Palace\": 1}
+
+# Gold Cost
+var cost = 1000
+# Array of Strings, will automatically instantiate each type as needed and attach them to the building
+# Will search Resources/ServiceDefinitions to fetch them and instantiate. 
+var services = {}
+# Array of Upgrades, relating directly to building level
+var upgrades = {}
+# Array of research, will search Resources/Research Definitions to fetch and instantiate
+var research = []
+
+var physical_resistance = .5
+var magic_resistance = 0
+var fire_resistance = 0
+var air_resistance = 0
+var earth_resistance = 0
+var water_resistance = 0
+var electric_resistance = 0
+var nature_resistance = 0
+var shadow_resistance = 0
+var light_resistance = 0
+
+var sprite_override
+"
+
+[resource]
+script = SubResource("GDScript_pm8wv")

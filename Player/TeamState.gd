@@ -12,10 +12,11 @@ var objectives
 var is_palace_alive
 var is_fow_explored
 var team_buildings
+var relaxation_buildings: Array
 var list_of_bts = {}
 var consider_list = {}
-var combat_reward_flags = {}
-var exploration_reward_flags = {}
+var combat_reward_flags = []
+var exploration_reward_flags = []
 signal items_added
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -23,12 +24,13 @@ func _ready():
 	self.available_enchants = []
 	self.team_npcs = []
 	self.team_buildings = []
+	self.relaxation_buildings = []
 	self.objectives = []
 	self.is_palace_alive = true
 	self.list_of_bts = self.expedition_state.game_state.list_of_bts 
 	self.consider_list = self.expedition_state.game_state.consider_list 
-	self.combat_reward_flags = {}
-	self.exploration_reward_flags = {}
+	self.combat_reward_flags = []
+	self.exploration_reward_flags = []
 	self.gold = 2000
 	var user_interface = load("res://UserInterface/UserInterface.tscn")
 	if team_name == "player":

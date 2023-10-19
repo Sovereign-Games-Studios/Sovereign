@@ -28,9 +28,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CylinderShape3D_s5j36")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
-target_desired_distance = 2.0
-path_max_distance = 10.01
+path_desired_distance = 3.0
+target_desired_distance = 3.0
+path_height_offset = -2.0
+navigation_layers = 7
 radius = 1.0
+avoidance_layers = 7
+avoidance_mask = 7
+debug_enabled = true
 
 [node name="AttackSpeed" type="Timer" parent="."]
 autostart = true

@@ -40,7 +40,7 @@ func _process(_delta):
 		mutex.unlock()
 		action_status = process_action(current_action)
 	elif parent_npc.action_queue.size() > 0 and not should_exit:
-		if action_status == "RUNNING" and current_action != null and ticks_since_last_action < 500:
+		if action_status == "RUNNING" and current_action != null and ticks_since_last_action < 5000:
 			ticks_since_last_action += 1
 			action_status = process_action(current_action)
 			return

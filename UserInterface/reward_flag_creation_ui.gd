@@ -17,6 +17,9 @@ func initialize(target: Node3D):
 		reward_flag = target.get_node("RewardFlag")		
 		current_reward = reward_flag.value
 		reward_flag.show()
+		# TODO debug this
+		var kingdom_stats = get_node("/root/World").teams["player"]
+		kingdom_stats.combat_reward_flags.append(target)
 	
 	$Control/AspectRatioContainer/TabContainer/Target/IncreaseReward.pressed.connect(_handle_reward_up)
 	$"Control/AspectRatioContainer/TabContainer/Target/DecreaseReward".pressed.connect(_handle_reward_down)
@@ -24,15 +27,34 @@ func initialize(target: Node3D):
 	$Control/AspectRatioContainer/TabContainer/Target/Reward.text = str(current_reward)
 	
 func _handle_reward_up():
-	reward_flag = attached_entity.get_node("RewardFlag")
-	reward_flag.value += 100
-	$Control/AspectRatioContainer/TabContainer/Target/Reward.text = str(reward_flag.value)
+	var kingdom_stats = get_node("/root/World").teams["player"]
+	if kingdom_stats.gold > 100:
+		reward_flag = attached_entity.get_node("RewardFlag")
+		reward_flag.value += 100
+		kingdom_stats.gold -= 100
+		$Control/AspectRatioContainer/TabContainer/Target/Reward.text = str(reward_flag.value)
+	else:
+		reward_flag = attached_entity.get_node("RewardFlag")
+		reward_flag.value += kingdom_stats.gold
+		kingdom_stats.gold -= kingdom_stats.gold
+		$Control/AspectRatioContainer/TabContainer/Target/Reward.text = str(reward_flag.value)
 
 func _handle_reward_down():
-	reward_flag = attached_entity.get_node("RewardFlag")
-	reward_flag.value -= 100
-	$Control/AspectRatioContainer/TabContainer/Target/Reward.text = str(reward_flag.value)
-	
+	var reward_flag = attached_entity.get_node("RewardFlag")
+	var kingdom_stats = get_node("/root/World").teams["player"]	
+	if reward_flag.gold > 100:
+		reward_flag.value -= 100
+		kingdom_stats.gold += 100
+		$Control/AspectRatioContainer/TabContainer/Target/Reward.text = str(reward_flag.value)
+	else:
+		reward_flag.value -= reward_flag.gold
+		kingdom_stats.gold += reward_flag.gold
+		$Control/AspectRatioContainer/TabContainer/Target/Reward.text = str(reward_flag.value)
+		reward_flag.hide()
+		var index = kingdom_stats.combat_reward_flags.find(attached_entity)
+		kingdom_stats.combat_reward_flags.remove_at(index)
+		
+			
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.

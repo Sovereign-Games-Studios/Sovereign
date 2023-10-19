@@ -28,6 +28,10 @@ func _ready():
 		var items = self.services["Item Seller"].inventory.keys()
 		self.team_state._add_items(self, items)
 		
+	self.team_state.team_buildings.append(self)
+	if self.definition.building_type == "Relaxation":
+		self.team_state.relaxation_buildings.append(self)
+		
 func initialize(start_position, building_name, team):
 	self.team = team
 	set_global_position(start_position)
@@ -58,7 +62,6 @@ func initialize(start_position, building_name, team):
 		$RecruitTimer.wait_time = 10
 		$RecruitTimer.timeout.connect(_recruit_on_timer_timeout)
 	attach_services(definition.services)
-		
 
 func _process(delta):
 	if current_health < 0:

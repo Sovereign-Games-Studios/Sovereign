@@ -308,15 +308,14 @@ func leaveBuilding(target_building:Building):
 	var found = target_building.current_occupants.find(self)
 	if found >= 0:
 		target_building.current_occupants.remove_at(found) 
-		self.show()
+	self.show()
 		
 '''
 Tell NPC to enter building
 '''
 func enterBuilding(target_building:Building):
-	if self.global_position.distance_to(target_building.global_position) < 10:
-		target_building.current_occupants.append(self) 
-		self.hide()
+	target_building.current_occupants.append(self) 
+	self.hide()
 
 func distance(npc: NPC, team_state: TeamState):
 	var enemy_npc = npc.target
