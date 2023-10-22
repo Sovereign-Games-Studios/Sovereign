@@ -19,7 +19,7 @@ func set_target(npc: NPC, team_state: TeamState):
 		best_enemy.death_signal.connect(npc._handle_target_death)
 		npc.target = best_enemy
 	if is_instance_valid(npc.target):
-		npc.set_destination(npc.target.global_position)
+		npc.set_destination(npc.target.global_transform.origin)
 		return "SUCCESS"
 	else:
 		return "FAILURE"
@@ -32,11 +32,12 @@ func move_to_target(npc: NPC, team_state: TeamState):
 	
 func move_to_destination(npc: NPC, team_state: TeamState):
 	# moves to current target, will loop until target is reached or becomes unreachable.
-	if not npc.get_children()[3].is_navigation_finished():
+	if not npc.get_children()[2].get_children()[0].is_navigation_finished():
 		#print(npc.get_children()[3].distance_to_target())
-		print("Navigation running from {current} to {destination}".format({"current": npc.global_position, "destination": npc.get_child(3).target_position}))
+		print("Navigation running from {current} to {destination}".format({"current": npc.get_child(2).global_position, "destination": npc.get_child(2).get_child(0).target_position}))
+		print(npc.get_children()[2].get_children()[0].is_navigation_finished())
 		return "RUNNING"
-	elif npc.get_children()[3].is_navigation_finished():
+	elif npc.get_children()[2].get_children()[0].is_navigation_finished():
 		print("Navigation Finished")
 		return "SUCCESS"
 	else:
@@ -76,12 +77,12 @@ func buy_item(npc: NPC, team_state: TeamState):
 					for building in team_state.available_items:
 						for item in team_state.available_items[building]:
 							if item == npc.desired_equipment[equipment]:	
-								npc.set_destination(building.global_position)
+								npc.set_destination(building.global_transform.origin)
 								npc.target_building = building
 								npc.state = "acquire_upgrades"
 								npc.purchase_goal = npc.desired_equipment[equipment]
 								return "RUNNING"
-	elif npc.get_children()[3].distance_to_target() < 10:
+	elif npc.get_children()[2].get_children()[0].distance_to_target() < 10:
 		npc.enterBuilding(npc.target_building)
 		npc.target_building.services["Item Seller"].sell_item(npc, npc.purchase_goal)
 		for slot in npc.desired_equipment:
@@ -142,14 +143,14 @@ func set_exploration_destination(npc: NPC, team_state: TeamState):
 				xform.basis.z = -xform.basis.y.cross(n)
 				xform.basis = xform.basis.orthonormalized()
 				npc.global_transform = npc.global_transform.interpolate_with(xform, 0.2)
-				npc.set_destination(collision)
+				npc.set_destination(collision.global_transform.origin)
 				return "SUCCESS"
 				
 		else:
 			npc.basis = npc.basis.rotated(Vector3(0,1,0), 90)
 			count +=1
 	# Failed to collide with anything after rotating 4 times. 		
-	npc.set_destination(npc.global_position + Vector3(randi_range(-10, 10), 0, randi_range(-10, 10)))
+	npc.set_destination(npc.global_transform.origin + Vector3(randi_range(-10, 10), 0, randi_range(-10, 10)))
 	return "SUCCESS"
 
 func set_relax_destination(npc: NPC, team_state: TeamState):
@@ -166,7 +167,7 @@ func set_relax_destination(npc: NPC, team_state: TeamState):
 		return "FAILED"
 	else:
 		print("Destination set here is our target: ", nearest_building)	
-		npc.set_destination(nearest_building.global_position)
+		npc.set_destination(nearest_building.global_transform.origin)
 		npc.target_building = nearest_building
 		return "SUCCESS"
 
