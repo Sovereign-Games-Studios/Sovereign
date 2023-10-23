@@ -32,12 +32,12 @@ func move_to_target(npc: NPC, team_state: TeamState):
 	
 func move_to_destination(npc: NPC, team_state: TeamState):
 	# moves to current target, will loop until target is reached or becomes unreachable.
-	if not npc.get_children()[2].get_children()[0].is_navigation_finished():
+	if not npc.get_children()[3].is_navigation_finished():
 		#print(npc.get_children()[3].distance_to_target())
-		print("Navigation running from {current} to {destination}".format({"current": npc.get_child(2).global_position, "destination": npc.get_child(2).get_child(0).target_position}))
-		print(npc.get_children()[2].get_children()[0].is_navigation_finished())
+		print("Navigation running from {current} to {destination}".format({"current": npc.get_child(2).global_position, "destination": npc.get_child(3).target_position}))
+		print(npc.get_children()[3].is_navigation_finished())
 		return "RUNNING"
-	elif npc.get_children()[2].get_children()[0].is_navigation_finished():
+	elif npc.get_children()[3].is_navigation_finished():
 		print("Navigation Finished")
 		return "SUCCESS"
 	else:
@@ -143,7 +143,7 @@ func set_exploration_destination(npc: NPC, team_state: TeamState):
 				xform.basis.z = -xform.basis.y.cross(n)
 				xform.basis = xform.basis.orthonormalized()
 				npc.global_transform = npc.global_transform.interpolate_with(xform, 0.2)
-				npc.set_destination(collision.global_transform.origin)
+				npc.set_destination(collision)
 				return "SUCCESS"
 				
 		else:
@@ -166,7 +166,7 @@ func set_relax_destination(npc: NPC, team_state: TeamState):
 	if nearest_building == null:
 		return "FAILED"
 	else:
-		print("Destination set here is our target: ", nearest_building)	
+		print("Destination set here is our target: ", nearest_building.global_transform.origin)	
 		npc.set_destination(nearest_building.global_transform.origin)
 		npc.target_building = nearest_building
 		return "SUCCESS"

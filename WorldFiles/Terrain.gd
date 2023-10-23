@@ -65,7 +65,8 @@ func generate_mesh(new_value: bool) -> void:
 	
 	# set the collision
 	$CollisionShape3D.shape = array_mesh.create_trimesh_shape()
-
+	$NavigationRegion3D/MeshInstance3D.mesh = surface_tool.commit()
+	$NavigationRegion3D.bake_navigation_mesh()
 # Generate dynamically in game
 func _ready():
 	generate_mesh(true)

@@ -53,7 +53,7 @@ Runs as soon as the NPC enters the world.
 '''
 func _ready():
 	self.gold = 0
-	$CollisionShape3D/NavigationAgent3D.set_target_position(self.global_position)
+	$NavigationAgent3D.set_target_position(self.global_position)
 	self.team_state = get_node("/root/World").teams[self.team]	
 	self.behaviour.initialize(self.team_state.list_of_bts["idle"], self.team_state, self)
 	self.team_state.items_added.connect(self.shopping._shopper.bind(self))
@@ -134,11 +134,14 @@ func _physics_process(delta):
 				mutex.unlock()		
 				
 	# TODO: temporary fix -- do not use pathplanning. Just walk in direction
-	if is_on_floor():
-		var vec = ($CollisionShape3D/NavigationAgent3D.get_next_path_position() - global_transform.origin).normalized() * self.attributes.speed
-		velocity.x = vec.x
-		velocity.z = vec.z
-		velocity.y = vec.y
+	# if is_on_floor():
+	print("What is our next path position: ", $NavigationAgent3D.get_next_path_position())
+	print("Origin: ", self.global_transform.origin)
+	var vec = ($NavigationAgent3D.get_next_path_position() - self.global_transform.origin).normalized() * self.attributes.speed
+	velocity.x = vec.x
+	velocity.z = vec.z
+	velocity.y = vec.y
+	print("our velocity: ", velocity)
 	move_and_slide()
 
 	for index in get_slide_collision_count():
@@ -222,7 +225,7 @@ Sets the NPC's destination in the Nav Agent.
 '''
 func set_destination(new_destination):
 	var destination = new_destination
-	$CollisionShape3D/NavigationAgent3D.set_target_position(destination)
+	$NavigationAgent3D.set_target_position(destination)
 
 '''
 Computes velicty and sets it.
