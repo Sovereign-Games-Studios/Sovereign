@@ -4,7 +4,7 @@ extends Node
 This is the basic interface used by NPCs to build their behaviour trees.
 '''
 
-# This should be an array of Modular Behaviours
+# Interrupt flag
 var should_exit = false
 # currently processing node
 var current_node: BehaviourNode
@@ -30,7 +30,7 @@ var ticks_since_last_action = 0
 func _process(_delta):
 	if parent_npc.state == "idle":
 		process_tree(self.root_node)
-	if 	(parent_npc.action_queue.size() < 4 and tree_status != "RUNNING") or should_exit:
+	if 	(parent_npc.action_queue.size() < 4 and tree_status != "RUNNING"):
 		process_tree(self.root_node)
 	if current_action == null and not should_exit:
 		ticks_since_last_action = 0
@@ -40,15 +40,16 @@ func _process(_delta):
 		mutex.unlock()
 		action_status = process_action(current_action)
 	elif parent_npc.action_queue.size() > 0 and not should_exit:
-		if action_status == "RUNNING" and current_action != null and ticks_since_last_action < 500:
+		if action_status == "RUNNING" and current_action != null and ticks_since_last_action < 5000:
 			ticks_since_last_action += 1
 			action_status = process_action(current_action)
 			return
 		elif action_status == "FAILURE":
 			parent_npc.state = "idle"
 			# If we failed, reset our queue
-			# print("ERROR: Action {action} failed!".format({"action": current_action}))
+			print("ERROR: Action {action} failed!".format({"action": current_action}))
 			ticks_since_last_action = 0
+			action_status= "SUCCESS"
 			current_action = null
 			should_exit = true
 			interrupt(root_node)
@@ -60,23 +61,22 @@ func _process(_delta):
 			current_action = parent_npc.action_queue.pop_front()
 			mutex.unlock()
 			action_status = process_action(current_action)
+	elif should_exit:
+			# Immediately halt actions and clear queue
+			mutex.lock()
+			current_action = null
+			parent_npc.action_queue = []		
+			mutex.unlock()
+			action_status = "SUCCESS"
+			
+			# Process new behaviour
+			process_tree(self.root_node)			
 	pass
 
 func process_action(action: Callable):
-	# If we manage to catch it here first
-	if should_exit:
-		print("Clearing action tree!")
-		current_action = null		
-		action_status = "FAILURE"		
-		# Might be necessary to force us back into the tree
-		mutex.lock()
-		parent_npc.action_queue = []
-		mutex.unlock()			
-		return	
-	else:
-		# call the action and get its current status
-		current_action = action
-		return(action.call(parent_npc, team_state))
+	# call the action and get its current status
+	current_action = action
+	return(action.call(parent_npc, team_state))
 
 	
 func initialize(new_root: BehaviourNode, new_state: TeamState, npc: NPC):
@@ -113,5 +113,6 @@ func interrupt(priorityNode: BehaviourNode):
 	interrupt_success.connect(_interrupt_success.bind(priorityNode))
 	
 func _interrupt_success(priorityNode: BehaviourNode):
+	print("Processing interrupt using priority: ", priorityNode.definition.resource_path)
 	process_tree(priorityNode)
 	interrupt_success.disconnect(_interrupt_success)

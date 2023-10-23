@@ -17,7 +17,16 @@ var inventory: Dictionary
 var gold = 0
 # Dictionary where the key is the item and value is location equipped. 
 var equipped_items: Dictionary
-
+var starting_equipment = {
+	\"weapon\": null,
+	\"head\": null,
+	\"neck\": null,
+	\"shoulders\": null,
+	\"chest\": null,
+	\"hands\": null,
+	\"legs\": null,
+	\"feet\": null
+}
 # Gold Cost
 var cost = 1000
 # Array of Abilities, will fetch them from Resources/AbilityDefinitions

@@ -19,7 +19,7 @@ func set_target(npc: NPC, team_state: TeamState):
 		best_enemy.death_signal.connect(npc._handle_target_death)
 		npc.target = best_enemy
 	if is_instance_valid(npc.target):
-		npc.set_destination(npc.target.global_position)
+		npc.set_destination(npc.target.global_transform.origin)
 		return "SUCCESS"
 	else:
 		return "FAILURE"
@@ -33,8 +33,6 @@ func move_to_target(npc: NPC, team_state: TeamState):
 func move_to_destination(npc: NPC, team_state: TeamState):
 	# moves to current target, will loop until target is reached or becomes unreachable.
 	if not npc.get_children()[3].is_navigation_finished():
-		# print(npc.get_children()[3].distance_to_target())
-		# print("Navigation running from {current} to {destination}".format({"current": npc.global_position, "destination": npc.get_child(3).target_position}))
 		return "RUNNING"
 	elif npc.get_children()[3].is_navigation_finished():
 		print("Navigation Finished")
@@ -49,7 +47,19 @@ func take_potion(npc: NPC, team_state: TeamState):
 	return "SUCCESS"	
 
 func leave_building(npc: NPC, team_state: TeamState):
+	npc.leaveBuilding(npc.target_building)
 	return
+func relax_in_building(npc: NPC, team_state: TeamState):
+	if npc.state == "relaxing":
+		return "RUNNING"
+	else:
+		npc.leaveBuilding(npc.target_building)
+		npc.target_building = null	
+		return "SUCCESS"
+		
+func _timeout_in_building(npc: NPC, team_state: TeamState):
+	npc.state = "idle"
+	return "SUCCESS"
 func equip_item(npc: NPC, team_state: TeamState):
 	return
 func sell_item(npc: NPC, team_state: TeamState):
@@ -62,20 +72,26 @@ func buy_item(npc: NPC, team_state: TeamState):
 					for building in team_state.available_items:
 						for item in team_state.available_items[building]:
 							if item == npc.desired_equipment[equipment]:	
-								npc.set_destination(building.global_position)
+								npc.set_destination(building.global_transform.origin)
 								npc.target_building = building
 								npc.state = "acquire_upgrades"
 								npc.purchase_goal = npc.desired_equipment[equipment]
 								return "RUNNING"
-	elif npc.get_children()[3].distance_to_target() < 10:
+	elif npc.get_children()[2].get_children()[0].distance_to_target() < 10:
 		npc.enterBuilding(npc.target_building)
 		npc.target_building.services["Item Seller"].sell_item(npc, npc.purchase_goal)
 		for slot in npc.desired_equipment:
 			if npc.desired_equipment[slot] == npc.purchase_goal:
 				npc.current_equipment[slot] = npc.inventory[-1]				
 				npc.desired_equipment[slot] = null
+				npc.equipmentHandler.equipment_change.emit()
 		npc.purchase_goal = null
-		npc.state = "idle"
+		#TODO make adding timers a utility function 
+		var timer = Timer.new()
+		timer.wait_time = 10
+		timer.timeout.connect(_timeout_in_building.bind(npc, team_state))
+		npc.add_child(timer)
+		timer.start()
 		return "SUCCESS"
 	else:
 		return "RUNNING"
@@ -84,8 +100,18 @@ func use_ability(npc: NPC, team_state: TeamState):
 	return
 func use_item(npc: NPC, team_state: TeamState):
 	return
-func enter_building(npc: NPC, team_state: TeamState):
-	return
+func enter_building_to_relax(npc: NPC, team_state: TeamState):
+	if npc.target_building != null:
+		npc.enterBuilding(npc.target_building)
+		#TODO make adding timers a utility function 
+		var timer = Timer.new()
+		timer.wait_time = 30
+		timer.timeout.connect(_timeout_in_building.bind(npc, team_state))
+		npc.add_child(timer)
+		timer.start()
+		return "SUCCESS"
+	else:
+		return "FAILURE"
 func idle(npc: NPC, team_state: TeamState):
 	return	
 func go_home(npc: NPC, team_state: TeamState):
@@ -119,8 +145,27 @@ func set_exploration_destination(npc: NPC, team_state: TeamState):
 			npc.basis = npc.basis.rotated(Vector3(0,1,0), 90)
 			count +=1
 	# Failed to collide with anything after rotating 4 times. 		
-	npc.set_destination(npc.global_position + Vector3(randi_range(-10, 10), 0, randi_range(-10, 10)))
+	npc.set_destination(npc.global_transform.origin + Vector3(randi_range(-10, 10), 0, randi_range(-10, 10)))
 	return "SUCCESS"
+
+func set_relax_destination(npc: NPC, team_state: TeamState):
+	npc.state = "relaxing"
+	var relaxation_buildings = team_state.relaxation_buildings
+	var nearest_building = null
+	for building in relaxation_buildings:
+		if nearest_building == null:
+			nearest_building = building
+		else:
+			if npc.global_position.distance_to(building) < npc.global_position.distance_to(nearest_building.global_transform.origin):
+				nearest_building = building 
+	if nearest_building == null:
+		return "FAILED"
+	else:
+		print("Destination set here is our target: ", nearest_building.global_transform.origin)	
+		npc.set_destination(nearest_building.global_transform.origin)
+		npc.target_building = nearest_building
+		return "SUCCESS"
+
 
 func distance(npc: NPC, team_state: TeamState):
 	var enemy_npc = npc.target

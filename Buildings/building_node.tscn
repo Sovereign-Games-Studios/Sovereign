@@ -1,6 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://cvniqy3tp5mdn"]
+[gd_scene load_steps=8 format=3 uid="uid://cvniqy3tp5mdn"]
 
 [ext_resource type="Script" path="res://Buildings/Building.gd" id="1_v8rkq"]
+[ext_resource type="Texture2D" uid="uid://ew2lbdr1eosr" path="res://Resources/Characters/Images/rewardflag.png" id="2_72taa"]
+[ext_resource type="Script" path="res://Npcs/reward_flag.gd" id="3_hwq8o"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_clg12"]
 radius = 2.0
@@ -41,6 +43,14 @@ visible = false
 mesh = SubResource("CylinderMesh_swhj0")
 
 [node name="InfluenceZone" type="Area3D" parent="."]
+collision_layer = 8
+collision_mask = 8
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="InfluenceZone"]
 shape = SubResource("SphereShape3D_sesj0")
+
+[node name="RewardFlag" type="Sprite3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.409576, 0.286788, 0, -0.286788, 0.409576, 0, 2.11499, 0)
+visible = false
+texture = ExtResource("2_72taa")
+script = ExtResource("3_hwq8o")

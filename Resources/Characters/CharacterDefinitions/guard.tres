@@ -24,7 +24,16 @@ var abilities = []
 # The basic attack definition for the character, by default it will use a basic attack definition
 # Setting this points to a specific Resource in Resources/AttackDefintions to use 
 var basic_attack = \"Barbarian\"
-
+var starting_equipment = {
+	\"weapon\": null,
+	\"head\": null,
+	\"neck\": null,
+	\"shoulders\": null,
+	\"chest\": null,
+	\"hands\": null,
+	\"legs\": null,
+	\"feet\": null
+}
 # How responsive a character is to gold incentive, 1-100
 var greed = 1
 # How responsive a character is to threats to the Kingdom, 1-100

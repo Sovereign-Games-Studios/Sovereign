@@ -8,26 +8,63 @@ List of variables that store the NPC's knowledge of it's current state. This is 
 
 # Dictionary of known enemies and their last seen location
 var known_enemies: Dictionary
-# Array of enemies in range
+# Array of enemies in vision range
 var enemies_in_range: Array
+# Array of allies in vision range
+var allies_in_range: Array
 # Array of enemies attacking kingdom
 var enemies_attacking_kingdom: Array
 # Dictionary of known monster lairs and their last seen location
 var known_lairs: Dictionary
-# Action currently being undertaken
-var current_action: Action
 # Personality of the NPC
 var personality: Personality
-# Dictionary of NPC Attributes
-var current_attributes: Dictionary
-# Current Target
-var current_target: NPC
-# Self
+# Party leader if any. This should be null if they are leading a party. 
 var party_leader: NPC
+# If the NPC is the party leader, indicate it. This should be false if the party_leader variable has a valid npc.
 var leading_party: bool
+# How long the npc has been idle
+var idle_ticks = 0
 
-func initialize(npc_personality):
+var power_level: int
+
+var mutex
+
+func initialize(npc_personality: Personality, mutex: Mutex):
 	self.personality = npc_personality
 	self.known_enemies = {}
 	self.known_lairs = {}
-	self.current_target = null
+	self.mutex = mutex
+	self.get_parent().level_up.connect(recalculate_power)
+	recalculate_power()
+	
+func recalculate_power():
+	var npc = self.get_parent()
+	self.power_level = 0
+	
+	
+func _physics_process(delta):
+	var npc = self.get_parent()
+	
+	if npc.state == "idle":
+		idle_ticks += 1
+	else:
+		idle_ticks = 0
+	
+	var vision = npc.find_child("Vision")
+	var i = 0
+	# Cleanup
+	for enemy in enemies_in_range:
+		if not enemy in vision.get_overlapping_bodies():
+			self.mutex.lock
+			enemies_in_range.remove_at(i)
+			self.mutex.unlock()
+		i += 1
+		
+	i = 0
+	# Cleanup
+	for ally in allies_in_range:
+		if not ally in vision.get_overlapping_bodies():
+			self.mutex.lock
+			allies_in_range.remove_at(i)
+			self.mutex.unlock()
+		i += 1

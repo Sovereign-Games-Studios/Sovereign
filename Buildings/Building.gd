@@ -17,14 +17,20 @@ var npc_node = preload("res://Npcs/npc_node.tscn")
 # Array of instantiated Services
 var services: Dictionary = {}
 signal death_signal
-
+var reward_flag: RewardFlag
 var fall_speed = 50;
+var level = 1;
+var max_health: int
 
 func _ready():
 	self.team_state = get_node("/root/World").teams[self.team]	
 	if self.services.has("Item Seller"):
 		var items = self.services["Item Seller"].inventory.keys()
 		self.team_state._add_items(self, items)
+		
+	self.team_state.team_buildings.append(self)
+	if self.definition.building_type == "Relaxation":
+		self.team_state.relaxation_buildings.append(self)
 		
 func initialize(start_position, building_name, team):
 	self.team = team
@@ -35,7 +41,7 @@ func initialize(start_position, building_name, team):
 	# Attributes
 	self.attributes = Attributes.new()
 	self.attributes.initialize(self, self.definition)
-	
+	self.max_health = self.definition.max_health
 	current_health = self.definition.max_health
 	self.current_occupants = []
 	if(team == "player"):
@@ -56,7 +62,6 @@ func initialize(start_position, building_name, team):
 		$RecruitTimer.wait_time = 10
 		$RecruitTimer.timeout.connect(_recruit_on_timer_timeout)
 	attach_services(definition.services)
-		
 
 func _process(delta):
 	if current_health < 0:

@@ -1,0 +1,32 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://bf3pwqljbuny2"]
+
+[sub_resource type="GDScript" id="GDScript_exf21"]
+script/source = "extends Resource
+
+
+func calculate_consideration_value(npc: NPC, kingdom_state):
+	var value = 100
+	var npc_knowledge = npc.brain
+	var enemy_npc = npc.target
+	if enemy_npc is NPC and npc.definition.character_type == \"Monster\":
+		return 1000 
+	if enemy_npc is NPC and npc.definition.character_type == \"Hero\":
+		# The way we calculate this means that units with a very high bravery essentially won't flee monsters despite low health.	
+		if enemy_npc.level > npc.level:
+			value -= clamp(5 * ((npc.bravery-npc.personality.cowardice)/100), 0, 100)
+		# The way we calculate this means that units with a very high bravery essentially won't flee monsters despite low health.
+		if enemy_npc.current_health > npc.current_health:		
+			value -= clamp((5 * ((npc.personality.cowardice - npc.personality.bravery)/100)), 0, 100)
+		# If an enemy npc is near death, go for the killing blow.
+		if enemy_npc.current_health / enemy_npc.max_health < .2:
+			value += 10
+	elif enemy_npc is Building:
+		value = 100
+	else:
+		value = 0
+	
+	return value
+"
+
+[resource]
+script = SubResource("GDScript_exf21")

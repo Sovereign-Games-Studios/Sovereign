@@ -11,7 +11,7 @@ var requires_timer = true
 func initialize(item_list: Array):
 	for item in item_list:
 		var item_name = item.replace(\" \", \"_\").to_lower()
-		var new_item = load(\"res://Resources/ItemDefinitions/\" + item_name + \".tres\")
+		var new_item = load(\"res://Resources/ItemDefinitions/\" + item_name.to_lower() + \".tres\")
 		replenishable_items.append(new_item)
 		# start with 10
 		inventory[new_item] = 10

@@ -34,35 +34,19 @@ var inventory = []
 var ability_cooldown = false
 var purchase_goal = null
 var target_building
-var current_equipment = {
-	"head": null,
-	"neck": null,
-	"shoulders": null,
-	"chest": null,
-	"hands": null,
-	"legs": null,
-	"feet": null,
-	"ring1": null,
-	"ring2": null,
-	"trinket": null
-}
+var shopping: ShoppingHandler
+var reward_flag: RewardFlag
+var equipment_handler: EquipmentHandler
+var greed: int
+var valor: int
+var bravery: int
+var cowardice: int
 
-var desired_equipment = {
-	"head": null,
-	"neck": null,
-	"shoulders": null,
-	"chest": null,
-	"hands": null,
-	"legs": null,
-	"feet": null,
-	"ring1": null,
-	"ring2": null,
-	"trinket": null
-}
 
 var max_health
 
 signal death_signal
+signal level_up
 
 '''
 Runs as soon as the NPC enters the world.
@@ -72,11 +56,11 @@ func _ready():
 	$NavigationAgent3D.set_target_position(self.global_position)
 	self.team_state = get_node("/root/World").teams[self.team]	
 	self.behaviour.initialize(self.team_state.list_of_bts["idle"], self.team_state, self)
-	self.team_state.items_added.connect(_item_check)
+	self.team_state.items_added.connect(self.shopping._shopper.bind(self))
 	add_child(self.behaviour)
 	if self.definition.character_type == "Hero":
 		self.healing_potions = 10
-	_item_check()
+	self.shopping._shopper(self)
 	pass # Replace with function body.
 
 	
@@ -106,6 +90,7 @@ func _process(delta):
 	
 	# Every character handles the level up differently as defined in their definiton.
 	if self.exp > 1000:
+		self.level_up.emit()
 		self.exp -= 1000
 		self.level += 1
 		if self.definition.character_type == "Hero":
@@ -136,16 +121,26 @@ func _physics_process(delta):
 				mutex.lock()
 				self.brain.enemies_in_range.append(node)
 				mutex.unlock()		
-				_handle_state_change("combat")				
+				_handle_state_change("combat")						
+		elif self.team == "player" and node.team == "player":
+			if not node in self.brain.allies_in_range:
+				mutex.lock()			
+				self.brain.allies_in_range.append(node)
+				mutex.unlock()
+		elif self.team == "enemy" and node.team == "enemy":
+			if not node in self.brain.allies_in_range:
+				mutex.lock()
+				self.brain.allies_in_range.append(node)
+				mutex.unlock()		
 				
 	# TODO: temporary fix -- do not use pathplanning. Just walk in direction
-	if is_on_floor():
-		var vec = ($NavigationAgent3D.target_position - self.global_position).normalized() * self.attributes.speed
-		velocity.x = vec.x
-		velocity.z = vec.z
-		
+	# if is_on_floor():
+	var vec = ($NavigationAgent3D.get_next_path_position() - self.global_transform.origin).normalized() * self.attributes.speed
+	velocity.x = vec.x
+	velocity.z = vec.z
+	velocity.y = vec.y
 	move_and_slide()
-	
+
 	for index in get_slide_collision_count():
 		var collision := get_slide_collision(index)
 		var body := collision.get_collider()
@@ -170,6 +165,9 @@ func initialize(start_position, character_name, team, home: Building):
 	self.max_health = self.definition.max_health	
 	self.current_health = self.definition.max_health
 	self.state = "idle"
+	var new_handler = EquipmentHandler.new()
+	new_handler.initialize(self.definition.starting_equipment)
+	self.equipment_handler = new_handler
 	# Used to track Fog of War Reveal
 	if(team == "player"):
 		self.add_to_group("Player Entities")
@@ -188,7 +186,10 @@ func initialize(start_position, character_name, team, home: Building):
 	# Attributes
 	self.attributes = Attributes.new()
 	self.attributes.initialize(self, self.definition)
-
+	self.greed = self.definition.greed
+	self.valor = self.definition.valor
+	self.bravery = self.definition.bravery
+	self.cowardice = self.definition.cowardice
 	# Attacks
 	self.basic_attack = Attack.new()
 	if(self.definition.basic_attack != null):
@@ -198,7 +199,7 @@ func initialize(start_position, character_name, team, home: Building):
 	self.basic_attack.get_script()		
 	$AttackSpeed.wait_time = self.basic_attack.attack_speed
 	$AttackSpeed.timeout.connect(_attack_target)
-	
+	self.shopping = ShoppingHandler.new()
 	# Ability Handling
 	if(self.definition.abilities.size() > 0):
 		for ability_name in self.definition.abilities:
@@ -206,15 +207,16 @@ func initialize(start_position, character_name, team, home: Building):
 	
 	# instantiate personality of NPC.
 	self.personality = Personality.new()
+	self.add_child(self.personality)
 	self.personality.initialize(self.definition)
 	
 	# The NPC's blackboard/knowledge of its own state
 	self.brain = NpcBrain.new()
-	self.brain.initialize(self.personality)
-	
+	self.add_child(self.brain)	
+	self.brain.initialize(self.personality, self.mutex)
 	# The NPC's behaviour Tree which handles basic actions and decides which ones to take. 
 	self.behaviour = BehaviourTree.new()
-
+	self.add_child(self.behaviour)
 '''
 Sets the NPC's destination in the Nav Agent.
 '''
@@ -249,11 +251,12 @@ func _attack_target():
 				var distance_to_target = distance(self, self.team_state)
 				if distance_to_target < self.basic_attack.range:
 					if self.definition.character_type == "Hero":	
-						self.exp += 50				
+						self.exp += 25				
 					var damage = Damage.calculateDamage(self, self.target)
 					self.target.current_health -= damage
 					if self.target is NPC:
 						self.target._handle_state_change("combat")
+					# TODO this needs to be extended to account for more than one ability and for utility abilities
 					for ability in ability_list:
 						if not self.ability_cooldown:
 							if distance_to_target < ability.range:
@@ -262,7 +265,6 @@ func _attack_target():
 									self.exp += 100
 									
 func handle_ability_cast(ability):
-	
 	self.ability_cooldown = true
 	if ability.type == "Damage":
 		if ability.target == "Area":
@@ -295,6 +297,7 @@ Examples of when NOT to call this function and set state directly:
 '''
 func _handle_state_change(new_state):
 	if new_state != self.state:
+		print("New State Detected! Old State: {old}, New State: {new}.".format({"old": self.state, "new": new_state}))
 		self.state = new_state
 		await self.behaviour.interrupt(self.team_state.list_of_bts[self.state])	
 
@@ -305,15 +308,14 @@ func leaveBuilding(target_building:Building):
 	var found = target_building.current_occupants.find(self)
 	if found >= 0:
 		target_building.current_occupants.remove_at(found) 
-		self.show()
+	self.show()
 		
 '''
 Tell NPC to enter building
 '''
 func enterBuilding(target_building:Building):
-	if self.global_position.distance_to(target_building.global_position) < 10:
-		target_building.current_occupants.append(self) 
-		self.hide()
+	target_building.current_occupants.append(self) 
+	self.hide()
 
 func distance(npc: NPC, team_state: TeamState):
 	var enemy_npc = npc.target
@@ -329,67 +331,4 @@ func distance(npc: NPC, team_state: TeamState):
 	var distance = sqrt(pow((enemy_x - npc_x), 2) + pow((enemy_y - npc_y), 2) + pow((enemy_z - npc_z), 2)) 
 	return distance
 
-'''
-Handler for equipment inventory change signal on team
 
-TODO: Better decision making and weights for this, probably break it out into its own file too.
-'''
-func _item_check():
-	for item_list in team_state.available_items:
-		for new_item in team_state.available_items[item_list]:
-			for equipment in self.current_equipment:
-				if self.current_equipment[equipment] != null:
-					var current_item = self.current_equipment[equipment]
-					var new_item_stat
-					var current_item_stat 
-					match self.definition.primary_stat:
-						"strength":
-							print("matched")
-							new_item_stat = new_item.strength
-							if self.desired_equipment[equipment] != null:
-								current_item_stat = self.desired_equipment[equipment].strength	
-							else:														
-								current_item_stat = current_item.strength
-						"agility":
-							new_item_stat = new_item.agility
-							if self.desired_equipment[equipment] != null:
-								current_item_stat = self.desired_equipment[equipment].agility	
-							else:														
-								current_item_stat = current_item.agility
-						"charisma":
-							new_item_stat = new_item.charisma
-							if self.desired_equipment[equipment] != null:
-								current_item_stat = self.desired_equipment[equipment].charisma	
-							else:														
-								current_item_stat = current_item.charisma
-						"stamina":
-							new_item_stat = new_item.stamina
-							if self.desired_equipment[equipment] != null:
-								current_item_stat = self.desired_equipment[equipment].stamina	
-							else:														
-								current_item_stat = current_item.stamina
-						"wisdom":
-							new_item_stat = new_item.wisdom
-							if self.desired_equipment[equipment] != null:
-								current_item_stat = self.desired_equipment[equipment].wisdom	
-							else:														
-								current_item_stat = current_item.wisdom
-						"spirit":
-							new_item_stat = new_item.spirit
-							if self.desired_equipment[equipment] != null:
-								current_item_stat = self.desired_equipment[equipment].spirit	
-							else:														
-								current_item_stat = current_item.spirit
-							
-					if _compare_items(new_item_stat, current_item_stat):
-						self.desired_equipment[equipment] = new_item
-				else: 
-					self.desired_equipment[equipment] = new_item
-'''
-Compares two items against the NPCs desired roles
-'''
-func _compare_items(new_item, current_item):
-	print("Comparing items.")
-	if new_item > current_item:
-		return true
-	return false
