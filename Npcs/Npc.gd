@@ -135,13 +135,10 @@ func _physics_process(delta):
 				
 	# TODO: temporary fix -- do not use pathplanning. Just walk in direction
 	# if is_on_floor():
-	print("What is our next path position: ", $NavigationAgent3D.get_next_path_position())
-	print("Origin: ", self.global_transform.origin)
 	var vec = ($NavigationAgent3D.get_next_path_position() - self.global_transform.origin).normalized() * self.attributes.speed
 	velocity.x = vec.x
 	velocity.z = vec.z
 	velocity.y = vec.y
-	print("our velocity: ", velocity)
 	move_and_slide()
 
 	for index in get_slide_collision_count():

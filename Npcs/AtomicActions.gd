@@ -33,9 +33,6 @@ func move_to_target(npc: NPC, team_state: TeamState):
 func move_to_destination(npc: NPC, team_state: TeamState):
 	# moves to current target, will loop until target is reached or becomes unreachable.
 	if not npc.get_children()[3].is_navigation_finished():
-		#print(npc.get_children()[3].distance_to_target())
-		print("Navigation running from {current} to {destination}".format({"current": npc.get_child(2).global_position, "destination": npc.get_child(3).target_position}))
-		print(npc.get_children()[3].is_navigation_finished())
 		return "RUNNING"
 	elif npc.get_children()[3].is_navigation_finished():
 		print("Navigation Finished")
@@ -61,9 +58,7 @@ func relax_in_building(npc: NPC, team_state: TeamState):
 		return "SUCCESS"
 		
 func _timeout_in_building(npc: NPC, team_state: TeamState):
-	npc.leaveBuilding(npc.target_building)
 	npc.state = "idle"
-	npc.target_building = null	
 	return "SUCCESS"
 func equip_item(npc: NPC, team_state: TeamState):
 	return
@@ -161,7 +156,7 @@ func set_relax_destination(npc: NPC, team_state: TeamState):
 		if nearest_building == null:
 			nearest_building = building
 		else:
-			if npc.global_position.distance_to(building) < npc.global_position.distance_to(nearest_building):
+			if npc.global_position.distance_to(building) < npc.global_position.distance_to(nearest_building.global_transform.origin):
 				nearest_building = building 
 	if nearest_building == null:
 		return "FAILED"

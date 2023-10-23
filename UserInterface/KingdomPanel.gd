@@ -27,7 +27,7 @@ func _input(event):
 						selected_ui.queue_free()
 						selected_ui = null
 					selected_ui = reward_flag_creation_node.instantiate()
-					selected_ui.initialize(camera.colliding_entity)
+					selected_ui.initialize(camera.colliding_entity, camera)
 					add_sibling(selected_ui)
 		elif event.pressed:
 			if camera.colliding_entity is Node3D:
