@@ -12,11 +12,12 @@ func calculate_consideration_value(npc: NPC, kingdom_state: TeamState):
 	var best_bounty = 0
 	
 	if kingdom_state.combat_reward_flags.size() > 0:
-		for flag in kingdom_state.combat_reward_flags:
-			# Money is a powerful motivator
-			var flag_val = flag  * .01 * npc.personality.greed
+		# we keep an array of flag targets
+		for flag_target in kingdom_state.combat_reward_flags:
+			# Money is a powerful motivator, 100 gold = 1 value but greed can change this.
+			var flag_val = flag_target.reward_flag.value  * .01 * npc.personality.greed
 			# Likewise, very strong opponents require more motivation
-			var combat_val = Comparisons.calculate_enemy_strength(npc, kingdom_state.combat_reward_flags[flag], kingdom_state) * npc.personality.cowardice
+			var combat_val = Comparisons.calculate_enemy_strength(npc, flag_target, kingdom_state) * npc.personality.cowardice
 			
 			var total_val = clamp((flag_val - combat_val), 0, 100)
 			

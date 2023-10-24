@@ -32,7 +32,7 @@ func _ready():
 	var fow_timer = get_node("CheckFogOfWar")
 	fow_timer.wait_time = 1
 	fow_timer.timeout.connect(_refresh_fow_state)
-	#scatter_lairs(4)
+	scatter_lairs(4)
 	pass # Replace with function body.
 
 func scatter_lairs(num: int):

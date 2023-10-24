@@ -12,10 +12,10 @@ engage_enemies:
 '''
 
 # List of considerations for choosing this specific option
-var considerations = [\"personal_strength\"]
+var considerations = [\"personal_strength\",\"reward_flag\"]
 
 # Child node, can either be an action or another behaviour node. 
-var child_nodes = [\"explore\", \"combat\"]
+var child_nodes = [\"explore\", \"attack_enemy\"]
 var type = \"Option\"
 
 func consider(npc: NPC, kingdom_state: TeamState):

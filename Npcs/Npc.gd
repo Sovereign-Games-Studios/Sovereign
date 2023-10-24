@@ -165,6 +165,7 @@ func initialize(start_position, character_name, team, home: Building):
 	self.max_health = self.definition.max_health	
 	self.current_health = self.definition.max_health
 	self.state = "idle"
+	self.reward_flag = RewardFlag.new()
 	var new_handler = EquipmentHandler.new()
 	new_handler.initialize(self.definition.starting_equipment)
 	self.equipment_handler = new_handler

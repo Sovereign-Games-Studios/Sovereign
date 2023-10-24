@@ -37,7 +37,7 @@ func initialize(start_position, building_name, team):
 	set_global_position(start_position)
 	self.definition = ResourceLoader.load("res://Resources/Buildings/BuildingDefinitions/"+building_name.to_lower()+".tres")
 	self.definition.get_script()
-	
+	self.reward_flag = RewardFlag.new()
 	# Attributes
 	self.attributes = Attributes.new()
 	self.attributes.initialize(self, self.definition)

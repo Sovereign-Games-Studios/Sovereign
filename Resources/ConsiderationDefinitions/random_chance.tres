@@ -13,7 +13,7 @@ engage_enemies:
 
 
 func calculate_consideration_value(npc: NPC, kingdom_state):
-	return randi_range(0, 300)
+	return randi_range(0, 100)
 "
 
 [resource]

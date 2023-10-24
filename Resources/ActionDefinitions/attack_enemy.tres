@@ -11,12 +11,12 @@ find_target:
 	Once best target is found, sets the target and initiates combat. 
 '''
 # List of considerations for choosing this specific reasoner
-var considerations = [\"personal_strength\"]
+var considerations = [\"personal_strength\", \"reward_flag\"]
 var child_nodes = []
 var type = \"ActionQueue\"
 
 func consider(npc: NPC, kingdom_state: TeamState):
-	var consideration_value = 1000
+	var consideration_value = 0
 	for consideration in considerations:
 		var consider_node = kingdom_state.consider_list[consideration] 
 		consideration_value += consider_node.calculate_consideration_value(npc, kingdom_state)

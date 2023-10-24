@@ -5,7 +5,7 @@ script/source = "extends Resource
 
 
 func calculate_consideration_value(npc: NPC, kingdom_state):
-	var value = 100
+	var value = 50
 
 	if kingdom_state.is_fow_explored:
 		value = 0

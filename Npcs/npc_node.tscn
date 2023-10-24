@@ -10,7 +10,13 @@
 radius = 10.0
 
 [node name="NPC" type="CharacterBody3D"]
+collision_priority = 100.0
+floor_stop_on_slope = false
+floor_constant_speed = true
+floor_block_on_wall = false
 floor_max_angle = 1.309
+floor_snap_length = 0.5
+safe_margin = 0.1
 script = ExtResource("1_sdoy5")
 
 [node name="VisionRay" type="RayCast3D" parent="."]
@@ -29,9 +35,10 @@ shape = SubResource("CylinderShape3D_s5j36")
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
 path_desired_distance = 5.0
 target_desired_distance = 10.0
-path_height_offset = 1.0
-avoidance_enabled = true
-radius = 1.0
+time_horizon_agents = 2.0
+time_horizon_obstacles = 1.0
+avoidance_layers = 257
+avoidance_mask = 257
 debug_enabled = true
 
 [node name="AttackSpeed" type="Timer" parent="."]
