@@ -12,7 +12,7 @@ find_target:
 '''
 
 # List of considerations for choosing this specific reasoner
-var considerations = [\"fog_of_war\"]
+var considerations = [\"personal_strength\"]
 var child_nodes = []
 var type = \"ActionQueue\"
 

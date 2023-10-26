@@ -13,7 +13,7 @@ var max_health = 200
 var current_health = 200
 # Dictionary where the key is the NPC Type (searches for NPC in Resources/NpcDefinitions)
 # and the value is the number of NPCs of that type this building can sustain. 
-var recruitable_npcs = {\"Greblin\": 4}
+var recruitable_npcs = {\"Greblin\": 1}
 var exp_value = 1000
 var min_drop = 100
 var max_drop = 250

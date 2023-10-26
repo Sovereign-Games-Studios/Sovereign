@@ -27,6 +27,10 @@ func think(npc: NPC, kingdom_state: TeamState, mutex: Mutex):
 		for option_name in self.child_nodes:
 			var option = kingdom_state.list_of_bts[option_name]
 			var option_value = option.definition.consider(npc, kingdom_state)
+			print("Current Option: ", option_name)
+			print("Option Value: ", option_value)
+			print("Best Option Currently: ", best_option)
+			print("Best Option Value: ", best_value)
 			if option_value > best_value:
 				best_value = option_value
 				best_option = option

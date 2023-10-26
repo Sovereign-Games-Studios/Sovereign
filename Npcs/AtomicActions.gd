@@ -11,18 +11,19 @@ func set_target(npc: NPC, team_state: TeamState):
 	if is_instance_valid(best_enemy):
 		best_enemy.death_signal.connect(npc._handle_target_death)
 		npc.target = best_enemy
-	print("BEST ENEMY: ", best_enemy)		
 	if is_instance_valid(npc.target):
 		npc.set_destination(npc.target.global_transform.origin)
 		return "SUCCESS"
 	else:
-		print("unable to set target")
 		return "FAILURE"
 		
 func move_to_target(npc: NPC, team_state: TeamState):
 	if npc.get_children()[3].distance_to_target() > npc.basic_attack.range:
 		npc.state = "Hunting Target"
-		npc.set_destination(npc.target.global_transform.origin)
+		if is_instance_valid(npc.target):
+			npc.set_destination(npc.target.global_transform.origin)
+		else:
+			return "FAILURE"
 		return "RUNNING"
 	else:
 		npc.state = "combat"
@@ -35,7 +36,6 @@ func move_to_destination(npc: NPC, team_state: TeamState):
 	elif npc.get_children()[3].is_navigation_finished():
 		return "SUCCESS"
 	else:
-		print("Navigation Failed")		
 		return "FAILURE"
 	
 func take_potion(npc: NPC, team_state: TeamState):
@@ -153,12 +153,11 @@ func set_relax_destination(npc: NPC, team_state: TeamState):
 		if nearest_building == null:
 			nearest_building = building
 		else:
-			if npc.global_position.distance_to(building) < npc.global_position.distance_to(nearest_building.global_transform.origin):
+			if npc.global_position.distance_to(building.global_transform.origin) < npc.global_position.distance_to(nearest_building.global_transform.origin):
 				nearest_building = building 
 	if nearest_building == null:
 		return "FAILED"
 	else:
-		print("Destination set here is our target: ", nearest_building.global_transform.origin)	
 		npc.set_destination(nearest_building.global_transform.origin)
 		npc.target_building = nearest_building
 		return "SUCCESS"

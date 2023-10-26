@@ -74,6 +74,11 @@ func _process(delta):
 					print(self.definition.name, " has died! Gold and exp has been distributed to ", node.definition.name)
 		print(self.name, " has been destroyed!")		
 		self.team = "corpse"		
+		if self.reward_flag:
+			self.reward_flag.queue_free()
+			var index = get_node("/root/World").teams["player"].combat_reward_flags.find(self)
+			get_node("/root/World").teams["player"].combat_reward_flags.remove_at(index)
+			
 		self.death_signal.emit()
 		self.queue_free()
 	for npc_type in self.recruited_npcs:

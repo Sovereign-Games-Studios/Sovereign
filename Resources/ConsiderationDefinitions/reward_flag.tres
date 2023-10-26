@@ -5,7 +5,7 @@ script/source = "extends Resource
 
 
 func calculate_consideration_value(npc: NPC, kingdom_state: TeamState):
-	var value = 0
+	var value = 100
 	
 	var npc_knowledge = npc.brain
 	
@@ -19,7 +19,7 @@ func calculate_consideration_value(npc: NPC, kingdom_state: TeamState):
 			# Likewise, very strong opponents require more motivation
 			var combat_val = Comparisons.calculate_enemy_strength(npc, flag_target, kingdom_state) * npc.personality.cowardice
 			
-			var total_val = clamp((flag_val - combat_val), 0, 100)
+			var total_val = flag_val-combat_val
 			
 			if total_val > best_bounty:
 				best_bounty = total_val

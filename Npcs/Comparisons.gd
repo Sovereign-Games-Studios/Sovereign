@@ -118,7 +118,6 @@ static func best_target_in_range(npc: NPC, kingdom_state: TeamState):
 				best_bounty = total_val
 				best_enemy = flag_target
 		
-		
 	return best_enemy
 
 

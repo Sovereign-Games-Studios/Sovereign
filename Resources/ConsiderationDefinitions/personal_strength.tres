@@ -17,7 +17,7 @@ func calculate_consideration_value(npc: NPC, kingdom_state):
 	if npc.healing_potions > 1:
 		value += 10
 		
-	return clamp(value, 0 , 100)
+	return value
 "
 
 [resource]
