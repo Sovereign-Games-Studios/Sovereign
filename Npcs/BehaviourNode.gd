@@ -32,6 +32,8 @@ func think(npc: NPC, kingdom_state: TeamState, mutex: Mutex):
 			print("Best Option Currently: ", best_option)
 			print("Best Option Value: ", best_value)
 			if option_value > best_value:
+				print("New Best Option: ", option_name)
+				print("New Best Option: ", option_value)
 				best_value = option_value
 				best_option = option
 		if best_option.type == "ActionQueue":
