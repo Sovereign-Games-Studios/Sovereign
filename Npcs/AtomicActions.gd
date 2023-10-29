@@ -74,14 +74,12 @@ func buy_item(npc: NPC, team_state: TeamState):
 								npc.state = "acquire_upgrades"
 								npc.purchase_goal = npc.desired_equipment[equipment]
 								return "RUNNING"
-	elif npc.get_children()[2].get_children()[0].distance_to_target() < 10:
+	elif npc.get_children()[3].distance_to_target() < 10:
 		npc.enterBuilding(npc.target_building)
 		npc.target_building.services["Item Seller"].sell_item(npc, npc.purchase_goal)
 		for slot in npc.desired_equipment:
 			if npc.desired_equipment[slot] == npc.purchase_goal:
-				npc.current_equipment[slot] = npc.inventory[-1]				
-				npc.desired_equipment[slot] = null
-				npc.equipmentHandler.equipment_change.emit()
+				npc.equipmentHandler.equip_item(npc.purchase_goal)
 		npc.purchase_goal = null
 		#TODO make adding timers a utility function 
 		var timer = Timer.new()

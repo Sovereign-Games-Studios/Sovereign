@@ -22,9 +22,10 @@ var personality: Personality
 var brain: NpcBrain
 # Array of actions to be done in order of queue starting at index 0.
 var action_queue: Array
-var occupied_building: Building
+var long_term_goal: Callable
 # State the NPC is currently in.
 var state: String
+var occupied_building: Building
 var mutex = Mutex.new()
 var root_node = GameStateInit.list_of_bts["idle"]
 var home: Building
@@ -41,9 +42,9 @@ var greed: int
 var valor: int
 var bravery: int
 var cowardice: int
-
-
-var max_health
+var power: int
+var ability_score: int
+var max_health: int
 
 signal death_signal
 signal level_up
@@ -68,6 +69,8 @@ func _ready():
 Runs every game tick.
 '''
 func _process(delta):
+	self.power = (self.current_health ** ((self.max_health-self.current_health)/self.max_health)) + self.attribute.attribute_score + self.level + self.equipment_handler.gear_score + self.ability_score
+	
 	var current_percent = self.current_health/self.definition.max_health
 	if current_percent < .20 and self.state != "retreat":
 		_handle_state_change("low_health")				
@@ -110,28 +113,29 @@ func _physics_process(delta):
 	var overlapping = $Vision.get_overlapping_bodies()	
 			
 	for node in overlapping:
-		if self.team == "player" and node.team == "enemy":
-			if not node in self.brain.enemies_in_range:
-				mutex.lock()			
-				self.brain.enemies_in_range.append(node)
-				mutex.unlock()
-				_handle_state_change("combat")
-		elif self.team == "enemy" and node.team == "player":
-			if not node in self.brain.enemies_in_range:
-				mutex.lock()
-				self.brain.enemies_in_range.append(node)
-				mutex.unlock()		
-				_handle_state_change("combat")						
-		elif self.team == "player" and node.team == "player":
-			if not node in self.brain.allies_in_range:
-				mutex.lock()			
-				self.brain.allies_in_range.append(node)
-				mutex.unlock()
-		elif self.team == "enemy" and node.team == "enemy":
-			if not node in self.brain.allies_in_range:
-				mutex.lock()
-				self.brain.allies_in_range.append(node)
-				mutex.unlock()		
+		if node.visible:
+			if self.team == "player" and node.team == "enemy":
+				if not node in self.brain.enemies_in_range:
+					mutex.lock()			
+					self.brain.enemies_in_range.append(node)
+					mutex.unlock()
+					_handle_state_change("combat")
+			elif self.team == "enemy" and node.team == "player":
+				if not node in self.brain.enemies_in_range:
+					mutex.lock()
+					self.brain.enemies_in_range.append(node)
+					mutex.unlock()		
+					_handle_state_change("combat")						
+			elif self.team == "player" and node.team == "player":
+				if not node in self.brain.allies_in_range:
+					mutex.lock()			
+					self.brain.allies_in_range.append(node)
+					mutex.unlock()
+			elif self.team == "enemy" and node.team == "enemy":
+				if not node in self.brain.allies_in_range:
+					mutex.lock()
+					self.brain.allies_in_range.append(node)
+					mutex.unlock()		
 				
 	# TODO: temporary fix -- do not use pathplanning. Just walk in direction
 	# if is_on_floor():
@@ -204,8 +208,10 @@ func initialize(start_position, character_name, team, home: Building):
 	# Ability Handling
 	if(self.definition.abilities.size() > 0):
 		for ability_name in self.definition.abilities:
-			self.ability_list.append(ResourceLoader.load("res://Resources/AbilityDefinitions/"+ability_name+".tres"))
-	
+			var new_ability = ResourceLoader.load("res://Resources/AbilityDefinitions/"+ability_name+".tres")
+			new_ability.get_script()
+			self.ability_list.append(new_ability)
+			self.ability_score += new_ability.definition.power_score
 	# instantiate personality of NPC.
 	self.personality = Personality.new()
 	self.add_child(self.personality)
@@ -215,9 +221,13 @@ func initialize(start_position, character_name, team, home: Building):
 	self.brain = NpcBrain.new()
 	self.add_child(self.brain)	
 	self.brain.initialize(self.personality, self.mutex)
+	
 	# The NPC's behaviour Tree which handles basic actions and decides which ones to take. 
 	self.behaviour = BehaviourTree.new()
 	self.add_child(self.behaviour)
+	# Health Rating + Ability Rating + Attribute Rating + Gear Score + Level
+	self.power = (self.current_health ** ((self.max_health-self.current_health)/self.max_health)) + self.attribute.attribute_score + self.level + self.equipment_handler.gear_score + self.ability_score
+	
 '''
 Sets the NPC's destination in the Nav Agent.
 '''
@@ -249,7 +259,7 @@ func _attack_target():
 	if self.state == "combat":
 		if is_instance_valid(self.target):
 			if self.target.team != self.team and self.target.is_visible_in_tree():
-				var distance_to_target = distance(self, self.team_state)
+				var distance_to_target = self.origin.transform.distance_to(self.target.origin.transform)
 				if distance_to_target < self.basic_attack.range:
 					if self.definition.character_type == "Hero":	
 						self.exp += 25				
@@ -269,7 +279,7 @@ func handle_ability_cast(ability):
 	self.ability_cooldown = true
 	if ability.type == "Damage":
 		if ability.target == "Area":
-			ability.damage_ability(self, self.target.global_position)
+			ability.damage_ability(self, self.target.origin.transform)
 
 '''
 Signal handling function that connects to the target's death signal.
@@ -317,19 +327,5 @@ Tell NPC to enter building
 func enterBuilding(target_building:Building):
 	target_building.current_occupants.append(self) 
 	self.hide()
-
-func distance(npc: NPC, team_state: TeamState):
-	var enemy_npc = npc.target
-	var enemy_pos = enemy_npc.global_position
-	var enemy_x = enemy_pos.x
-	var enemy_y = enemy_pos.y
-	var enemy_z = enemy_pos.z
-	var npc_pos = npc.global_position
-	var npc_x = npc_pos.x
-	var npc_y = npc_pos.y
-	var npc_z = npc_pos.z
-	
-	var distance = sqrt(pow((enemy_x - npc_x), 2) + pow((enemy_y - npc_y), 2) + pow((enemy_z - npc_z), 2)) 
-	return distance
 
 

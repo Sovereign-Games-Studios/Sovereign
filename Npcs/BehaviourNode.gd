@@ -19,6 +19,10 @@ func initialize(new_definition: Resource):
 	type = new_definition.type
 
 func think(npc: NPC, kingdom_state: TeamState, mutex: Mutex):
+	if npc.long_term_goal != null:
+		if npc.long_term_goal.definition.is_possible:
+			var status = npc.long_term_goal.definition.queue_actions(npc, kingdom_state, mutex)
+			return status
 	if self.child_nodes.size() > 0:
 		var status
 		var best_option = kingdom_state.list_of_bts["idle"]
@@ -26,17 +30,22 @@ func think(npc: NPC, kingdom_state: TeamState, mutex: Mutex):
 		# exits thought process early
 		for option_name in self.child_nodes:
 			var option = kingdom_state.list_of_bts[option_name]
-			var option_value = option.definition.consider(npc, kingdom_state)
-			print("Current Option: ", option_name)
-			print("Option Value: ", option_value)
-			print("Best Option Currently: ", best_option)
-			print("Best Option Value: ", best_value)
+			var option_cost = 0
+			if npc.long_term_goal != null:
+				option_cost = option.definition.consider_costs(npc, kingdom_state)
+			var option_reward = option.definition.consider_reward(npc, kingdom_state)
+			var option_value = option_reward - option_cost
 			if option_value > best_value:
-				print("New Best Option: ", option_name)
-				print("New Best Option: ", option_value)
 				best_value = option_value
 				best_option = option
 		if best_option.type == "ActionQueue":
+			if npc.long_term_goal == null:
+				npc.long_term_goal = best_option
+				if best_option.definition.is_possible:
+					status = best_option.definition.queue_actions(npc, kingdom_state, mutex)
+				else:
+					# postpone for now
+					return "SUCCESS"
 			# all action node definitions have the queue_actions function defined within that must be overriden. 
 			status = best_option.definition.queue_actions(npc, kingdom_state, mutex)
 		else:

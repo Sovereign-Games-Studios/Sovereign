@@ -1,0 +1,13 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://e3uhdavket8j"]
+
+[sub_resource type="GDScript" id="GDScript_exf21"]
+script/source = "extends Resource
+
+
+func calculate_consideration_value(npc: NPC, kingdom_state: TeamState):
+	var strength_rating = 0
+	var npc_level = npc.level
+	var npc."
+
+[resource]
+script = SubResource("GDScript_exf21")
