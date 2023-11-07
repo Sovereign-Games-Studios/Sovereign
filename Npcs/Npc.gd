@@ -22,7 +22,7 @@ var personality: Personality
 var brain: NpcBrain
 # Array of actions to be done in order of queue starting at index 0.
 var action_queue: Array
-var long_term_goal: Callable
+var long_term_goal: Resource
 # State the NPC is currently in.
 var state: String
 var occupied_building: Building

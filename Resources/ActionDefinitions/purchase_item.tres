@@ -28,7 +28,12 @@ func queue_actions(npc: NPC, kingdom_state: TeamState, mutex: Mutex):
 	npc.action_queue.push_back(buy_item)
 	mutex.unlock()
 	return \"SUCCESS\"
-"
+	
+func is_possible(npc: NPC, kingdom_state: TeamState):
+	if npc.purchase_goal.value <= npc.gold:
+		return true
+	else:
+		return false"
 
 [resource]
 script = SubResource("GDScript_nhm6f")

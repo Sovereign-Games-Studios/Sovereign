@@ -30,7 +30,9 @@ func queue_actions(npc: NPC, kingdom_state: TeamState, mutex: Mutex):
 	npc.action_queue.push_back(move_to_destination)
 	mutex.unlock()
 	return \"SUCCESS\"
-"
+
+func is_possible(npc: NPC, kingdom_state: TeamState):
+	return true"
 
 [resource]
 script = SubResource("GDScript_iptki")

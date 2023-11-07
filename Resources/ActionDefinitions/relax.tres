@@ -35,7 +35,12 @@ func queue_actions(npc: NPC, kingdom_state: TeamState, mutex: Mutex):
 	npc.action_queue.push_back(relax_in_building)	
 	mutex.unlock()
 	return \"SUCCESS\"
-"
+
+func is_possible(npc: NPC, kingdom_state: TeamState):
+	if len(kingdom_state.relaxation_buildings) > 0:
+		return true
+	else:
+		return false"
 
 [resource]
 script = SubResource("GDScript_2swqp")

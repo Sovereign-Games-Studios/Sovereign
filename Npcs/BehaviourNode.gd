@@ -20,7 +20,7 @@ func initialize(new_definition: Resource):
 
 func think(npc: NPC, kingdom_state: TeamState, mutex: Mutex):
 	if npc.long_term_goal != null:
-		if npc.long_term_goal.definition.is_possible:
+		if npc.long_term_goal.definition.is_possible(npc, kingdom_state):
 			var status = npc.long_term_goal.definition.queue_actions(npc, kingdom_state, mutex)
 			return status
 	if self.child_nodes.size() > 0:
