@@ -32,6 +32,36 @@ func queue_actions(npc: NPC, kingdom_state: TeamState, mutex: Mutex):
 	# Attack the target
 	mutex.unlock()
 	return \"SUCCESS\"
+	
+'''
+TODO 
+- Add a variable to store the best target so we don't do this twice
+'''
+func weigh_option(npc: NPC, kingdom_state: TeamState):
+	var possible_reward_value
+	var option_value
+	var combat_exp_gain = 10
+	var exp_gain_for_slaying = 0
+	var gold_gain_for_slaying = 0
+	var npc_pos = npc.global_transform.origin
+	
+	for enemy in kingdom_state.observed_enemies:
+		var distance = npc_pos.distance_to(enemy.global_transform.origin)
+		if enemy is NPC:
+			var current_threat_value = (enemy.power ** (enemy.power - npc.power))/npc.personality.bravery
+			# We get lazy if its far away.
+			current_threat_value += distance 
+			exp_gain_for_slaying = enemy.definition.exp_value
+			gold_gain_for_slaying = (enemy.definition.max_drop + enemy.definition.min_drop)/2 
+			var current_reward_value = exp_gain_for_slaying+(gold_gain_for_slaying * npc.personality.greed)
+			if npc.reward_flag:
+				current_reward_value += npc.reward_flag.value
+			var current_option_value = current_reward_value - current_threat_value
+			if current_option_value > option_value:
+				option_value = current_option_value
+				# TODO maybe implement this. 
+				# npc.best_target = enemy
+	return option_value
 "
 
 [resource]

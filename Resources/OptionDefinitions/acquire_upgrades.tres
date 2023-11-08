@@ -19,13 +19,33 @@ var child_nodes = [\"purchase_items\"]
 
 var type = \"OptionNode\"
 
-func consider(npc: NPC, kingdom_state: TeamState):
-	var consideration_value = 0
-	for consideration in considerations:
-		var consider_node = kingdom_state.consider_list[consideration]
-		consideration_value += consider_node.calculate_consideration_value(npc, kingdom_state)
-	consideration_value/considerations.size()
-	return consideration_value
+'''
+TODO 
+- Add a variable to store the item for calculation so we don't repeat it later
+- Add in a time function for how long it takes the NPC to accumulate required gold, adjust choice
+'''
+func weigh_option(npc: NPC, kingdom_state: TeamState):
+	var option_value = 0
+	var best_gs_change = 0
+	var gold_cost
+	for equipment in npc.desired_equipment:
+		if npc.desired_equipment[equipment] != null:
+			var gs_change = npc.desired_equipment[equipment].gear_score - npc.current_equipment[equipment].gear_score
+			if gs_change > best_gs_change:
+				best_gs_change = gs_change
+				gold_cost = npc.desired_equipment[equipment].cost
+	
+	gold_cost = gold_cost - npc.gold
+	
+	if npc.long_term_goal != null:
+		if gold_cost > 0:
+			# If we cannot afford the item, this option should not be considered as a short term action. 
+			option_value = -100
+			return option_value
+		else:
+			# Return the power level change for the action, which for gear score is a flat number.
+			option_value = best_gs_change
+	return option_value
 "
 
 [resource]

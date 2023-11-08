@@ -17,6 +17,8 @@ var list_of_bts = {}
 var consider_list = {}
 var combat_reward_flags = []
 var exploration_reward_flags = []
+# NPC Object:Observed Location
+var observed_enemies: Dictionary = {}
 signal items_added
 # Called when the node enters the scene tree for the first time.
 func _ready():

@@ -23,7 +23,7 @@ var shadow_resistance
 var light_resistance 
 var speed
 var attribute_dict
-var attribute_score
+var attribute_score: int = 0
 
 func initialize(owner: Node3D, definition: Resource):
 	
@@ -51,6 +51,9 @@ func initialize(owner: Node3D, definition: Resource):
 			"strength": self.strength,
 			"wisdom": self.wisdom
 		}
+			
+		for attribute in attribute_dict:
+			self.attribute_score += attribute_dict[attribute] 
 	# Handle Resists
 	self.physical_resistance = definition.physical_resistance 
 	self.magic_resistance = definition.magic_resistance 
@@ -62,9 +65,7 @@ func initialize(owner: Node3D, definition: Resource):
 	self.nature_resistance = definition.nature_resistance  
 	self.shadow_resistance = definition.shadow_resistance  
 	self.light_resistance = definition.light_resistance  
-	
-	for attribute in attribute_dict:
-		self.attribute_score +=attribute_dict[attribute] 
+
 # update function
 func _process(delta):
 	self.attribute_dict = {

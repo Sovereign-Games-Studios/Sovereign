@@ -69,7 +69,7 @@ func _ready():
 Runs every game tick.
 '''
 func _process(delta):
-	self.power = (self.current_health ** ((self.max_health-self.current_health)/self.max_health)) + self.attribute.attribute_score + self.level + self.equipment_handler.gear_score + self.ability_score
+	self.power = (self.current_health ** ((self.max_health-self.current_health)/self.max_health)) + self.attributes.attribute_score + self.level + self.equipment_handler.gear_score + self.ability_score
 	
 	var current_percent = self.current_health/self.definition.max_health
 	if current_percent < .20 and self.state != "retreat":
@@ -118,12 +118,16 @@ func _physics_process(delta):
 				if not node in self.brain.enemies_in_range:
 					mutex.lock()			
 					self.brain.enemies_in_range.append(node)
+					# this will either update the node or create a new entry. 
+					self.team_state.observed_enemies[node] = node.origin.transform
 					mutex.unlock()
 					_handle_state_change("combat")
 			elif self.team == "enemy" and node.team == "player":
 				if not node in self.brain.enemies_in_range:
 					mutex.lock()
 					self.brain.enemies_in_range.append(node)
+					# this will either update the node or create a new entry. 
+					self.team_state.observed_enemies[node] = node.origin.transform
 					mutex.unlock()		
 					_handle_state_change("combat")						
 			elif self.team == "player" and node.team == "player":
@@ -211,7 +215,7 @@ func initialize(start_position, character_name, team, home: Building):
 			var new_ability = ResourceLoader.load("res://Resources/AbilityDefinitions/"+ability_name+".tres")
 			new_ability.get_script()
 			self.ability_list.append(new_ability)
-			self.ability_score += new_ability.definition.power_score
+			self.ability_score += new_ability.power_score
 	# instantiate personality of NPC.
 	self.personality = Personality.new()
 	self.add_child(self.personality)
@@ -226,7 +230,7 @@ func initialize(start_position, character_name, team, home: Building):
 	self.behaviour = BehaviourTree.new()
 	self.add_child(self.behaviour)
 	# Health Rating + Ability Rating + Attribute Rating + Gear Score + Level
-	self.power = (self.current_health ** ((self.max_health-self.current_health)/self.max_health)) + self.attribute.attribute_score + self.level + self.equipment_handler.gear_score + self.ability_score
+	self.power = (self.current_health ** ((self.max_health-self.current_health)/self.max_health)) + self.attributes.attribute_score + self.level + self.equipment_handler.gear_score + self.ability_score
 	
 '''
 Sets the NPC's destination in the Nav Agent.
@@ -259,7 +263,7 @@ func _attack_target():
 	if self.state == "combat":
 		if is_instance_valid(self.target):
 			if self.target.team != self.team and self.target.is_visible_in_tree():
-				var distance_to_target = self.origin.transform.distance_to(self.target.origin.transform)
+				var distance_to_target = self.origin.transform.distance_to(self.target.global_transform.origin)
 				if distance_to_target < self.basic_attack.range:
 					if self.definition.character_type == "Hero":	
 						self.exp += 25				
@@ -287,6 +291,7 @@ Signal handling function that connects to the target's death signal.
 func _handle_target_death():
 	mutex.lock()
 	self.brain.enemies_in_range.remove_at(self.brain.enemies_in_range.find(self.target))
+	self.team_state.observed_enemies.erase(self.target)
 	mutex.unlock()
 	self.target = null
 	if self.brain.enemies_in_range.size() > 0:

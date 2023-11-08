@@ -33,7 +33,10 @@ func is_possible(npc: NPC, kingdom_state: TeamState):
 	if npc.purchase_goal.value <= npc.gold:
 		return true
 	else:
-		return false"
+		return false
+
+func weigh_option(npc: NPC, kingdom_state: TeamState):
+	var value = 1 ** (npc.max_health - npc.current_health)"
 
 [resource]
 script = SubResource("GDScript_nhm6f")

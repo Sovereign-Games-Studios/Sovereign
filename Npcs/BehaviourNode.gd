@@ -30,11 +30,10 @@ func think(npc: NPC, kingdom_state: TeamState, mutex: Mutex):
 		# exits thought process early
 		for option_name in self.child_nodes:
 			var option = kingdom_state.list_of_bts[option_name]
-			var option_cost = 0
-			if npc.long_term_goal != null:
-				option_cost = option.definition.consider_costs(npc, kingdom_state)
-			var option_reward = option.definition.consider_reward(npc, kingdom_state)
-			var option_value = option_reward - option_cost
+			var option_value = option.definition.weigh_option(npc, kingdom_state)
+			if not option_value:
+				print("This option returned nil: ", option_name)
+				option_value = -100
 			if option_value > best_value:
 				best_value = option_value
 				best_option = option
