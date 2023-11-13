@@ -39,8 +39,7 @@ func initialize(owner: Node3D, definition: Resource):
 		
 		self.speed = definition.speed
 		
-		if definition.character_type == "Hero":
-			self.primary_stat = definition.primary_stat
+		self.primary_stat = definition.primary_stat
 			
 		self.attribute_dict = {
 			"agility": self.agility,

@@ -114,22 +114,14 @@ func _physics_process(delta):
 			
 	for node in overlapping:
 		if node.visible:
-			if self.team == "player" and node.team == "enemy":
+			if node.team != self.team:
 				if not node in self.brain.enemies_in_range:
 					mutex.lock()			
 					self.brain.enemies_in_range.append(node)
 					# this will either update the node or create a new entry. 
-					self.team_state.observed_enemies[node] = node.origin.transform
+					self.team_state.observed_enemies[node] = node.global_transform.origin
 					mutex.unlock()
-					_handle_state_change("combat")
-			elif self.team == "enemy" and node.team == "player":
-				if not node in self.brain.enemies_in_range:
-					mutex.lock()
-					self.brain.enemies_in_range.append(node)
-					# this will either update the node or create a new entry. 
-					self.team_state.observed_enemies[node] = node.origin.transform
-					mutex.unlock()		
-					_handle_state_change("combat")						
+					_handle_state_change("combat")				
 			elif self.team == "player" and node.team == "player":
 				if not node in self.brain.allies_in_range:
 					mutex.lock()			
@@ -263,7 +255,7 @@ func _attack_target():
 	if self.state == "combat":
 		if is_instance_valid(self.target):
 			if self.target.team != self.team and self.target.is_visible_in_tree():
-				var distance_to_target = self.origin.transform.distance_to(self.target.global_transform.origin)
+				var distance_to_target = self.global_transform.origin.distance_to(self.target.global_transform.origin)
 				if distance_to_target < self.basic_attack.range:
 					if self.definition.character_type == "Hero":	
 						self.exp += 25				
@@ -283,7 +275,7 @@ func handle_ability_cast(ability):
 	self.ability_cooldown = true
 	if ability.type == "Damage":
 		if ability.target == "Area":
-			ability.damage_ability(self, self.target.origin.transform)
+			ability.damage_ability(self, self.target.global_transform.origin)
 
 '''
 Signal handling function that connects to the target's death signal.

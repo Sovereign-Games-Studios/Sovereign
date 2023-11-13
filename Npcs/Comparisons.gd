@@ -65,8 +65,10 @@ static func calculate_enemy_strength(npc: NPC, enemy_npc: Node3D, kingdom_state:
 static func best_target_in_range(npc: NPC, kingdom_state: TeamState):
 	var npc_knowledge = npc.brain
 	var best_enemy_value = 0
-	var best_enemy = null
-	for enemy in npc_knowledge.enemies_in_range:
+	var best_enemy
+	for enemy in kingdom_state.observed_enemies.keys():
+		if not best_enemy:
+			best_enemy = kingdom_state.observed_enemies.keys()[0] 
 		var value = 0	
 		# The way we calculate this means that units with a very high bravery essentially won't flee monsters despite low health.	
 		if enemy.level > npc.level:
@@ -82,10 +84,11 @@ static func best_target_in_range(npc: NPC, kingdom_state: TeamState):
 		if enemy.current_health / enemy.max_health < .2:
 			value += 10
 		# We are thoroughly outclassed by the enemy.
-		if npc.attributes.attribute_dict[npc.attributes.primary_stat] < enemy.attribute_dict[npc.attributes.primary_stat]:
-			value -= clamp(10 * ((npc.bravery-npc.personality.cowardice)/100), 0, 100)
-		else:
-			value += clamp(5 * ((npc.bravery-npc.personality.cowardice)/100), 0, 100)
+		if enemy is NPC:
+			if npc.attributes.attribute_dict[npc.attributes.primary_stat] < enemy.attributes.attribute_dict[npc.attributes.primary_stat]:
+				value -= clamp(10 * ((npc.bravery-npc.personality.cowardice)/100), 0, 100)
+			else:
+				value += clamp(5 * ((npc.bravery-npc.personality.cowardice)/100), 0, 100)
 		# Every 100 gold is worth 1 value, with greed modifying that. 
 		value += clamp(.01 * enemy.reward_flag.value * npc.personality.greed, 0, 100)
 		
@@ -96,8 +99,8 @@ static func best_target_in_range(npc: NPC, kingdom_state: TeamState):
 			best_enemy_value = value
 			best_enemy = enemy
 		elif value == best_enemy_value:
-			var current_distance = npc.transform.origin.distance_squared_to(best_enemy.transform.origin)
-			var other_distance = npc.transform.origin.distance_squared_to(enemy.transform.origin)
+			var current_distance = npc.transform.origin.distance_squared_to(best_enemy.global_transform.origin)
+			var other_distance = npc.transform.origin.distance_squared_to(enemy.global_transform.origin)
 			if current_distance > other_distance:
 				best_enemy_value = value
 				best_enemy = enemy

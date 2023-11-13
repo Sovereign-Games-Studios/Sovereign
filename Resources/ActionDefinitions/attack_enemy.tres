@@ -23,6 +23,12 @@ func consider(npc: NPC, kingdom_state: TeamState):
 	consideration_value/considerations.size()
 	return consideration_value  
 	
+	
+func is_possible(npc: NPC, kingdom_state: TeamState):
+	if len(kingdom_state.observed_enemies) > 0:
+		return true
+	return false
+		
 func queue_actions(npc: NPC, kingdom_state: TeamState, mutex: Mutex):
 	mutex.lock()
 		# Find a valid enemy in range and set them as our target
@@ -38,8 +44,11 @@ TODO
 - Add a variable to store the best target so we don't do this twice
 '''
 func weigh_option(npc: NPC, kingdom_state: TeamState):
-	var possible_reward_value
-	var option_value
+	if len(kingdom_state.observed_enemies) <= 0:
+		return -100 
+		
+	var possible_reward_value = 0
+	var option_value = 0
 	var combat_exp_gain = 10
 	var exp_gain_for_slaying = 0
 	var gold_gain_for_slaying = 0
@@ -51,8 +60,13 @@ func weigh_option(npc: NPC, kingdom_state: TeamState):
 			var current_threat_value = (enemy.power ** (enemy.power - npc.power))/npc.personality.bravery
 			# We get lazy if its far away.
 			current_threat_value += distance 
-			exp_gain_for_slaying = enemy.definition.exp_value
-			gold_gain_for_slaying = (enemy.definition.max_drop + enemy.definition.min_drop)/2 
+			if npc.definition.character_type == \"Hero\":
+				exp_gain_for_slaying = enemy.definition.exp_value
+				gold_gain_for_slaying = (enemy.definition.max_drop + enemy.definition.min_drop)/2 
+			else: 
+				# Monsters like to kill.
+				exp_gain_for_slaying = 100
+				gold_gain_for_slaying = 100
 			var current_reward_value = exp_gain_for_slaying+(gold_gain_for_slaying * npc.personality.greed)
 			if npc.reward_flag:
 				current_reward_value += npc.reward_flag.value
