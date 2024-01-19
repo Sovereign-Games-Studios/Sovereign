@@ -9,6 +9,8 @@ var range = 5
 var target = \"Area\"
 # Area Abilities must define a radius
 var radius = 10
+
+var power_score = 100
 ''' 
 Type of Ability includes Buff/Debuff, Damage, Summon, Utility
 

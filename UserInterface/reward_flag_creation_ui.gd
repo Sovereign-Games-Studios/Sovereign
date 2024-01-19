@@ -68,8 +68,6 @@ func _process(delta):
 		var text = ("Unit Name: " + attached_entity.definition.name +
 		 "\nTeam: " + attached_entity.team)
 		$"Control/AspectRatioContainer/TabContainer/Target".text = text
-		if attached_entity.reward_flag != null:
-			$Control/AspectRatioContainer/TabContainer/Target/Reward.text = attached_entity.reward_flag.value	
 	else:
 		queue_free()
 	pass

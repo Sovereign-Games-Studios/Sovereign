@@ -28,6 +28,12 @@ func queue_actions(npc: NPC, kingdom_state: TeamState, mutex: Mutex):
 	npc.action_queue.push_back(go_home)
 	mutex.unlock()
 	return \"SUCCESS\"
+
+func is_possible(npc: NPC, kingdom_state: TeamState):
+	return true
+
+func weigh_option(npc: NPC, kingdom_state: TeamState):
+	var value = 1 ** (npc.max_health - npc.current_health)
 "
 
 [resource]

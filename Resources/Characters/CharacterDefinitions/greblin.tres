@@ -27,6 +27,7 @@ var starting_equipment = {
 	\"legs\": null,
 	\"feet\": null
 }
+var primary_stat = \"agility\"
 # Gold Cost
 var cost = 1000
 # Array of Abilities, will fetch them from Resources/AbilityDefinitions

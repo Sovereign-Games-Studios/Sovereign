@@ -12,7 +12,7 @@ find_target:
 '''
 
 # List of considerations for choosing this specific reasoner
-var considerations = [\"fog_of_war\"]
+var considerations = [\"personal_strength\"]
 var child_nodes = []
 var type = \"ActionQueue\"
 
@@ -30,6 +30,19 @@ func queue_actions(npc: NPC, kingdom_state: TeamState, mutex: Mutex):
 	npc.action_queue.push_back(move_to_destination)
 	mutex.unlock()
 	return \"SUCCESS\"
+
+func is_possible(npc: NPC, kingdom_state: TeamState):
+	if kingdom_state.is_fow_explored:
+		return false
+	else:
+		return true
+	
+func weigh_option(npc: NPC, kingdom_state: TeamState):
+	if kingdom_state.is_fow_explored:
+		return -100
+	else:
+		# Static EXP gain weighted by npc desire to wander about aimlessly.
+		return 10 * npc.personality.wanderlust
 "
 
 [resource]

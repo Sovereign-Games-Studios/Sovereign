@@ -24,6 +24,7 @@ var abilities = []
 # The basic attack definition for the character, by default it will use a basic attack definition
 # Setting this points to a specific Resource in Resources/AttackDefintions to use 
 var basic_attack = \"Barbarian\"
+var primary_stat = \"strength\"
 var starting_equipment = {
 	\"weapon\": null,
 	\"head\": null,

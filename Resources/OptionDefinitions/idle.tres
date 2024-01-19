@@ -15,7 +15,7 @@ engage_enemies:
 var considerations = [\"idle\"]
 var type = \"Option\"
 # Child node, can either be an action or another behaviour node. 
-var child_nodes = [\"relax\",\"hunt_monsters\"]
+var child_nodes = [\"relax\",\"explore\", \"attack_enemy\"]
 
 func consider(npc: NPC, kingdom_state: TeamState):
 	var consideration_value = 0
@@ -24,6 +24,10 @@ func consider(npc: NPC, kingdom_state: TeamState):
 		consideration_value += consider_node.calculate_consideration_value(npc, kingdom_state)
 	consideration_value/considerations.size()
 	return consideration_value
+
+func weigh_option(npc:NPC, kingdom_state:TeamState):
+	# Heroes are lazy creatures, prone to relaxation but some have the spark of valor.
+	return 100 / npc.personality.valor
 "
 
 [resource]

@@ -28,6 +28,35 @@ func queue_actions(npc: NPC, kingdom_state: TeamState, mutex: Mutex):
 	npc.action_queue.push_back(buy_item)
 	mutex.unlock()
 	return \"SUCCESS\"
+	
+func is_possible(npc: NPC, kingdom_state: TeamState):
+	if npc.purchase_goal.value <= npc.gold:
+		return true
+	else:
+		return false
+		
+func weigh_options(npc:NPC, kingdom_state:TeamState):
+	var option_value = 0
+	var best_gs_change = 0
+	var gold_cost
+	for equipment in npc.desired_equipment:
+		if npc.desired_equipment[equipment] != null:
+			var gs_change = npc.desired_equipment[equipment].gear_score - npc.current_equipment[equipment].gear_score
+			if gs_change > best_gs_change:
+				best_gs_change = gs_change
+				gold_cost = npc.desired_equipment[equipment].cost
+	
+	gold_cost = gold_cost - npc.gold
+	
+	if npc.long_term_goal != null:
+		if gold_cost > 0:
+			# If we cannot afford the item, this option should not be considered as a short term action. 
+			option_value = -100
+			return option_value
+		else:
+			# Return the power level change for the action, which for gear score is a flat number.
+			option_value = best_gs_change
+	return option_value
 "
 
 [resource]

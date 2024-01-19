@@ -7,14 +7,7 @@ The standard actions in game all Behaviour Nodes reference. These scripts handle
 
 
 func set_target(npc: NPC, team_state: TeamState):
-	var best_distance = 10000
-	var best_enemy = null
-	for enemy in npc.brain.enemies_in_range:
-		if is_instance_valid(enemy):
-			npc.target = enemy
-			var distance = distance(npc, team_state)
-			if distance < best_distance:
-				best_enemy = enemy
+	var best_enemy = Comparisons.best_target_in_range(npc, team_state)
 	if is_instance_valid(best_enemy):
 		best_enemy.death_signal.connect(npc._handle_target_death)
 		npc.target = best_enemy
@@ -26,8 +19,14 @@ func set_target(npc: NPC, team_state: TeamState):
 		
 func move_to_target(npc: NPC, team_state: TeamState):
 	if npc.get_children()[3].distance_to_target() > npc.basic_attack.range:
+		npc.state = "Hunting Target"
+		if is_instance_valid(npc.target):
+			npc.set_destination(npc.target.global_transform.origin)
+		else:
+			return "FAILURE"
 		return "RUNNING"
 	else:
+		npc.state = "combat"
 		return "SUCCESS"
 	
 func move_to_destination(npc: NPC, team_state: TeamState):
@@ -35,10 +34,8 @@ func move_to_destination(npc: NPC, team_state: TeamState):
 	if not npc.get_children()[3].is_navigation_finished():
 		return "RUNNING"
 	elif npc.get_children()[3].is_navigation_finished():
-		print("Navigation Finished")
 		return "SUCCESS"
 	else:
-		print("Navigation Failed")		
 		return "FAILURE"
 	
 func take_potion(npc: NPC, team_state: TeamState):
@@ -77,14 +74,12 @@ func buy_item(npc: NPC, team_state: TeamState):
 								npc.state = "acquire_upgrades"
 								npc.purchase_goal = npc.desired_equipment[equipment]
 								return "RUNNING"
-	elif npc.get_children()[2].get_children()[0].distance_to_target() < 10:
+	elif npc.get_children()[3].distance_to_target() < 10:
 		npc.enterBuilding(npc.target_building)
 		npc.target_building.services["Item Seller"].sell_item(npc, npc.purchase_goal)
 		for slot in npc.desired_equipment:
 			if npc.desired_equipment[slot] == npc.purchase_goal:
-				npc.current_equipment[slot] = npc.inventory[-1]				
-				npc.desired_equipment[slot] = null
-				npc.equipmentHandler.equipment_change.emit()
+				npc.equipmentHandler.equip_item(npc.purchase_goal)
 		npc.purchase_goal = null
 		#TODO make adding timers a utility function 
 		var timer = Timer.new()
@@ -156,27 +151,12 @@ func set_relax_destination(npc: NPC, team_state: TeamState):
 		if nearest_building == null:
 			nearest_building = building
 		else:
-			if npc.global_position.distance_to(building) < npc.global_position.distance_to(nearest_building.global_transform.origin):
+			if npc.global_position.distance_to(building.global_transform.origin) < npc.global_position.distance_to(nearest_building.global_transform.origin):
 				nearest_building = building 
 	if nearest_building == null:
 		return "FAILED"
 	else:
-		print("Destination set here is our target: ", nearest_building.global_transform.origin)	
 		npc.set_destination(nearest_building.global_transform.origin)
 		npc.target_building = nearest_building
 		return "SUCCESS"
 
-
-func distance(npc: NPC, team_state: TeamState):
-	var enemy_npc = npc.target
-	var enemy_pos = enemy_npc.global_position
-	var enemy_x = enemy_pos.x
-	var enemy_y = enemy_pos.y
-	var enemy_z = enemy_pos.z
-	var npc_pos = npc.global_position
-	var npc_x = npc_pos.x
-	var npc_y = npc_pos.y
-	var npc_z = npc_pos.z
-	
-	var distance = sqrt(pow((enemy_x - npc_x), 2) + pow((enemy_y - npc_y), 2) + pow((enemy_z - npc_z), 2)) 
-	return distance

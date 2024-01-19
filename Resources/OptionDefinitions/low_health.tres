@@ -26,7 +26,9 @@ func consider(npc: NPC, kingdom_state: TeamState):
 		consideration_value += consider_node.calculate_consideration_value(npc, kingdom_state)
 	consideration_value/considerations.size()
 	return consideration_value
-"
+
+func weigh_option(npc:NPC, kingdom_state:TeamState):
+	return 100"
 
 [resource]
 script = SubResource("GDScript_jfxgr")

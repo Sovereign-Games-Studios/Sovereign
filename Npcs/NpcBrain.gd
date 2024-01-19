@@ -25,21 +25,16 @@ var leading_party: bool
 # How long the npc has been idle
 var idle_ticks = 0
 
-var power_level: int
-
+var long_term_goal: Array
 var mutex
 
 func initialize(npc_personality: Personality, mutex: Mutex):
 	self.personality = npc_personality
 	self.known_enemies = {}
 	self.known_lairs = {}
+	self.long_term_goal = []
 	self.mutex = mutex
-	self.get_parent().level_up.connect(recalculate_power)
-	recalculate_power()
 	
-func recalculate_power():
-	var npc = self.get_parent()
-	self.power_level = 0
 	
 	
 func _physics_process(delta):

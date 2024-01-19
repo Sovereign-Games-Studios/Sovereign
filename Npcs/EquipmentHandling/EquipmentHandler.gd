@@ -10,6 +10,7 @@ var legs: Item = null
 var feet: Item = null
 var rings: Array = []
 var trinkets: Array = []
+var gear_score: int = 0
 var current_equipment = {
 	"weapon": weapon,
 	"head": head,
@@ -23,8 +24,28 @@ var current_equipment = {
 
 var desired_equipment = current_equipment.duplicate()
 
-signal equipment_change
 
 
 func initialize(starting_equipment: Dictionary):
-	current_equipment = starting_equipment
+	
+	for item in starting_equipment:
+		if starting_equipment[item]:
+			var item_name = starting_equipment[item].replace(" ", "_").to_lower()
+			var starting_item = Item.new()
+			starting_item.initialize(item_name)
+			self.current_equipment[item] = starting_item
+		
+	calc_gear_score()
+
+func equip_item(new_item: Item):
+	current_equipment[new_item.slot] = new_item
+	desired_equipment[new_item.slot] = null
+	calc_gear_score()
+
+	
+func calc_gear_score():
+	var current_gear_score = 0
+	for item in self.current_equipment:
+		if self.current_equipment[item]:
+			current_gear_score += self.current_equipment[item].gear_score
+	self.gear_score = current_gear_score

@@ -7,7 +7,10 @@ script/source = "extends Resource
 func calculate_consideration_value(npc: NPC, kingdom_state):
 	var value = 0
 	var npc_knowledge = npc.brain
-	
+	# If no enemies, just leave.
+	if npc_knowledge.enemies_in_range.size() == 0:
+		return -10
+		
 	for enemy_npc in npc_knowledge.enemies_in_range:
 		if enemy_npc is NPC and npc.definition.character_type == \"Hero\":
 			# The way we calculate this means that units with a very high bravery essentially won't flee monsters despite low health.	

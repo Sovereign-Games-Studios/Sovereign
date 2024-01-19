@@ -30,7 +30,7 @@ var ticks_since_last_action = 0
 func _process(_delta):
 	if parent_npc.state == "idle":
 		process_tree(self.root_node)
-	if 	(parent_npc.action_queue.size() < 4 and tree_status != "RUNNING"):
+	if 	(parent_npc.action_queue.size() < 1 and tree_status != "RUNNING"):
 		process_tree(self.root_node)
 	if current_action == null and not should_exit:
 		ticks_since_last_action = 0

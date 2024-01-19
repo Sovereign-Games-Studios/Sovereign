@@ -28,6 +28,19 @@ func queue_actions(npc: NPC, kingdom_state: TeamState, mutex: Mutex):
 	npc.action_queue.push_back(take_potion)
 	mutex.unlock()
 	return \"SUCCESS\"
+
+func is_possible(npc: NPC, kingdom_state: TeamState):
+	if npc.healing_potions > 0:
+		return true
+	else:
+		return false
+	
+func weigh_option(npc: NPC, kingdom_state: TeamState):
+	if npc.healing_potions > 0:
+		return 1 ** ((npc.max_health - npc.current_health) * (npc.personality.cowardice/npc.personality.bravery))
+	else:
+		# Run away!
+		return -100
 "
 
 [resource]

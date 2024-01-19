@@ -5,7 +5,7 @@ script/source = "extends Resource
 
 
 func calculate_consideration_value(npc: NPC, kingdom_state: TeamState):
-	var value = 100
+	var value = 0
 	
 	var npc_knowledge = npc.brain
 	
